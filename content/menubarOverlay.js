@@ -25,7 +25,7 @@
     .getService(Ci.nsIPrefService);
   let prefs = prefsSvc.getBranch("extensions.savedpasswordeditor.");
 
-  let observe = function (aSubject, aTopic, aData) {
+  let observe = (aSubject, aTopic, aData) => {
     if (aData.startsWith("opensp")) {
       let keyObj = document.getElementById(
         "savedpasswordeditor-key-opensavedpasswords");
@@ -52,26 +52,26 @@
       shortcutModifiers = [];
       var keyElemModList = keyMods.replace(" ", ",").split(",");
       [["control", "ctrlKey"], ["alt", "altKey"], ["meta", "metaKey"],
-      ["shift", "shiftKey"]].forEach(function (e) {
+       ["shift", "shiftKey"]].forEach(e => {
         shortcutModifiers.push(
           [e[1], (keyElemModList.indexOf(e[0]) != -1)]);
       });
     }
   };
 
-  prefs.addObserver("", { observe: observe }, false);
+  prefs.addObserver("", { observe }, false);
 
   window.addEventListener(
     "keypress",
-    function (evt) {
+    evt => {
       if (shortcutKeycode != 0 ?
         evt.keyCode != shortcutKeycode
         : String.fromCharCode(evt.charCode) != shortcutKey)
         return;
 
-      if (!shortcutModifiers.every((e) => { return evt[e[0]] == e[1] })) return;
-      document.getElementById("savedpasswordeditor-command-opensavedpasswords")
-        .doCommand();
+      if (!shortcutModifiers.every(e => evt[e[0]] == e[1])) return;
+      document.getElementById(
+        "savedpasswordeditor-command-opensavedpasswords").doCommand();
     },
     false);
 

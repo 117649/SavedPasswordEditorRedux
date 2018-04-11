@@ -18,6 +18,18 @@
 		<optionsType>3</optionsType>
     <homepageURL>https://addons.mozilla.org/addon/saved-password-editor/</homepageURL>
 
+    <!-- This cannot be submitted on AMO, due to the app ID being the same as
+         Firefox's. -->
+    <!--
+    <targetApplication>
+      <RDF:Description>
+        <id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</id> <!- - Waterfox - ->
+        <minVersion>52.0.0a1</minVersion>
+        <maxVersion>56.*</maxVersion>
+      </RDF:Description>
+    </targetApplication>
+    -->
+
     <targetApplication>
       <RDF:Description>
         <id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</id> <!-- Firefox -->
