@@ -1,0 +1,1287 @@
+Manifest-Version: 1.0
+
+Name: install.rdf
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 5p73Q/nyZQa5O3ikHRuTEA==
+SHA1-Digest: RATXV9gbV8joXakJRrAec+sIofs=
+
+Name: chrome.manifest
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: s4f4krLgCPoq40iRVsxbXA==
+SHA1-Digest: +zZgi9L86ZP3GAKHugzrHtolxgA=
+
+Name: LICENSE.txt
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 8n3v4elsLh7NTgyb6JZ5SQ==
+SHA1-Digest: hCdFy3BvjyEmUG9URJL3qA2+KbM=
+
+Name: content/browserMenubarOverlay.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: DH7roNuS4AOB/rWfrF46KA==
+SHA1-Digest: pOjlFhlU9GBa8oRcbyh+SI3JEQg=
+
+Name: content/contextmenuOverlay.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: X1GeOXH4T5qH0boyYddu2Q==
+SHA1-Digest: Ru3R35rQd57bA0S2gZSq9cT4enY=
+
+Name: content/contextmenuOverlay.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: JiYYMdRL7UeJWi4+85gd0g==
+SHA1-Digest: 6IOSRy3YT635dTSdu/4CrRb3uv8=
+
+Name: content/firstrun.jsm
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: WV22TOfHLISAp4vnvb4gbA==
+SHA1-Digest: GsVApVNZOllIwt2iZPL+JXr7JRU=
+
+Name: content/firstrunOverlay.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: sINSIqxRt4bBiwEiYBo1WA==
+SHA1-Digest: 40ZYv10HQrTBLXFyjm8J7vH6F5Q=
+
+Name: content/frame-script.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: mbVtncS444V1M6tS59EWBw==
+SHA1-Digest: dm4h98VhueotBEumxKDN15zDxXA=
+
+Name: content/mailMenubarOverlay.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Tw3qzcGyXjzEg89ctsYxXg==
+SHA1-Digest: wnntmx8PcUzLZIT4ajCOfTFdSu0=
+
+Name: content/menubarOverlay.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 8onvo6nXFcesuXjOsLRWLw==
+SHA1-Digest: Xd8N6fNB8EvjHV6jIfUXLDx/h2s=
+
+Name: content/prefwindow.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 4G4iO5aKGygp7ft7KA7gbQ==
+SHA1-Digest: Snk84iq2wMLsezd14bJ94wBYnes=
+
+Name: content/prefwindow.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ltcCe1zZqQDSIA/99s87rQ==
+SHA1-Digest: IzwFhNbpGQZ/yoAbmhPM2duK1+0=
+
+Name: content/pwdedit.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ssqn8IwMsoBB8Ht9Uf/Cow==
+SHA1-Digest: +0O2QgcHYEreqBT0GCDidQZ/Teo=
+
+Name: content/pwdedit.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: s7Sto5jAO0j7mBA1bQJjmw==
+SHA1-Digest: h/k5R1hp9PJ38jgKZPAh0cxOTSI=
+
+Name: content/pwdmgrOverlay-sm.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: aB0W1Ux4DbOAs2G1quRZLw==
+SHA1-Digest: aGx8o775GoI+uLsUAYm++JUvT0Y=
+
+Name: content/pwdmgrOverlay-sm.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: kej8dmpZbwQMdIEnISwNVg==
+SHA1-Digest: GebkbtrypupEChVN9zeiJ3eyPUY=
+
+Name: content/pwdmgrOverlay.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: q8RkZkz+aTxBXRCL2478gA==
+SHA1-Digest: ndes+I4eX8jbvC2FhYLtS8IjTA4=
+
+Name: content/pwdmgrOverlay.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 6q+Mkgtgs/cWZisIaD0Qig==
+SHA1-Digest: gnnjglShOJxGnHaDdPwLa6fRmjc=
+
+Name: content/qtextbox.xml
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: WV7pjKx/Hrmwhn39Bvwy4g==
+SHA1-Digest: WDPyL1hA8Qf3uqAtXUShwDxR/74=
+
+Name: content/SavedPasswordEditor-frame.jsm
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: /D5j2kGUPYGyXGvEgt5w5w==
+SHA1-Digest: Xlyl0lPTNzWWQbUSuyEmmCd8nTk=
+
+Name: content/SavedPasswordEditor.jsm
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: XFvbK0m644YMd0FCN30WLw==
+SHA1-Digest: D894zQ01oWkrrMXlg3Cb1KzUicU=
+
+Name: content/toolbarOverlay.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: vWuo0KuaVaDtDDxMdxOr3Q==
+SHA1-Digest: ogAC76qXYazqrfi4bagCPKOoN3c=
+
+Name: content/toolbarOverlay.xul
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: zk6ov8k+FGpDJHZ9DE6Gkg==
+SHA1-Digest: 4pwU/ZTymtSPuaee8GzlUA2Ti98=
+
+Name: content/welcome.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Yl8hTZ0U8IOraDzp6BWBXg==
+SHA1-Digest: 9mkUmKiXeDs7ZGXt40mgdeadzQc=
+
+Name: content/welcome.xhtml
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: k+EqPjTTGIA52j5hJYp4cw==
+SHA1-Digest: tlJZp4+ACO5sCh6NHKvIsVfRwZc=
+
+Name: content/welcome_sm.xhtml
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: qKXqTh9om2+TbpSPR/Ywow==
+SHA1-Digest: kGQSVIG9C0qDvazfftYqEvqJrRU=
+
+Name: defaults/preferences/prefs.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: nUisXXmqUcJkPl+0ld3ARQ==
+SHA1-Digest: m5OWzyzyLAG0dv2COw+srj5Q61Q=
+
+Name: locale/bg/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: FvlR8czTkf9T4SsYi7nqtw==
+SHA1-Digest: TeC4nzw4KCH2nckQXhLA6EvklOE=
+
+Name: locale/bg/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: WibQBiXq0uUqo99n3uhtJg==
+SHA1-Digest: 0AVysZZqMVtUuOZ7sHyb19umBgU=
+
+Name: locale/bg/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: F+c6CLKnfAdOg3jnXXWZjA==
+SHA1-Digest: tUfzixp4nEBa99SyNpT8HQYQVIM=
+
+Name: locale/bg/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: XVCKWofgjV+x7P2+iEAH7w==
+SHA1-Digest: niTIoE9yK0x589YZMS1v7v7AvyE=
+
+Name: locale/bg/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: HN/1Ou7zeNhvVI3MEBu+yw==
+SHA1-Digest: 99HPL5w3w7zP997NmxdPwQ+QPe0=
+
+Name: locale/bg/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: EafMWsdAz4H95lYQSJ/n8w==
+SHA1-Digest: 7MSniw0RBBvaaCtgex60MXh+n0g=
+
+Name: locale/bg/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: BExFEhVhxXc2ezI/3uvgFw==
+SHA1-Digest: KicXVOolMlalGje16pPBc/C25jc=
+
+Name: locale/bg/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: UrU0ib/5FF06AUwr1kdcwg==
+SHA1-Digest: V62/6Lvt7wqixcHlnV6QbwD61EA=
+
+Name: locale/de/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Cmlg+75Dbo3DEbOYdfwcCg==
+SHA1-Digest: g+bovX6XClPjWasCCGctDMDAZXs=
+
+Name: locale/de/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: K85wp1OkvA2Z64lSOKTetA==
+SHA1-Digest: 5CZqX37LJx/j2AFuP1e7gz/nnc0=
+
+Name: locale/de/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 1xWuiygAeEmXuNAlBzEyug==
+SHA1-Digest: jSNF/Cd9lAWV1Hy6UlzfEOW5wP8=
+
+Name: locale/de/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ThsFLs/cwEaT8j4Cn81fTw==
+SHA1-Digest: 2wW4m4T/w9DsT4WakaEu0VK00UI=
+
+Name: locale/de/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: eubo4rBSeGZc9nas6lbPMQ==
+SHA1-Digest: WLTwoC3EQz85B0VEwRriOqs80mU=
+
+Name: locale/de/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: u7mPX9yn2wJa2fiFsY3Udg==
+SHA1-Digest: RwawHF7IB9ZdoftXQrZifsdVz5U=
+
+Name: locale/de/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: zSxCxOzHRQ0nVzVcrtTjQg==
+SHA1-Digest: d+jSM+cb9R8//AVY9eEcHycjHFw=
+
+Name: locale/de/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Z+ac6sKwsvovCK5IoQ71JQ==
+SHA1-Digest: 0ukdwCAxLY+JkKjVh4h1kOglZfg=
+
+Name: locale/dsb/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ev1GvDUjjWUqLO6VJMRAdg==
+SHA1-Digest: y+hN8rf0sz2olEoT3bgrDeyl3uo=
+
+Name: locale/dsb/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: UqmRfWKpZImpIB4qYFU4uQ==
+SHA1-Digest: uHb2FsqChYoyRLYh4MmoVKaPcYs=
+
+Name: locale/dsb/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: LmhQ9OerZOq5b4a9momU3Q==
+SHA1-Digest: FxEACaUCwJI9S//lgLvv0XzImf8=
+
+Name: locale/dsb/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: By39k5PXpfrIAEN5raUVZA==
+SHA1-Digest: pcHddceLkmGKDUUnCjicrBXmKIU=
+
+Name: locale/dsb/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: NfzM4WwypbQY2IxqbjZYGA==
+SHA1-Digest: BVXuH0b9MUs3p7EWqP6ZjUH5CcY=
+
+Name: locale/dsb/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Ydp4UzhQnkj05vyvuOsoUQ==
+SHA1-Digest: AYLjl1QfkA1hwNoDgVXBPAOn6H8=
+
+Name: locale/dsb/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Fd4dnEZ1k6+fNNKlnIXnMQ==
+SHA1-Digest: c122+ln8NZ/j5fPw6QrBvsJx9SE=
+
+Name: locale/dsb/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: jLIMDcuXiPbBtJd+IvWsyQ==
+SHA1-Digest: e3SanojX2nryKm6j2OPys5uwdJA=
+
+Name: locale/el/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: OGNYSF1m622VdNgTxZdqfw==
+SHA1-Digest: Wfj2Dd/DgJWARvWBWKmW0SNPLAk=
+
+Name: locale/el/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: wbG7XZmduqS8sdyAktghBQ==
+SHA1-Digest: /CUD7hS1U3jNkRI7ZiIHmfSp2Wg=
+
+Name: locale/el/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: BRFHpuSRH+GBgyHjYVD4mg==
+SHA1-Digest: gnmLCit3VP6FxaGRD1KNPJ4LXwc=
+
+Name: locale/el/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Klnb2ofxYp/nSJFyDs+Qfg==
+SHA1-Digest: RcGQMM7mhMNlxg1DwIGm2alL1ok=
+
+Name: locale/el/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ZGYgUCIcVXXGF/D5GAjBNg==
+SHA1-Digest: yMa09IZtboHr8F9HcsofHKHJ6To=
+
+Name: locale/el/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: WaOX6x0jqG2VZRe/au1/nw==
+SHA1-Digest: urWf9wHNRZnJcUrri3r9m+21FJU=
+
+Name: locale/el/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: BT0+KBvguJ2nkc3LXV4svA==
+SHA1-Digest: Wm0Jl0I+KBwckAz5FlAhDQ90fSg=
+
+Name: locale/el/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: jubBsYlfBLCyyg6XXUlSsA==
+SHA1-Digest: EZRqpioCUEF9sIOTs0sZp0sx8ts=
+
+Name: locale/en-US/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: iV6cTSWQqtkS/PHzIjvZYw==
+SHA1-Digest: NwwZG8f26PZmtEQK+PQ8C8zg43s=
+
+Name: locale/en-US/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: KIthKMtNkOGZxEcNnKwFew==
+SHA1-Digest: /5PF2e+0JZh2qZHz1gquylTvC/M=
+
+Name: locale/en-US/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 5b/8SbT44m6g5GhZ6rw29A==
+SHA1-Digest: w49ydANWrookT2LkAcLsy+YjcGo=
+
+Name: locale/en-US/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: L79xm7Wuu/EW5gN/HukOEA==
+SHA1-Digest: +bbqKsmsp/uJDQTMkApyWw7unUg=
+
+Name: locale/en-US/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: mLCCHdaohQtuO1WlHYfJJg==
+SHA1-Digest: NvLrQpxfkjQ04XzmHL4HBFjMFnA=
+
+Name: locale/en-US/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: jbtDyfvR8au0Ndwd42/aTQ==
+SHA1-Digest: ZYIdtxYnMIOlA2VopMqJwztxs2U=
+
+Name: locale/en-US/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: IJD6ahWxBB7FED6JfUm/1g==
+SHA1-Digest: ieB0rvoIyRp2APIycJynCmsZMbc=
+
+Name: locale/en-US/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Tj2vsofi77DbjDLzj0bmwg==
+SHA1-Digest: Qp6sD/7AjvPLQryMAxYWr6KnBg0=
+
+Name: locale/eo/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: P4VeuLNf8hk6xDyQgxgRDQ==
+SHA1-Digest: G5j4M28IUSOgWfQlSHj87+hC25g=
+
+Name: locale/eo/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: PkuZQ2qkk7LcV1VYoU88vw==
+SHA1-Digest: /+bA7LD25SVdVerilsvobemLSp8=
+
+Name: locale/eo/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Sod+YLnNcje8SIl7Wb08xg==
+SHA1-Digest: WVoyP1H338phIuA2ShmCmvaQDRE=
+
+Name: locale/eo/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: CW9sKBhZK3sTvYHrlgYLug==
+SHA1-Digest: HT2pk0ItYjN+YquIvLJzZxqtuq4=
+
+Name: locale/eo/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: FKckUww89HPNrgtiIeZrsw==
+SHA1-Digest: MuDoGIyeV4/9+ngrZGxmoNLXhLk=
+
+Name: locale/eo/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Axh1YiCYPlkx7bontHogjA==
+SHA1-Digest: uY43gJEu0GWA/owgJZJX0GYSMhA=
+
+Name: locale/eo/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: tiAUbxhCFDp+SfSz3suxLA==
+SHA1-Digest: JlyADqWrMPZI5DGEZKMVzll2aRo=
+
+Name: locale/eo/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: lbwfKaG9wfRleMi5GNTf5w==
+SHA1-Digest: 7JzuhXCqQc7nzvDZjqvLEtZm7AM=
+
+Name: locale/es-ES/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: tR0fYuhuSmXgNSwIvhQeCg==
+SHA1-Digest: VQ1WN/stJz5vbcUm46CDU2pRrYI=
+
+Name: locale/es-ES/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: gxcuMlVDLpSEkgzMip5zCQ==
+SHA1-Digest: ZMl7mJp0iFygn3NkrzUWEbmg9VI=
+
+Name: locale/es-ES/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: a9/lum9sEgYR86SHSt88hQ==
+SHA1-Digest: 9P8uwFyY/Vu3x8eGDyfMzViga10=
+
+Name: locale/es-ES/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: jOvJG4RqT3lvYCAkglaCsw==
+SHA1-Digest: uKc8Y3CXPb6O0SbL/CKTjKtdltk=
+
+Name: locale/es-ES/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: EMqVNy3+ixC6Hfjvq9WC6A==
+SHA1-Digest: iYw610dzvmaVK2ZFEVNO0rmxOuA=
+
+Name: locale/es-ES/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: vIcgyZzPSThBhXAjpDtY3Q==
+SHA1-Digest: hbkmCYXtV4m0DHQ8H7poge/pkKU=
+
+Name: locale/es-ES/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Gqj1VvUrlAzlBSbOfZA+gA==
+SHA1-Digest: 3WKSdhMG9osA79LteMS9btDWiqM=
+
+Name: locale/es-ES/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: MbMU5nyKbs1zehrIaEd3zQ==
+SHA1-Digest: RtQAH7+O75ShBRHXjk/XGTbpk6g=
+
+Name: locale/fi/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: K5MxcKxHCJzelwsFRHnzpw==
+SHA1-Digest: IvuyS42h8JHsNsLdLseK6SX+puA=
+
+Name: locale/fi/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: YhsLOu0tSJmouAvnp8/YCw==
+SHA1-Digest: QihOnYrCGJgfewZv+JYsF7Suitg=
+
+Name: locale/fi/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: vbMb8IwxwASGyOR1UAA1kQ==
+SHA1-Digest: +TMjA+IPWDd6uGlV/LeY6uj6HTw=
+
+Name: locale/fi/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: oyvObI58NyPONXHCGyOGVQ==
+SHA1-Digest: iZKMgBR0Vmi/C0bMnJjzxqIQW9s=
+
+Name: locale/fi/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: pvfUCuhKRHYwre2dylfbug==
+SHA1-Digest: 8QMuawtco6sCzqi4NVNdNP904hY=
+
+Name: locale/fi/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: zW9dNzUG2HcSyO+6najhtw==
+SHA1-Digest: rKj+Lmg7IRjGFXsDpTRcT7WXdCY=
+
+Name: locale/fi/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: toN14ku1kp2gUWrPN/SBSQ==
+SHA1-Digest: gud3ZiYv0rQGzkeoPRKK06TqD24=
+
+Name: locale/fi/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: IRDkmcYDPK0ciFyZE87tPA==
+SHA1-Digest: DDoHrldrtofCY7ohooV5vpHYLGA=
+
+Name: locale/fr/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: V1tZnGR70EAWy1odv1K6VA==
+SHA1-Digest: Rl953YI470Z0vHv/u6hcGpLYlA8=
+
+Name: locale/fr/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: bKXL6enXVG1mWmj93U0iXg==
+SHA1-Digest: nOgs+mkH0M37r0QR/QSB/kaa98Y=
+
+Name: locale/fr/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: FtEkoesgE1R3GW7og6SE0A==
+SHA1-Digest: HQ/zC2DiOV4BwHoecuYC2drV7U0=
+
+Name: locale/fr/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: aD5+DPyRaw9jvkhRWdaz3w==
+SHA1-Digest: fAmKcCbdqzxu6NrSBrVwBkAbZGk=
+
+Name: locale/fr/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 1hkYS69UlZpATufAA2xIRw==
+SHA1-Digest: Hs37qR3v8UeDxEjFDS5EtCkb5AU=
+
+Name: locale/fr/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: wTgFotKdnnHDbHwPK5IXbw==
+SHA1-Digest: vtjCAlXZGTR+kOzvHpLZ3Pi+rZc=
+
+Name: locale/fr/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: M8OL49OmGSOc+DguK4mDmw==
+SHA1-Digest: +y92iSnfbP6ggxD2GuD453pTtuA=
+
+Name: locale/fr/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: PeT6qTRFuWyi5FBLqBjRgQ==
+SHA1-Digest: T2B4VCvrMM4ya+JvRDxEe8oKiy0=
+
+Name: locale/hsb/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: oklu1NcLhDfCAXqn26oC5A==
+SHA1-Digest: tLvmwlKQUbdRAmmB6o95gJoyr7s=
+
+Name: locale/hsb/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: o4/Zj7mH4/GyvInjOfQkIw==
+SHA1-Digest: 1gjXeOs3QN0FXmstuCbKaztPjbk=
+
+Name: locale/hsb/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: mY4hHZEWrMuSbF54yXn7WA==
+SHA1-Digest: JGnKqDSjIvzA+WbSGw+f4W+3XJI=
+
+Name: locale/hsb/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: NIOWkJt6MZ+qNo0Rc2vskA==
+SHA1-Digest: FTcZ7RY3cPjZsGDsqAYoxgWkvWc=
+
+Name: locale/hsb/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: k6/0cjhcQHzsXPF9STNUiQ==
+SHA1-Digest: tLY5yVnov8bBRDH9tyTx7pm6z0k=
+
+Name: locale/hsb/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: sJGzszud7jQ+QA/qAxXttQ==
+SHA1-Digest: WvtcvIhPYmMw7ot0vyzYeippycA=
+
+Name: locale/hsb/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: TTrzQWdPIlJZO9pU+CHotQ==
+SHA1-Digest: NmrWyyQ3f4byJ/MSRdW3CL0vIPk=
+
+Name: locale/hsb/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: cmy8gIVfJqyRjlyi9dZhYA==
+SHA1-Digest: e7ITcbpb7hmH8MJPycqVHHvEZsg=
+
+Name: locale/hu/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: FfAdfsWJBBHL8BMLri1vkQ==
+SHA1-Digest: YJi2rbofT4xmuQxbuf4vLa/BZgI=
+
+Name: locale/hu/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 20FOQoJ6yR7mESulsaeCVA==
+SHA1-Digest: me6mwiyJQdGz8gzC1qoaTkI3VPU=
+
+Name: locale/hu/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: kYPMcFAiF52do+Wd1HNWNA==
+SHA1-Digest: ICEI5ByxM5FlIDZMMObg7WdEuK4=
+
+Name: locale/hu/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: eOdabdZDjez7oEfmD66utw==
+SHA1-Digest: VGl3soV3zZKZJvGuiQXLj6uP90o=
+
+Name: locale/hu/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: fm489VR1WIQaRYfCxlDtXw==
+SHA1-Digest: 3EgIrAKK3+6MwPxzGryLmzbrZ6k=
+
+Name: locale/hu/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: WjG7/EcAvm4O2gDLbTssdQ==
+SHA1-Digest: 3QVxTct/zb8pNa7g8H2AkACK7xI=
+
+Name: locale/hu/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: rAJ8zAZn6QAF8u1W6w5KcQ==
+SHA1-Digest: OGx+9J7Lsw7XBI05BO3wo9+b4i8=
+
+Name: locale/hu/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: kG2b7oD2OhddrzJgWJrotg==
+SHA1-Digest: m+xkndzhuH9+eMVKQl/N70SFsVw=
+
+Name: locale/id-ID/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: VtvIzWVmey5CL4wVvBZHOQ==
+SHA1-Digest: FIzw/QMgQOXuUH4YfqBiTerfIBQ=
+
+Name: locale/id-ID/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: XAtCTSAwdF1QMqx6EjxJ5A==
+SHA1-Digest: f5DXQrabnA4QztLgmWOAjCGL/aI=
+
+Name: locale/id-ID/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: oSqkOZCyzjoN53uGj7ipFQ==
+SHA1-Digest: xglFA29wUpqHtHDg6v6aC0mruzc=
+
+Name: locale/id-ID/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: GsX5OM7K7te7UPsGH/LTMg==
+SHA1-Digest: QayyPW5GLP3bTqjOAgErH/1B9Gk=
+
+Name: locale/id-ID/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: eIakURF2PlQUlKCXH0GquQ==
+SHA1-Digest: cxoRdSOJcqLmISdWSbcmu3QywsA=
+
+Name: locale/id-ID/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 9QDlPlSFraqO0X5gesUIZw==
+SHA1-Digest: ukeMRg+5OQ713Njtu4ulAYsyJnU=
+
+Name: locale/id-ID/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: SvV/vATVLnvnh5Tt+mXiUA==
+SHA1-Digest: Mcqh/HvewzZZZ37lSGl7P5lpjDw=
+
+Name: locale/id-ID/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: sRz0M2hueEyQKSVCiQoWJA==
+SHA1-Digest: sa+pLxM7AUcqG3uI4wHv+dAblbI=
+
+Name: locale/it/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: O2z5yFqsFlU9cqI54IeuKA==
+SHA1-Digest: 1Hv7GBXqKbrofnhJT+f3VZXSlSU=
+
+Name: locale/it/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: z4ZAyE2QUt3NGzh32VTDVg==
+SHA1-Digest: cwgRRrMq/DC1TJzV0gWW8nHzOHc=
+
+Name: locale/it/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 2k8JaF1zFcLL8Enoqrl8CA==
+SHA1-Digest: dVBLjXPjxgjnwexW7usddlSiewo=
+
+Name: locale/it/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: cm4VzdJWfNooJaNVIjjvrA==
+SHA1-Digest: dYN5O7ofRYBSjgubXLcMxvtHmLQ=
+
+Name: locale/it/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 33wkHH6R4msICw44Bnod8A==
+SHA1-Digest: LISOoZz8/NJW8hFXTo6cRQWKWQo=
+
+Name: locale/it/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: kSdLt7mWB4k3L2H7l1J3rQ==
+SHA1-Digest: jMRKF3/oDrhGgE0nWRiuvY1ih0g=
+
+Name: locale/it/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Ei/zU8us5RkgFk2gbf9QdA==
+SHA1-Digest: 3sRq/WwlMcw0WNbviuQqK7uZYWc=
+
+Name: locale/it/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Bv/S1+/OQ7krnTpAXFtuCA==
+SHA1-Digest: VkoH+ZtcTLTVp6bccSExqr7OOfc=
+
+Name: locale/ja/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: BG1nW49I1IVJoSFUwYI08A==
+SHA1-Digest: KdGTJL2HN853cVh2BODRLMrE3rU=
+
+Name: locale/ja/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ro87YAa0P1BsxnqBcljJAA==
+SHA1-Digest: j56HDGj31ne8XTU0st6IJnFL7JM=
+
+Name: locale/ja/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 77bcqk3/0sIfBrIqme4H6g==
+SHA1-Digest: NrLadSRStjkmDdgSL7S4Di4Q628=
+
+Name: locale/ja/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: QmKmAV0gHXJ2dhKuYseToA==
+SHA1-Digest: PwRn8Cox7gGolSdmKLPXJIn7xA0=
+
+Name: locale/ja/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 1lCx9UdiHA3rXREGtZHkYg==
+SHA1-Digest: qIPRecVTUviGfBbZF8oqvxUiuSo=
+
+Name: locale/ja/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: jZUFm0cygEun9NMvbVIbMw==
+SHA1-Digest: A2xR7hyNE39+ks79ywYrFkmoblE=
+
+Name: locale/ja/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Fv486zox+ZgSxEd6jZWxpg==
+SHA1-Digest: psifDcjwtT0zycXnelQe0tKzvKE=
+
+Name: locale/ja/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: vInoAuzxLJdHfBN14oGATw==
+SHA1-Digest: H1XS9IigqnVfARLM07BWMWypMqQ=
+
+Name: locale/nl/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: FMMsV+YnPN4JfdSSMkLxJQ==
+SHA1-Digest: Gin3yLyG4Vu78LUmHEbggYA2be0=
+
+Name: locale/nl/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: zyBcktrb4eBe+MK82xOX7w==
+SHA1-Digest: Y/vxrD2TjzI0T8KuzsEwcomhg8U=
+
+Name: locale/nl/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: CZiP80HiSSnDTksK567yrw==
+SHA1-Digest: 4VSlHVZly/iQHb8eNmTaadVNfj4=
+
+Name: locale/nl/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: YHrB/j3PajRhIz84nvWdcw==
+SHA1-Digest: AsqxGVTWn8nBe0+p7OiA2qZKAes=
+
+Name: locale/nl/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: trjeMkHy08y5RJbb5Z2bDQ==
+SHA1-Digest: F5/1fGrXODSYkDQcDF8xy1vIUZw=
+
+Name: locale/nl/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: F0LiB09doqIv0XyJSY+E1g==
+SHA1-Digest: vID6333aKcQlbP+ys4OMPhx/Nvw=
+
+Name: locale/nl/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 7VUbSUeYZzbA07QrJmZihA==
+SHA1-Digest: Ti98CpEF6X2yl1WK+Tp+TPPzuLo=
+
+Name: locale/nl/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: hOeFE2c164NDCDxiwzzI1Q==
+SHA1-Digest: Dbj9Uwk2ZQcDDSd8w+DiRQTv2VQ=
+
+Name: locale/pl/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: AbE4l2igqBCB2oNKVmzClQ==
+SHA1-Digest: CHhbitezUTHMswCasdfZq0mTKTM=
+
+Name: locale/pl/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 2tm9/At3mueCs24YdOUqhQ==
+SHA1-Digest: gN23pY7gQMJMjji9UlNGnFVPmx4=
+
+Name: locale/pl/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: f6K1RVUES5hOHIFjkQuJuw==
+SHA1-Digest: HPxS1M93E+Ml5X1MBnBA2CLqImk=
+
+Name: locale/pl/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: hP4ApzssgUK97WY/gWF16A==
+SHA1-Digest: u897U0WYfCzSVJunGkfl7dVMi9Y=
+
+Name: locale/pl/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: SpkiYk8eu6D2j94UPEqlig==
+SHA1-Digest: I2iGUC1lSnnkmDWPfwZmvumkONE=
+
+Name: locale/pl/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 7RhzwqbDonhCcnNyPhy7Qg==
+SHA1-Digest: GSYW4Tjx3X3ANi/YO2dAsiKmvUw=
+
+Name: locale/pl/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 3xlU0GVMy2N8wtmb6CWB7Q==
+SHA1-Digest: GkH7+19DrUgb1WF06FlakMmKuOs=
+
+Name: locale/pl/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ZyVMKeVr7oUWar2ysAub7Q==
+SHA1-Digest: puQV8Uo+GcUnObbUQpfnEcOhsXQ=
+
+Name: locale/pt-BR/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: v9h+jgXABrCymf/AafMeiA==
+SHA1-Digest: Z8oOGnEMT5dqCkQ1AoGfXd29QmE=
+
+Name: locale/pt-BR/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: T9SNlfy0wmHXgQ59Vi45rQ==
+SHA1-Digest: 8z4VpfiUw0bJpLjWrCXzXXXFLTE=
+
+Name: locale/pt-BR/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 29IICw9m7YG8lgAab7MBbw==
+SHA1-Digest: gOvTilL5ha0Q22E2Pccbe6J5Z7s=
+
+Name: locale/pt-BR/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: y8NudWKCCnpl37WwnVTsDg==
+SHA1-Digest: q8rrcKc4VGV6oVgVA74tp8avjBQ=
+
+Name: locale/pt-BR/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: wA+DzefoYh+MU4kb9VGYvw==
+SHA1-Digest: xWbNmvGlYITNVWMV+/bs8civRMM=
+
+Name: locale/pt-BR/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: OIxO0nzlGmjQeZZcHn41xA==
+SHA1-Digest: 7TLisUUxv50BTMPWvIwJYXoWWng=
+
+Name: locale/pt-BR/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: xqAyH8h0+Usf+AfoE22Ddw==
+SHA1-Digest: 0gAxmdMSIY/OK4mwGQ1/mdSGC+A=
+
+Name: locale/pt-BR/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: PXpFjiat91fm7Z1quGxjzA==
+SHA1-Digest: mQ1ORrdoPkDDxKo84aqnfpuoB+A=
+
+Name: locale/pt-PT/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: h3WP0rk5dGU4KoERFS3WMA==
+SHA1-Digest: 81PlmE5fWyCHIWxD6LK+oF2kRa4=
+
+Name: locale/pt-PT/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 994wkP6acTHhmGN0OfZLHw==
+SHA1-Digest: jrbrkGPQI3jPalNvzC72l8qroHI=
+
+Name: locale/pt-PT/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: yLNo/Bu9aJkWDOJNkxNs2g==
+SHA1-Digest: LyU/8t7acHUPIPqpHGdsLbRzWNQ=
+
+Name: locale/pt-PT/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: tFA5S3DQcQK333oB75gnTg==
+SHA1-Digest: sCwf28VKETY2pZBS49Bd+H9kbHI=
+
+Name: locale/pt-PT/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: FX47l2ZV08goZBg4Ug1OgQ==
+SHA1-Digest: JEFjXVVedDhZAPSZ6Z2wtcpJ58o=
+
+Name: locale/pt-PT/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: cd0Yy4X7+ZcBq2Oe9kGGPw==
+SHA1-Digest: lbqSaIk5rPLexJ8HEEzN8IxQG3Y=
+
+Name: locale/pt-PT/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: kbYfG2OV0LH1TPKbwgpElg==
+SHA1-Digest: gonh8w5sNqIR/MTKiOAdIIeDGg0=
+
+Name: locale/pt-PT/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 21++goz1yCT1HpXKuOJuLA==
+SHA1-Digest: 9xif4ObX0L3l/vCYgpPj7PKz5uM=
+
+Name: locale/ru/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: cQKFWT4S3xcjr8o+v7em4Q==
+SHA1-Digest: pb1SThXhndIhIv6Ta1/tLaNEa/c=
+
+Name: locale/ru/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: aso3wl7povsczRDKD/W3DA==
+SHA1-Digest: gQF7aECxotzQpAHaHL9L+OBcmIs=
+
+Name: locale/ru/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 7Qy0itqt6x0xd76X0SR29A==
+SHA1-Digest: h1m1/2GvzwKT3wgZpnLEOqNo2Bk=
+
+Name: locale/ru/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: W6Z3fCLnYk/ZX4xL2zIojA==
+SHA1-Digest: BRfP1aqJnGUHCTI6RIHk/kGpo40=
+
+Name: locale/ru/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ax89zjlK68HX2gtmw88PDw==
+SHA1-Digest: NKGjxf3h9/i3zIXHsf2E9k5yvd0=
+
+Name: locale/ru/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: k/a7kMb0vd7CMNCj/OawvA==
+SHA1-Digest: PUnj2uXcTdOlbSP/6Z+zmWv7o4Q=
+
+Name: locale/ru/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 0ck6LaFxIYZp2c23lb6oGQ==
+SHA1-Digest: Y60ezuhiYccsbPCTwLvaRZ6UC0o=
+
+Name: locale/ru/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Mvtpk2RI6b6tSITYLS6U8A==
+SHA1-Digest: vJ1em80Zl8qBKbkUSF9UKX2B3Rk=
+
+Name: locale/sl-SI/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: PbXRwOPyNLGECXRV5MRk0Q==
+SHA1-Digest: E5Unx01IQS9U4w0mUY7Nd3Nxlac=
+
+Name: locale/sl-SI/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: BcAKcoK3fIWpr0MO61JMjg==
+SHA1-Digest: 6XzzPydCoeb828ffAOJrRyj8Eq0=
+
+Name: locale/sl-SI/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: KWejaKpoynnl2PLYQObTKg==
+SHA1-Digest: CoPxrPc5ccpom46lwYbREOn7gRM=
+
+Name: locale/sl-SI/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: KEeME1l5nbbZqswSKpomkw==
+SHA1-Digest: YoannNLWHogM1qPXwKmgC79azBM=
+
+Name: locale/sl-SI/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Ljiqx7IzTegIbzNEdK0C+g==
+SHA1-Digest: 2zrBqZhliFKbb3GYBgCzMDCpTZE=
+
+Name: locale/sl-SI/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 2ShT5rylBfWMqcR2fmvqIw==
+SHA1-Digest: l7F6XWK9K/6kE62syowoPmxvPuM=
+
+Name: locale/sl-SI/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: /OtT3ZY2UTlHa1HZ4tW5SA==
+SHA1-Digest: UL2PO+3yVs+TgZJ4rP7vCIAE3F4=
+
+Name: locale/sl-SI/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: jFJWNkttoh3pdYmveGs/Pw==
+SHA1-Digest: S89iFHicPydUE/f7mzY32Svhahw=
+
+Name: locale/sr/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: aLxwvFnOo1CjH20RtkflkQ==
+SHA1-Digest: HxU8kTyfbV8d9vvFtgps7IlU2xQ=
+
+Name: locale/sr/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 28+50MCb+INwhwJUwyFo1w==
+SHA1-Digest: wgtCnJl96tEcSbtlCD2HIGT8Z/w=
+
+Name: locale/sr/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: BBql7SSYiQOt2SylR9vDrw==
+SHA1-Digest: RymMHF7i1UUOq3fvbFDBbjUJV70=
+
+Name: locale/sr/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: vZ3yz44/95HkGvluMiuDxw==
+SHA1-Digest: xAonJSi+wOh/S9rZUQkNh3+8xxM=
+
+Name: locale/sr/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: BbpSby2ly3urBGf1GLcN1g==
+SHA1-Digest: lYrh3j/HWAsGKofzM53gpYrPxQs=
+
+Name: locale/sr/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: I9B2r2M1RPAumGqv1B6Ocw==
+SHA1-Digest: +irM2SL7vgvnQZvDip8AB4XhB/8=
+
+Name: locale/sr/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: M4aQQ43bnhCNdpURtXWwKQ==
+SHA1-Digest: 004Lu0jeSA9F2Cd4pfQvkCK9gUI=
+
+Name: locale/sr/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 1rDpggVFcSjFk+t9VK9Ldw==
+SHA1-Digest: DYhHeg/rqv8OEHVvFlyZ4A+uLuE=
+
+Name: locale/sv-SE/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Y44srQZbRHNFicuC8VXlSg==
+SHA1-Digest: 3Wt1EPUWZvBkl4Hsl0FS8SZKTjg=
+
+Name: locale/sv-SE/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: oTaM/FTMf+e5/SCJR1v/Xg==
+SHA1-Digest: uuTjuf5cfMBuVFJVwi+tV0E/LFQ=
+
+Name: locale/sv-SE/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: IkgqHfXbFuGwdWV0Kah7UA==
+SHA1-Digest: L2ktzBF4MC1I2P3lAxGNhhVgqYI=
+
+Name: locale/sv-SE/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: UxcPLWomT8BIIRdW9KXwjA==
+SHA1-Digest: 8F/p8ANdXxzHweod+OJSa4To6dc=
+
+Name: locale/sv-SE/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 6M4ghZ6zC5MXtuOj1P7ecQ==
+SHA1-Digest: QEcHbmOhoh9F+we75ApoQPenDsk=
+
+Name: locale/sv-SE/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: V62ToUtxHTvbTcAhToSx1g==
+SHA1-Digest: FpR9L0F3FdJ4ipysRVugqE+uU4Q=
+
+Name: locale/sv-SE/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: v6Sr+PQSR1tILuoVtmJXDA==
+SHA1-Digest: TrBG6dmNmrFuntUN1nwqo6yeVfM=
+
+Name: locale/sv-SE/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Cvca2GjQP4yYWzdYNvm0Kw==
+SHA1-Digest: HmgRrBSqYuyCAcE3r+OC3thvGlI=
+
+Name: locale/tr/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Mq2zpZ2ggLlS8+3KwqXDfg==
+SHA1-Digest: AXr3u6bu4Yii8LtROlfX9u4mig4=
+
+Name: locale/tr/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: PXARGgrsmJG0cMeAje2D3Q==
+SHA1-Digest: SlSH4IzkvtjsK+8v2WtOBfDs3dU=
+
+Name: locale/tr/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: wpy9B5zxb3989SWAHQwXlA==
+SHA1-Digest: EdLLuYim3Y53XcCRPGVhqqUOaYk=
+
+Name: locale/tr/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Ky4exHKBCVRB5Knmt8uZbw==
+SHA1-Digest: qgK5YIFingxYq0g34y7RYNqG1hY=
+
+Name: locale/tr/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: y1qZuOGJejiRI+8z0AZLmQ==
+SHA1-Digest: DpmYgg3Kc2tf/t3nwFw9PmdxftA=
+
+Name: locale/tr/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: xmFJ7N8xX+6VCoJ5BhqKjg==
+SHA1-Digest: xplC3jQzsgFXM9zRcpzBuNt9S30=
+
+Name: locale/tr/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: xQneMxfzi52I+9sy4wzaVg==
+SHA1-Digest: gNBDDO0zHMlAh5PdFAiz7M4rr9M=
+
+Name: locale/tr/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: En4MIRzHMoZiwhRxjbrQqg==
+SHA1-Digest: R2erYousmhb/98+M4JoJeUmMJIw=
+
+Name: locale/uk/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 8mQN7Xs+4c3wWBK48VrrWg==
+SHA1-Digest: U12uecnq6RmOcVKvZnKOXj9BNzQ=
+
+Name: locale/uk/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: oDdaq+LSAumCBCFHQz+WjA==
+SHA1-Digest: aO8lPsWEPZ/NMBLQ/WZWs/Xsn+s=
+
+Name: locale/uk/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ohSf+i5KspHoHljkgGqvlw==
+SHA1-Digest: pvZrCNgOAobfWVb3hV0jmmslteE=
+
+Name: locale/uk/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 7jXfa3yqw9m6qxJR7BSN7Q==
+SHA1-Digest: zsvFGwbXhqVtT6NhnwoyHjGXyEE=
+
+Name: locale/uk/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: AlAqi2szfRVjnxP6eTNANQ==
+SHA1-Digest: WZ+EZSKg3tBhr2Xf/kkFH3/S87s=
+
+Name: locale/uk/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: unEbacDRv6DPKAh0hmGVNA==
+SHA1-Digest: TAGUidcGr7WXPFeB54nOPJJUpD8=
+
+Name: locale/uk/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: rebau72xGZdXmus/MP1GSA==
+SHA1-Digest: iTzjXQ78BbScN1FpIDiFC8c2bA4=
+
+Name: locale/uk/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: nF5bv4oL+jyDu62laQV4MA==
+SHA1-Digest: JepeK8b1/H7kFrCQVDl3/AkgvuE=
+
+Name: locale/vi/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: EJLzop5XJPID6s/4wT2S3Q==
+SHA1-Digest: u0eIkampcYCn19uZLJ6FEJ1Zozo=
+
+Name: locale/vi/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 89qghCCCIo5nGrjL3N1GKw==
+SHA1-Digest: 9nnNC3XCJDdhUFRf7WACm8NxxNE=
+
+Name: locale/vi/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: J2yiU5dOrXvXcj7O2tLENw==
+SHA1-Digest: jKBHnrF/bET5A/X5kR2LRQse2d4=
+
+Name: locale/vi/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 4iqZ/kLkLsMoJEua2KZS2g==
+SHA1-Digest: bmwnkLLljYPqjtZT2LFZCru0uIE=
+
+Name: locale/vi/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 33nKxy4XwQDr8nhXhQMyMg==
+SHA1-Digest: uE7hCFaLqbpfXV2dnnqKFZ9AaPY=
+
+Name: locale/vi/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: fcobQvlSOj6O8wG7YDk28g==
+SHA1-Digest: H2SixPmhkBbdSR8IcwM7ok8XRWA=
+
+Name: locale/vi/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: v5GKn7EnhHxCK+gHTZR9Rg==
+SHA1-Digest: ZmEq8KEuTlhwJJsA+ywg7ZTujB4=
+
+Name: locale/vi/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: sPkZP7rSxv68qha38BqYLA==
+SHA1-Digest: 8IzQj4m+NdwF7G/z1MK2tFJ3S7w=
+
+Name: locale/zh-CN/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: lIDzFETvQlt7z4H+x7yw7w==
+SHA1-Digest: 4ZwKPtLUjGd5Sal9D+M2/pFYq4I=
+
+Name: locale/zh-CN/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: u6fPMr05cEKhWz2uGnE3BQ==
+SHA1-Digest: DJX+hRkCWsovfTwc2ESSxi2AVWU=
+
+Name: locale/zh-CN/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 2jIjLd6Lg87/MxJ55zZpUQ==
+SHA1-Digest: DGDOhrZJFUs9hCm+FWB2spuYY1s=
+
+Name: locale/zh-CN/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 64L4B++VBCo4xFByrQ47hA==
+SHA1-Digest: byHVUbBEMgBE9uabc6HRyC1PL/4=
+
+Name: locale/zh-CN/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: wXi6DM4H0/oi1gf+GiOnvg==
+SHA1-Digest: 2xj6X6S5ft9Q4W76Fg5ya59ocwQ=
+
+Name: locale/zh-CN/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 4wz+cixRq53BKHqZwQysAQ==
+SHA1-Digest: zxGe/SR5cUEnDcycvH4/oR/Qd8s=
+
+Name: locale/zh-CN/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: cSN/CC71648cI0lTHMUvoA==
+SHA1-Digest: NGF4F6D7BPpATTq3kIMwqAWSGGs=
+
+Name: locale/zh-CN/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 1mo5NvKBbuLm2OES/9OjJA==
+SHA1-Digest: 3+GJOyKFwrACVuw6FyS4AlxOzlQ=
+
+Name: locale/zh-TW/browserOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: QrMzSxae3uYMZobsMZwuew==
+SHA1-Digest: NBkxcoRlM8NVwbjprTnemEDTY/s=
+
+Name: locale/zh-TW/prefwindow.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: /HRRQDRODPSCNivDmia4ow==
+SHA1-Digest: 445c8ovKvIxgoj081ip0XvlzVqo=
+
+Name: locale/zh-TW/pwdedit.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: EECZhOEtShT9mNR8Uq+0qQ==
+SHA1-Digest: gpr6z0eTcGsG+fk0nuriQ5Ak3ns=
+
+Name: locale/zh-TW/pwdedit.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: fo+xUF3yC12uvWd5i5B7VA==
+SHA1-Digest: 0qSfP8pcumzptVz+YrcduvRNaWI=
+
+Name: locale/zh-TW/pwdmgrOverlay.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: b1drba1HYE49Sp9JjShMzQ==
+SHA1-Digest: 75ZbAHxg00sZI0HEluAtPpZK47Y=
+
+Name: locale/zh-TW/pwdmgrOverlay.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 8iYtKyC/Qod6d4XEE+iSIg==
+SHA1-Digest: kkPvXj3k4Ckz+zovOCW9Dd9Wbiw=
+
+Name: locale/zh-TW/spe.properties
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: U5vovII3LYnxpL9uYZ942Q==
+SHA1-Digest: 2XqqF3xJm8cy5vU6JVWqs8DV9Mc=
+
+Name: locale/zh-TW/welcome.dtd
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: xHGPo2byzKU52krI5ubWPw==
+SHA1-Digest: 7QRF9gxEWq2Bh9Gt5s3YiGUPcw4=
+
+Name: skin/indef.png
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Ng3gUHrQ1R+hxvYp7VSs+g==
+SHA1-Digest: 7yeAB+/WIfud5BWmLLNqnWuK+PY=
+
+Name: skin/key16.png
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: sZ30N7UYNsRlCe/v3rSRCA==
+SHA1-Digest: YhlW2eILqWhffGrWg/i/EbN3LMM=
+
+Name: skin/key19.png
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 3P94+rgg2g5MgcoRqDmq2g==
+SHA1-Digest: V0EHi9OTqSg1gDgH64IAIlfqOSY=
+
+Name: skin/key24.png
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: iZue5nkDKx1t949PK1gbAA==
+SHA1-Digest: Y8u3XCq0+PDix1N7KOdUGlXCDtc=
+
+Name: skin/key29.png
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Ic6yb38hkU+Y8a9JklJvTw==
+SHA1-Digest: 8tsKkHDCDGOHB3yTAd6sEdNxoQ4=
+
+Name: skin/key32.png
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 6clAbi06wJFMNlpkSuL1oQ==
+SHA1-Digest: H+qI0FLqMRAdHVQhc/hVABOpS2Q=
+
+Name: skin/key64.png
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: n5yEx9j9z2xBOZbq76aLOA==
+SHA1-Digest: yiuznf5KfrtPPd43wNa3do/mT7E=
+
+Name: skin/overlay-sm.css
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: GwrxrxlGNiWgcy6g6d6Fww==
+SHA1-Digest: wPypI2QUyGzJEjfnMmWd/z2subg=
+
+Name: skin/overlay.css
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: XRFEN0lLYRNtXv0xbGl8nA==
+SHA1-Digest: F02crLvnxTe20TRv0nWD5MpFaLA=
+
+Name: skin/prefwindow.css
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: apqyqL538+lhYaS+GHqS4Q==
+SHA1-Digest: BFMKZ+kpNs7Kz25EEjddBAPhfkc=
+
+Name: skin/pwdmgrOverlay.css
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 5UuT9spmlx/cyvR3wWdylA==
+SHA1-Digest: OFzk1Z5YIkiYyUPI0LSP2TxH8/g=
+
+Name: skin/qtextbox.css
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: GH9Azx1cE/4KSMkbxOhsSg==
+SHA1-Digest: EhSQmJgEQvGqhnvHhvzm/tXfxTs=
+
+Name: skin/welcome.css
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 3IVlmouGlIF7989tqdQlNg==
+SHA1-Digest: 3fe4j47daDmnnEJD3q0xYSBjcI0=
+
