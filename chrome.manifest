@@ -4,6 +4,7 @@ resource	savedpasswordeditor	content/
 
 ## Chrome
 content	savedpasswordeditor		content/
+content	savedpasswordeditor-defaults defaults/
 
 # Language-specific content
 locale	savedpasswordeditor	bg	locale/bg/

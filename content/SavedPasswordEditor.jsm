@@ -73,7 +73,7 @@ var SavedPasswordEditor = {
       Cc["@mozilla.org/embedcomp/window-watcher;1"].
         getService(Ci.nsIWindowWatcher).
         openWindow(
-          null, "chrome://passwordmgr/content/passwordManager.xul", "",
+          null, "chrome://savedpasswordeditor/content/passwordmgr/passwordManager.xhtml", "",
           "chrome,titlebar,toolbar,centerscreen,resizable", null);
   },
 
@@ -103,7 +103,7 @@ var SavedPasswordEditor = {
 
     var ret = { newSignon: null, callback: _finish, parentWindow: null };
     aWindow.openDialog(
-      "chrome://savedpasswordeditor/content/pwdedit.xul", "",
+      "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
       "centerscreen,dependent,dialog,chrome",
       [this.curInfo], 0, false, ret);
     this.curInfo = null;
@@ -147,7 +147,7 @@ var SavedPasswordEditor = {
     } else {
       SavedPasswordEditor.oldSignon = spe._signonMap[target.label];
       window.openDialog(
-        "chrome://savedpasswordeditor/content/pwdedit.xul", "",
+        "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
         "centerscreen,dependent,dialog,chrome",
         [SavedPasswordEditor.oldSignon], 1, false,
         { newSignon: null, callback: spe._finishEdit, parentWindow: window });
@@ -198,7 +198,7 @@ var SavedPasswordEditor = {
     } else if (signons.length == 1) {
       SavedPasswordEditor.oldSignon = signons[0];
       aWindow.openDialog(
-        "chrome://savedpasswordeditor/content/pwdedit.xul", "",
+        "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
         "centerscreen,dependent,dialog,chrome",
         [signons[0]], 1, false,
         { newSignon: null, callback: this._finishEdit,

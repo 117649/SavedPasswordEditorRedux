@@ -22,9 +22,10 @@
                  type="text/css"?>
 
 <!DOCTYPE dialog SYSTEM "chrome://savedpasswordeditor/locale/pwdedit.dtd">
+<script src="chrome://savedpasswordeditor/content/qtextbox.js"/>
 
 <dialog id="pwdedit"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml"
         title="&savedpasswordeditor.title;"
         buttons="accept,cancel"
         ondialogaccept="return setNewSignon();">
@@ -36,7 +37,7 @@
   </stringbundleset>
   <script type="text/javascript" src="pwdedit.js"/>
   <dialogheader id="header"/>
-  <groupbox id="type_groupbox">
+  <html:fieldset id="type_groupbox">
     <caption id="type_caption" label="&signontype.label;"/>
     <radiogroup id="type_group" oncommand="handle_typeSelect();">
       <radio id="type_form" label="&type_form.label;"
@@ -46,7 +47,7 @@
              accesskey="&type_annotated.accesskey;"
              tooltiptext="&type_annotated.tooltip;"/>
     </radiogroup>
-  </groupbox>
+  </html:fieldset>
   <grid>
     <columns>
       <column/>
@@ -57,33 +58,33 @@
       <row align="center">
         <label control="hostname_text" value="&hostname.label;"
                tooltiptext="&hostname.tooltip;"/>
-        <textbox id="hostname_text" class="qtextbox"
+        <html:input id="hostname_text" is="q-textbox"
                  tooltiptext="&hostname.tooltip;"/>
       </row>
       <row align="center">
         <label id="formSubmitURL_lbl" control="formSubmitURL_text"
                value="&formSubmitURL.label;"
                tooltiptext="&formSubmitURL.tooltip;"/>
-        <textbox id="formSubmitURL_text" class="qtextbox"
+        <html:input id="formSubmitURL_text" is="q-textbox"
                  tooltiptext="&formSubmitURL.tooltip;"/>
       </row>
       <row align="center">
         <label id="httpRealm_lbl" control="httpRealm_text"
                value="&annotation.label;"
                tooltiptext="&annotation.tooltip;"/>
-        <textbox id="httpRealm_text" class="qtextbox"
+        <html:input id="httpRealm_text" is="q-textbox"
                  tooltiptext="&annotation.tooltip;"/>
       </row>
       <row align="center">
         <label control="username_text" value="&username.label;"
                tooltiptext="&username.tooltip;"/>
-        <textbox id="username_text" class="qtextbox"
+        <html:input id="username_text" is="q-textbox"
                  tooltiptext="&username.tooltip;"/>
       </row>
       <row align="center">
         <label control="password_text" value="&password.label;"
                tooltiptext="&password.tooltip;"/>
-        <textbox persist="type" id="password_text" class="qtextbox"
+        <html:input persist="type" id="password_text" is="q-textbox"
                  tooltiptext="&password.tooltip;"/>
         <button id="showPassword_btn" label="&showPassword.label;"
                 accesskey="&showPassword.accesskey;"
@@ -98,14 +99,14 @@
         <label id="usernameField_lbl" control="usernameField_text"
                value="&usernameField.label;"
                tooltiptext="&usernameField.tooltip;"/>
-        <textbox id="usernameField_text" class="qtextbox"
+        <html:input id="usernameField_text" is="q-textbox"
                  tooltiptext="&usernameField.tooltip;"/>
       </row>
       <row align="center">
         <label id="passwordField_lbl" control="passwordField_text"
                align="center" value="&passwordField.label;"
                tooltiptext="&passwordField.tooltip;"/>
-        <textbox id="passwordField_text" class="qtextbox"
+        <html:input id="passwordField_text" is="q-textbox"
                  tooltiptext="&passwordField.tooltip;"/>
       </row>
     </rows>

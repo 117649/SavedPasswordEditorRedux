@@ -25,8 +25,10 @@
           "chrome://savedpasswordeditor/locale/prefwindow.dtd">
 
 <prefwindow
-    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml"
     id="savedpasswordeditor-prefwindow" title="&prefwindow.title;">
+  <script type="application/javascript" src="chrome://savedpasswordeditor/content/prefs-ce.js"/>
+
   <prefpane>
     <preferences>
       <preference id="pref-display-menuitem"
@@ -57,7 +59,7 @@
                   name="extensions.savedpasswordeditor.showpassword"
                   type="int"/>
     </preferences>
-    <groupbox>
+    <html:fieldset>
       <caption label="&opensp_group.caption;"/>
       <checkbox id="displayMenuitem_ck" label="&displayMenuitem.label;"
                 tooltiptext="&displayMenuitem.tooltip;"
@@ -66,7 +68,7 @@
       <hbox id="renameMenuitem_row" align="center" class="indent">
         <label id="renameMenuitem_lbl" value="&renameMenuitemTo.label;"
                tooltiptext="&renameMenuitemTo.tooltip;"/>
-        <textbox id="renameMenuitem_text"
+        <html:input id="renameMenuitem_text"
                  tooltiptext="&renameMenuitemTo.tooltip;"
                  preference="pref-rename-menuitem-to"/>
       </hbox>
@@ -74,10 +76,10 @@
         <label control="opensp_shortcut_modifiers"
                value="&opensp_shortcut.label;"
                tooltiptext="&opensp_shortcut.tooltip;"/>
-        <textbox id="opensp_shortcut_modifiers" flex="1"
+        <html:input id="opensp_shortcut_modifiers" flex="1"
                  tooltiptext="&opensp_shortcut_modifiers.tooltip;"
                  preference="pref-savedpasswords-shortcut-modifiers"/>
-        <textbox id="opensp_shortcut_key" size="10"
+        <html:input id="opensp_shortcut_key" size="10"
                  tooltiptext="&opensp_shortcut_key.tooltip;"
                  preference="pref-savedpasswords-shortcut-key"
                  onsynctopreference="return synctopref();"/>
@@ -88,14 +90,14 @@
         <button id="opensp_keypressrecv" tabindex="-1"/>
       </hbox>
       <label id="entershortcut_lbl" value="&entershortcut.label;"/>
-    </groupbox>
-    <groupbox>
+    </html:fieldset>
+    <html:fieldset>
       <caption label="&webpages.caption;"/>
       <checkbox id="promptforctxmenudelete_ck"
                 label="&promptforctxmenudelete.label;"
                 preference="pref-confirm-ctxmenu-delete"/>
-    </groupbox>
-    <groupbox>
+    </html:fieldset>
+    <html:fieldset>
       <caption label="&modstosavedpasswords.caption;"/>
       <checkbox id="preselectcurrentsite_ck"
                 label="&preselectCurrentSite.label;"
@@ -109,8 +111,8 @@
                 label="&alwaysPromptForMasterPassword.label;"
                 tooltiptext="&alwaysPromptForMasterPassword.tooltip;"
                 preference="pref-forcepromptformasterpassword"/>
-    </groupbox>
-    <groupbox>
+    </html:fieldset>
+    <html:fieldset>
       <caption label="&passwordfield_caption.label;"/>
       <radiogroup id="showPassword_rg" preference="pref-showpassword">
         <radio label="&passwordfield_alwayshide.label;" value="0"/>
@@ -120,7 +122,7 @@
         <radio label="&passwordfield_followspwin.label;" value="3"
                tooltiptext="&passwordfield_followspwin.tooltip;"/>
       </radiogroup>
-    </groupbox>
+    </html:fieldset>
   </prefpane>
   <script type="text/javascript" src="prefwindow.js"/>
 </prefwindow>

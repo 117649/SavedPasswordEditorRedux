@@ -236,7 +236,7 @@ var spEditor = {
     var selSignons = selections.map(el => table[el]);
     var ret = { newSignon: null, callback: null };
     window.openDialog(
-      "chrome://savedpasswordeditor/content/pwdedit.xul", "",
+      "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
       "centerscreen,dependent,dialog,chrome,modal",
       selSignons, 1, checkPasswordsShowing(), ret);
 
@@ -269,7 +269,7 @@ var spEditor = {
     var signon = table[selections[0]];
     var ret = { newSignon: null, callback: null };
     window.openDialog(
-      "chrome://savedpasswordeditor/content/pwdedit.xul", "",
+      "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
       "centerscreen,dependent,dialog,chrome,modal",
       [signon], 2, checkPasswordsShowing(), ret);
     this.selectionsEnabled = true;
@@ -293,7 +293,7 @@ var spEditor = {
     this.selectionsEnabled = false;
     var ret = { newSignon: null, callback: null };
     window.openDialog(
-      "chrome://savedpasswordeditor/content/pwdedit.xul", "",
+      "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
       "centerscreen,dependent,dialog,chrome,modal",
       [], 0, checkPasswordsShowing(), ret);
     this.selectionsEnabled = true;
