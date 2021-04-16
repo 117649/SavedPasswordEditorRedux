@@ -18,8 +18,13 @@
 
 "use strict";
 
-const Cc = Components.classes, Ci = Components.interfaces,
+try {
+  const Cc = Components.classes, Ci = Components.interfaces,
   Cu = Components.utils;
+} catch (error) {
+  
+}
+
 Cu.import("resource://gre/modules/Services.jsm");
 
 var prefs = Services.prefs.getBranch("extensions.savedpasswordeditor.");

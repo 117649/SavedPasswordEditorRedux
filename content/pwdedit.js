@@ -57,12 +57,12 @@ window.addEventListener(
                         passwordField: "" };
 
     if (editorMode == 0)
-      el("header").setAttribute("title", peStrBundle.getString("newlogin"));
+      el("header").setAttribute("value", peStrBundle.getString("newlogin"));
     else if (editorMode == 2)
-      el("header").setAttribute("title", peStrBundle.getString("clonelogin"));
+      el("header").setAttribute("value", peStrBundle.getString("clonelogin"));
     else
       el("header").setAttribute(
-        "title", peStrBundle.getString(oldSignons.length > 1 ? "editmultlogin"
+        "value", peStrBundle.getString(oldSignons.length > 1 ? "editmultlogin"
                                                            : "editlogin"));
 
     var compositeSignon = intersectSignonProps(oldSignons);

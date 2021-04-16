@@ -22,7 +22,7 @@ Components.utils.import("resource://gre/modules/Services.jsm");
 
 document.addEventListener(
   "DOMContentLoaded",
-  function dclHandler (ev) {
+  function dclHandler(ev) {
     spEditor.signonBundle = document.getElementById("signonBundle");
     spEditor.genStrBundle =
       document.getElementById("savedpwdedit-gen-stringbundle");
@@ -33,7 +33,7 @@ document.addEventListener(
   },
   false);
 
-function checkPasswordsShowing () {
+function checkPasswordsShowing() {
   if (window.hasOwnProperty("showingPasswords"))
     return showingPasswords;
   else
@@ -41,14 +41,14 @@ function checkPasswordsShowing () {
     return !document.getElementById("passwordCol").hidden;
 }
 
-function showPasswords () {
+function showPasswords() {
   if (!checkPasswordsShowing()) {
     let togglePasswords = document.getElementById("togglePasswords");
 
     if (togglePasswords &&
-        (!spEditor.prefs.getBoolPref("force_prompt_for_masterPassword")
-         || masterPasswordLogin(() => true))) {
-      if (window.hasOwnProperty("showingPasswords"))
+      (!spEditor.prefs.getBoolPref("force_prompt_for_masterPassword")
+        || masterPasswordLogin(() => true))) {
+      // if (window.hasOwnProperty("showingPasswords"))
         showingPasswords = true;
 
       if (window.getLegacyString) {
@@ -56,13 +56,15 @@ function showPasswords () {
         togglePasswords.accessKey = getLegacyString("hidePasswordsAccessKey");
       } else {
         togglePasswords.label =
-          spEditor.signonBundle.getString("hidePasswords");
+          // spEditor.signonBundle.getString("hidePasswords");
+          "Hide Passwords";
         togglePasswords.accessKey =
-          spEditor.signonBundle.getString("hidePasswordsAccessKey");
+          // spEditor.signonBundle.getString("hidePasswordsAccessKey");
+          "P";
       }
 
       document.getElementById("passwordCol").hidden = false;
-      _filterPasswords();
+      FilterPasswords();
     }
   }
 }
@@ -75,7 +77,7 @@ window.addEventListener(
 
     if (spEditor.prefs.getBoolPref("preselect_current_site")) {
       let wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].
-               getService(Components.interfaces.nsIWindowMediator);
+        getService(Components.interfaces.nsIWindowMediator);
       let brWin = wm.getMostRecentWindow("navigator:browser");
       let browser = brWin.gBrowser.selectedBrowser;
 
@@ -83,15 +85,15 @@ window.addEventListener(
         let returnHandler = ({ data: hostname }) => {
           browser.messageManager.removeMessageListener(
             "SavedPasswordEditor:returnlocation", returnHandler);
-          let col = getColumnByName("hostname");
+          let col = getColumnByName("origin");
 
-          for (let i = 0; i < spEditor.signonsTree.view.rowCount; i++)
-            if (spEditor.signonsTree.view.getCellText(i, {id:col.id})
-                == hostname) {
+          for (let i = 0; i < spEditor.signonsTree._view.rowCount; i++)
+            if (spEditor.signonsTree._view.getCellText(i, { id: col.id })
+              == hostname) {
               spEditor.signonsTree.view.selection.select(i);
               setTimeout(
                 () => {
-                  spEditor.signonsTree.treeBoxObject.ensureRowIsVisible(i);
+                  spEditor.signonsTree.ensureRowIsVisible(i);
                 }, 0);
               break;
             }
@@ -104,15 +106,15 @@ window.addEventListener(
       }
     }
 
-    var menuBtnAnon =
-      document.getAnonymousNodes(document.getElementById("speMenuBtn"));
-    var innerBtn = menuBtnAnon[1], dropMarker = menuBtnAnon[2];
-    innerBtn.removeAttribute("class");
-    dropMarker.removeAttribute("class");
-    var innerBtnCS = getComputedStyle(innerBtn),
-        dropMarkerStl = dropMarker.style;
-    dropMarkerStl.marginTop = innerBtnCS.marginTop;
-    dropMarkerStl.marginBottom = innerBtnCS.marginBottom;
+    // var menuBtnAnon =
+    //   document.getAnonymousNodes(document.getElementById("speMenuBtn"));
+    // var innerBtn = menuBtnAnon[1], dropMarker = menuBtnAnon[2];
+    // innerBtn.removeAttribute("class");
+    // dropMarker.removeAttribute("class");
+    // var innerBtnCS = getComputedStyle(innerBtn),
+    //   dropMarkerStl = dropMarker.style;
+    // dropMarkerStl.marginTop = innerBtnCS.marginTop;
+    // dropMarkerStl.marginBottom = innerBtnCS.marginBottom;
   },
   false);
 
@@ -122,7 +124,7 @@ document.getElementById("signonsTree").addEventListener(
     if (!spEditor.selectionsEnabled) return;
     var selections = GetTreeSelections(spEditor.signonsTree);
     if (selections.length > 0
-        && (!window.hasOwnProperty("gSelectUserInUse") || !gSelectUserInUse)) {
+      && (!window.hasOwnProperty("gSelectUserInUse") || !gSelectUserInUse)) {
       document.getElementById("key_editSignon").removeAttribute("disabled");
       document.getElementById("edit_signon").removeAttribute("disabled");
       document.getElementById("visit_site").removeAttribute("disabled");
@@ -146,7 +148,7 @@ document.getElementById("signonsTree").addEventListener(
     }
 
     if (selections.length == 1
-        && (!window.hasOwnProperty("gSelectUserInUse") || !gSelectUserInUse)) {
+      && (!window.hasOwnProperty("gSelectUserInUse") || !gSelectUserInUse)) {
       document.getElementById("key_cloneSignon").removeAttribute("disabled");
       document.getElementById("clone_signon").removeAttribute("disabled");
       document.getElementById("speMenuBtn_cloneSignon").
@@ -168,8 +170,8 @@ var spEditor = {
   pmoStrBundle: null,
   signonsTree: null,
   prefs: Components.classes["@mozilla.org/preferences-service;1"].
-         getService(Components.interfaces.nsIPrefService).
-         getBranch("extensions.savedpasswordeditor."),
+    getService(Components.interfaces.nsIPrefService).
+    getBranch("extensions.savedpasswordeditor."),
 
   selectionsEnabled: true,
   userChangedMenuBtn: false,
@@ -177,24 +179,24 @@ var spEditor = {
   menuBtnSel: function (ev, elem) {
     this.userChangedMenuBtn = true;
     var mb = document.getElementById("speMenuBtn");
-    switch(elem.id) {
-    case "speMenuBtn_editSignon":
-      mb.command = "edit_signon";
-      mb.setAttribute("icon", "properties");
-      this.editSignon();
-      break;
+    switch (elem.id) {
+      case "speMenuBtn_editSignon":
+        mb.command = "edit_signon";
+        mb.setAttribute("icon", "properties");
+        this.editSignon();
+        break;
 
-    case "speMenuBtn_cloneSignon":
-      mb.command = "clone_signon";
-      mb.removeAttribute("icon");
-      this.cloneSignon();
-      break;
+      case "speMenuBtn_cloneSignon":
+        mb.command = "clone_signon";
+        mb.removeAttribute("icon");
+        this.cloneSignon();
+        break;
 
-    case "speMenuBtn_newSignon":
-      mb.command = "new_signon";
-      mb.setAttribute("icon", "add");
-      this.newSignon();
-      break;
+      case "speMenuBtn_newSignon":
+        mb.command = "new_signon";
+        mb.setAttribute("icon", "add");
+        this.newSignon();
+        break;
     }
 
     ev.stopPropagation();
@@ -210,10 +212,10 @@ var spEditor = {
 
     var newSignon =
       Components.classes["@mozilla.org/login-manager/loginInfo;1"].
-      createInstance(Components.interfaces.nsILoginInfo);
+        createInstance(Components.interfaces.nsILoginInfo);
     newSignon.init(merged.hostname, merged.formSubmitURL,
-                   merged.httpRealm, merged.username, merged.password,
-                   merged.usernameField, merged.passwordField);
+      merged.httpRealm, merged.username, merged.password,
+      merged.usernameField, merged.passwordField);
     return newSignon;
   },
 
@@ -255,8 +257,8 @@ var spEditor = {
       Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
         getService(Components.interfaces.nsIPromptService).
         alert(window, this.genStrBundle.getString("error"),
-              this.pmoStrBundle.getFormattedString("badnewentry",
-                                                   [e.message]));
+          this.pmoStrBundle.getFormattedString("badnewentry",
+            [e.message]));
     }
   },
 
@@ -284,28 +286,31 @@ var spEditor = {
       Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
         getService(Components.interfaces.nsIPromptService).
         alert(window, this.genStrBundle.getString("error"),
-              this.pmoStrBundle.getFormattedString("badnewentry",
-                                                   [e.message]));
+          this.pmoStrBundle.getFormattedString("badnewentry",
+            [e.message]));
     }
   },
 
   newSignon: function () {
     this.selectionsEnabled = false;
     var ret = { newSignon: null, callback: null };
-    window.openDialog(
-      "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
-      "centerscreen,dependent,dialog,chrome,modal",
-      [], 0, checkPasswordsShowing(), ret);
+    try {
+      window.openDialog(
+        "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
+        "centerscreen,dependent,dialog,chrome,modal",
+        [], 0, checkPasswordsShowing(), ret);
+    } catch (e) { console.log(e) }
+
     this.selectionsEnabled = true;
     if (!ret.newSignon) return;
     try {
       let newSignon =
         Components.classes["@mozilla.org/login-manager/loginInfo;1"].
-        createInstance(Components.interfaces.nsILoginInfo);
+          createInstance(Components.interfaces.nsILoginInfo);
       newSignon.init(ret.newSignon.hostname, ret.newSignon.formSubmitURL,
-                     ret.newSignon.httpRealm, ret.newSignon.username,
-                     ret.newSignon.password, ret.newSignon.usernameField,
-                     ret.newSignon.passwordField);
+        ret.newSignon.httpRealm, ret.newSignon.username,
+        ret.newSignon.password, ret.newSignon.usernameField,
+        ret.newSignon.passwordField);
       Services.logins.addLogin(newSignon);
       var fv = document.getElementById("filter").value;
       setFilter("");
@@ -315,8 +320,8 @@ var spEditor = {
       Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
         getService(Components.interfaces.nsIPromptService).
         alert(window, this.genStrBundle.getString("error"),
-              this.pmoStrBundle.getFormattedString("badnewentry",
-                                                   [e.message]));
+          this.pmoStrBundle.getFormattedString("badnewentry",
+            [e.message]));
     }
   },
 
@@ -328,7 +333,7 @@ var spEditor = {
     var selSignons = selections.map(el => table[el]);
 
     var curWin =
-        Components.classes["@mozilla.org/appshell/window-mediator;1"].
+      Components.classes["@mozilla.org/appshell/window-mediator;1"].
         getService(Components.interfaces.nsIWindowMediator).
         getMostRecentWindow("navigator:browser");
 
@@ -337,8 +342,9 @@ var spEditor = {
       for (let signon of selSignons) {
         try {
           curWin.openURL(signon.hostname);
-        } catch (e if e.name == "NS_ERROR_MALFORMED_URI") {
-          error = true;
+        } catch (e) {
+          if (e.name == "NS_ERROR_MALFORMED_URI")
+            error = true;
         }
       }
 
@@ -346,8 +352,8 @@ var spEditor = {
         Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
           getService(Components.interfaces.nsIPromptService).
           alert(window, this.genStrBundle.getString("error"),
-                this.pmoStrBundle.getString(
-                  selSignons.length == 1 ? "badurl" : "badmulturl"));
+            this.pmoStrBundle.getString(
+              selSignons.length == 1 ? "badurl" : "badmulturl"));
       }
 
       curWin.focus();

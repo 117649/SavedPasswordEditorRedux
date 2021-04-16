@@ -19,7 +19,7 @@
 "use strict";
 
 Components.utils.import(
-  "resource://savedpasswordeditor/SavedPasswordEditor.jsm");
+  "chrome://savedpasswordeditor/content/SavedPasswordEditor.jsm");
 
 window.addEventListener(
   "load",

@@ -107,9 +107,9 @@ function Startup() {
       }
 
       SignonColumnSort(sortField);
-      Services.telemetry
-        .getKeyedHistogramById("PWMGR_MANAGE_SORTED")
-        .add(sortField);
+      // Services.telemetry
+      //   .getKeyedHistogramById("PWMGR_MANAGE_SORTED")
+      //   .add(sortField);
     });
 
   LoadSignons();
@@ -144,7 +144,7 @@ let signonsTreeView = {
   selection: null,
 
   rowCount: 0,
-  setTree(tree) {},
+  setTree(tree) { },
   getImageSrc(row, column) {
     if (column.element.getAttribute("id") !== "siteCol") {
       return "";
@@ -154,7 +154,7 @@ let signonsTreeView = {
 
     return PlacesUtils.urlWithSizeRef(window, "page-icon:" + signon.origin, 16);
   },
-  getCellValue(row, column) {},
+  getCellValue(row, column) { },
   getCellText(row, column) {
     let time;
     let signon = GetVisibleLogins()[row];
@@ -197,7 +197,7 @@ let signonsTreeView = {
   isContainer(index) {
     return false;
   },
-  cycleHeader(column) {},
+  cycleHeader(column) { },
   getRowProperties(row) {
     return "";
   },
@@ -311,7 +311,7 @@ function LoadSignons() {
   signonsTreeView.rowCount = signons.length;
 
   // sort and display the table
-  signonsTree.view = signonsTreeView;
+  signonsTree.view = signonsTree._view = signonsTreeView;
   // The sort column didn't change. SortTree (called by
   // SignonColumnSort) assumes we want to toggle the sort
   // direction but here we don't so we have to trick it
@@ -452,7 +452,7 @@ async function DeleteAllSignons() {
   removeButton.setAttribute("disabled", "true");
   removeAllButton.setAttribute("disabled", "true");
   FinalizeSignonDeletions(syncNeeded);
-  Services.telemetry.getHistogramById("PWMGR_MANAGE_DELETED_ALL").add(1);
+  // Services.telemetry.getHistogramById("PWMGR_MANAGE_DELETED_ALL").add(1);
   Services.obs.notifyObservers(
     null,
     "weave:telemetry:histogram",
@@ -472,9 +472,9 @@ async function TogglePasswordVisible() {
   // Notify observers that the password visibility toggling is
   // completed.  (Mostly useful for tests)
   Services.obs.notifyObservers(null, "passwordmgr-password-toggle-complete");
-  Services.telemetry
-    .getHistogramById("PWMGR_MANAGE_VISIBILITY_TOGGLED")
-    .add(showingPasswords);
+  // Services.telemetry
+  // .getHistogramById("PWMGR_MANAGE_VISIBILITY_TOGGLED")
+  // .add(showingPasswords);
   Services.obs.notifyObservers(
     null,
     "weave:telemetry:histogram",
@@ -504,7 +504,7 @@ async function AskUserShowPasswords() {
 function FinalizeSignonDeletions(syncNeeded) {
   for (let s = 0; s < deletedSignons.length; s++) {
     Services.logins.removeLogin(deletedSignons[s]);
-    Services.telemetry.getHistogramById("PWMGR_MANAGE_DELETED").add(1);
+    // Services.telemetry.getHistogramById("PWMGR_MANAGE_DELETED").add(1);
     Services.obs.notifyObservers(
       null,
       "weave:telemetry:histogram",
@@ -600,7 +600,7 @@ function SignonClearFilter() {
       signonsTreeView.selection.rangedSelect(range.min, range.max, true);
     }
   } else {
-    signonsTreeView.selection.select(0);
+    signonsTreeView.selection.select(-1);
   }
   signonsTreeView._lastSelectedRanges = [];
 
@@ -718,7 +718,7 @@ async function CopyPassword() {
   let row = signonsTree.currentIndex;
   let password = signonsTreeView.getCellText(row, { id: "passwordCol" });
   clipboard.copyString(password);
-  Services.telemetry.getHistogramById("PWMGR_MANAGE_COPIED_PASSWORD").add(1);
+  // Services.telemetry.getHistogramById("PWMGR_MANAGE_COPIED_PASSWORD").add(1);
   Services.obs.notifyObservers(
     null,
     "weave:telemetry:histogram",
@@ -734,7 +734,7 @@ function CopyUsername() {
   let row = signonsTree.currentIndex;
   let username = signonsTreeView.getCellText(row, { id: "userCol" });
   clipboard.copyString(username);
-  Services.telemetry.getHistogramById("PWMGR_MANAGE_COPIED_USERNAME").add(1);
+  // Services.telemetry.getHistogramById("PWMGR_MANAGE_COPIED_USERNAME").add(1);
   Services.obs.notifyObservers(
     null,
     "weave:telemetry:histogram",

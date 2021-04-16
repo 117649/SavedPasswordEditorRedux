@@ -26,8 +26,47 @@
 
 <prefwindow
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml"
+    onload="customElements.define('prefwindow', PrefWindow); if (window.toString() == '[object ChromeWindow]') window.sizeToContent();"
     id="savedpasswordeditor-prefwindow" title="&prefwindow.title;">
-  <script type="application/javascript" src="chrome://savedpasswordeditor/content/prefs-ce.js"/>
+  <script type="text/javascript">
+	  <![CDATA[
+		// avoid opening prefs in tab, workaround to bug 1414406
+		var {
+		  classes: Cc,
+		  interfaces: Ci,
+		  utils: Cu
+		} = Components;
+		var chromewin = window.docShell.rootTreeItem.domWindow;
+		if (chromewin.location.href !== 'chrome://savedpasswordeditor/content/prefwindow.xhtml') {
+			var gBrowser = chromewin.gBrowser;
+      		let kcTab = gBrowser.selectedTab;
+      		let previousTab;
+      		let lastAccessed  = 0;
+      		for (let tab of gBrowser.tabs) {
+      		  if (!tab._notselectedsinceload && !tab.getAttribute('pending') && tab._lastAccessed > lastAccessed && tab != kcTab) {
+      		    lastAccessed = tab._lastAccessed;
+      		    previousTab = tab;
+      		  }
+      		}
+      		gBrowser.selectedTab = previousTab;
+		  
+      		chromewin.setTimeout(() => {		  
+				chromewin.openDialog('chrome://savedpasswordeditor/content/prefwindow.xhtml', '&prefwindow.title;', 'chrome,centerscreen,toolbar');
+			}, 0);
+
+			gBrowser.removeTab(kcTab);
+		} else {
+		  setTimeout(function () {
+			var navwin = Cc['@mozilla.org/appshell/window-mediator;1']
+							 .getService(Ci.nsIWindowMediator).getMostRecentWindow('navigator:browser');
+			var {SessionStoreInternal} = Cu.import('resource:///modules/sessionstore/SessionStore.jsm', navwin);
+			var data = SessionStoreInternal._windows[navwin.__SSi];
+			if (data._closedTabs && data._closedTabs.length && data._closedTabs[0].state.entries[0].url === 'chrome://savedpasswordeditor/content/prefwindow.xhtml')
+			  data._closedTabs.shift();
+		  }, 0);
+		}
+	  ]]>
+	</script>
 
   <prefpane>
     <preferences>
@@ -60,7 +99,7 @@
                   type="int"/>
     </preferences>
     <html:fieldset>
-      <caption label="&opensp_group.caption;"/>
+      <html:legend>&opensp_group.caption;</html:legend>
       <checkbox id="displayMenuitem_ck" label="&displayMenuitem.label;"
                 tooltiptext="&displayMenuitem.tooltip;"
                 preference="pref-display-menuitem"
@@ -92,13 +131,13 @@
       <label id="entershortcut_lbl" value="&entershortcut.label;"/>
     </html:fieldset>
     <html:fieldset>
-      <caption label="&webpages.caption;"/>
+      <html:legend>&webpages.caption;</html:legend>
       <checkbox id="promptforctxmenudelete_ck"
                 label="&promptforctxmenudelete.label;"
                 preference="pref-confirm-ctxmenu-delete"/>
     </html:fieldset>
     <html:fieldset>
-      <caption label="&modstosavedpasswords.caption;"/>
+      <html:legend>&modstosavedpasswords.caption;</html:legend>
       <checkbox id="preselectcurrentsite_ck"
                 label="&preselectCurrentSite.label;"
                 tooltiptext="&preselectCurrentSite.tooltip;"
@@ -113,7 +152,7 @@
                 preference="pref-forcepromptformasterpassword"/>
     </html:fieldset>
     <html:fieldset>
-      <caption label="&passwordfield_caption.label;"/>
+      <html:legend>&passwordfield_caption.label;</html:legend>
       <radiogroup id="showPassword_rg" preference="pref-showpassword">
         <radio label="&passwordfield_alwayshide.label;" value="0"/>
         <radio label="&passwordfield_alwaysshow.label;" value="1"/>
@@ -124,5 +163,6 @@
       </radiogroup>
     </html:fieldset>
   </prefpane>
+  <script type="application/javascript" src="chrome://savedpasswordeditor/content/prefs-ce.js"/>
   <script type="text/javascript" src="prefwindow.js"/>
 </prefwindow>

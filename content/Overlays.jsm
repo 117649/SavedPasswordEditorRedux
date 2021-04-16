@@ -38,7 +38,7 @@ function setAttribute(obj, attr, val) {
   obj.setAttribute(attr, val);
 }
 
-XPCOMUtils.defineLazyModuleGetter(this, 'Windows', "chrome://savedpasswordeditor/content/bootstrap/Windows.jsm");
+XPCOMUtils.defineLazyModuleGetter(this, 'Windows', "chrome://savedpasswordeditor/content/Windows.jsm");
 
 const Globals = {};
 Globals.widgets = {};

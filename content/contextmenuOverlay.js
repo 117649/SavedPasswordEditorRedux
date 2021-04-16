@@ -19,7 +19,7 @@
 "use strict";
 
 const Cu = Components.utils;
-Cu.import("resource://savedpasswordeditor/SavedPasswordEditor.jsm");
+Cu.import("chrome://savedpasswordeditor/content/SavedPasswordEditor.jsm");
 
 window.messageManager.loadFrameScript(
   "chrome://savedpasswordeditor/content/frame-script.js", true);

@@ -4,6 +4,7 @@
   <RDF:Description about="urn:mozilla:install-manifest">
     <id>savedpasswordeditor@daniel.dawson</id>
     <type>2</type>
+		<bootstrap>true</bootstrap>
     <multiprocessCompatible>true</multiprocessCompatible>
     <name>Saved Password Editor</name>
     <version>2.10.4</version>
@@ -14,6 +15,7 @@
     <iconURL>chrome://savedpasswordeditor/skin/key32.png</iconURL>
     <icon64URL>chrome://savedpasswordeditor/skin/key64.png</icon64URL>
     <optionsURL>chrome://savedpasswordeditor/content/prefwindow.xhtml</optionsURL>
+		<optionsType>3</optionsType>
     <homepageURL>https://addons.mozilla.org/addon/saved-password-editor/</homepageURL>
 
     <targetApplication>

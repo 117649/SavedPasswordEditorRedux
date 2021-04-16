@@ -19,7 +19,7 @@
 "use strict";
 
 const Ci = Components.interfaces, Cu = Components.utils;
-Cu.import("resource://savedpasswordeditor/SavedPasswordEditor-frame.jsm");
+Cu.import("chrome://savedpasswordeditor/content/SavedPasswordEditor-frame.jsm");
 
 addEventListener(
   "contextmenu",

@@ -52,7 +52,7 @@
       shortcutModifiers = [];
       var keyElemModList = keyMods.replace(" ", ",").split(",");
       [["control", "ctrlKey"], ["alt", "altKey"], ["meta", "metaKey"],
-       ["shift", "shiftKey"]].forEach(function (e) {
+      ["shift", "shiftKey"]].forEach(function (e) {
         shortcutModifiers.push(
           [e[1], (keyElemModList.indexOf(e[0]) != -1)]);
       });
@@ -65,11 +65,11 @@
     "keypress",
     function (evt) {
       if (shortcutKeycode != 0 ?
-            evt.keyCode != shortcutKeycode
-            : String.fromCharCode(evt.charCode) != shortcutKey)
+        evt.keyCode != shortcutKeycode
+        : String.fromCharCode(evt.charCode) != shortcutKey)
         return;
 
-      if (!shortcutModifiers.every(function (e) evt[e[0]] == e[1])) return;
+      if (!shortcutModifiers.every((e) => { return evt[e[0]] == e[1] })) return;
       document.getElementById("savedpasswordeditor-command-opensavedpasswords")
         .doCommand();
     },
@@ -77,18 +77,17 @@
 
   window.addEventListener(
     "load",
-    function init_menuitemDynamic (evt) {
+    function init_menuitemDynamic(evt) {
       const prefBranch =
         Components.classes["@mozilla.org/preferences-service;1"].
-        getService(Components.interfaces.nsIPrefService).
-        getBranch("extensions.savedpasswordeditor.");
+          getService(Components.interfaces.nsIPrefService).
+          getBranch("extensions.savedpasswordeditor.");
 
-      function menuitemDynamic (evt) {
+      function menuitemDynamic(evt) {
         var mi = document.getElementById("savedpasswordeditor-toolsmenuitem");
         var renameTo =
-          prefBranch.getComplexValue(
-            "rename_menuitem_to",
-            Components.interfaces.nsISupportsString).data;
+          prefBranch.getStringPref(
+            "rename_menuitem_to");
         if (renameTo) {
           mi.setAttribute("label", renameTo);
           mi.removeAttribute("tooltiptext");
@@ -106,17 +105,16 @@
         return true;
       }
 
-      function register_menuitemDynamic (popup) {
+      function register_menuitemDynamic(popup) {
         if (popup)
           popup.addEventListener("popupshowing", menuitemDynamic, false);
       }
 
-      function appmenuitemDynamic (evt) {
+      function appmenuitemDynamic(evt) {
         var mi = document.getElementById("savedpasswordeditor-appmenuitem");
         var renameTo =
-          prefBranch.getComplexValue(
-            "rename_menuitem_to",
-            Components.interfaces.nsISupportsString).data;
+          prefBranch.getStringPref(
+            "rename_menuitem_to");
         if (renameTo) {
           mi.setAttribute("label", renameTo);
           mi.removeAttribute("tooltiptext");
@@ -134,7 +132,7 @@
         return true;
       }
 
-      function register_appmenuitemDynamic (popup) {
+      function register_appmenuitemDynamic(popup) {
         if (popup)
           popup.addEventListener("popupshowing", appmenuitemDynamic, false);
       }

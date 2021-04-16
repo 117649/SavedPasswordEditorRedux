@@ -19,10 +19,15 @@
 @namespace "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
 #speMenuBtn {
-  -moz-appearance: none;
-  margin: 0px;
+  margin-right: -3px;
   border-width: 0px;
   padding: 0px;
+}
+
+#speMenuBtn + button{
+  -moz-appearance: none;
+  min-width: unset;
+  margin: 0;
 }
 
 #speMenuBtn > button {

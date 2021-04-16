@@ -22,21 +22,24 @@
                  type="text/css"?>
 
 <!DOCTYPE dialog SYSTEM "chrome://savedpasswordeditor/locale/pwdedit.dtd">
-<script src="chrome://savedpasswordeditor/content/qtextbox.js"/>
 
 <dialog id="pwdedit"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml"
         title="&savedpasswordeditor.title;"
         buttons="accept,cancel"
         ondialogaccept="return setNewSignon();">
+  <script type="text/javascript"><![CDATA[
+    this.addEventListener("dialogaccept",_=> {return setNewSignon()});
+    ]]></script>
   <stringbundleset id="stringbundleset">
     <stringbundle id="general-string-bundle"
                   src="chrome://savedpasswordeditor/locale/spe.properties"/>
     <stringbundle id="pwdedit-string-bundle"
                  src="chrome://savedpasswordeditor/locale/pwdedit.properties"/>
   </stringbundleset>
+  <script src="chrome://savedpasswordeditor/content/qtextbox.js"/>
   <script type="text/javascript" src="pwdedit.js"/>
-  <dialogheader id="header"/>
+  <label id="header"/>
   <html:fieldset id="type_groupbox">
     <caption id="type_caption" label="&signontype.label;"/>
     <radiogroup id="type_group" oncommand="handle_typeSelect();">
@@ -48,40 +51,48 @@
              tooltiptext="&type_annotated.tooltip;"/>
     </radiogroup>
   </html:fieldset>
+  <html:style>
+    grid {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+    }
+
+    rows,row{
+      display: contents;
+    }
+    row > :first-child {
+      grid-column-start: 1;
+    }
+  </html:style>
   <grid>
-    <columns>
-      <column/>
-      <column flex="1"/>
-      <column/>
-    </columns>
-    <rows>
-      <row align="center">
+      <html:row align="center">
         <label control="hostname_text" value="&hostname.label;"
                tooltiptext="&hostname.tooltip;"/>
         <html:input id="hostname_text" is="q-textbox"
                  tooltiptext="&hostname.tooltip;"/>
-      </row>
-      <row align="center">
+      </html:row>
+      <html:row align="center">
         <label id="formSubmitURL_lbl" control="formSubmitURL_text"
                value="&formSubmitURL.label;"
                tooltiptext="&formSubmitURL.tooltip;"/>
         <html:input id="formSubmitURL_text" is="q-textbox"
                  tooltiptext="&formSubmitURL.tooltip;"/>
-      </row>
-      <row align="center">
+      </html:row>
+      <html:row align="center">
         <label id="httpRealm_lbl" control="httpRealm_text"
                value="&annotation.label;"
                tooltiptext="&annotation.tooltip;"/>
         <html:input id="httpRealm_text" is="q-textbox"
                  tooltiptext="&annotation.tooltip;"/>
-      </row>
-      <row align="center">
+      </html:row>
+      <html:row align="center">
         <label control="username_text" value="&username.label;"
                tooltiptext="&username.tooltip;"/>
         <html:input id="username_text" is="q-textbox"
                  tooltiptext="&username.tooltip;"/>
-      </row>
-      <row align="center">
+      </html:row>
+      <html:row align="center">
         <label control="password_text" value="&password.label;"
                tooltiptext="&password.tooltip;"/>
         <html:input persist="type" id="password_text" is="q-textbox"
@@ -94,22 +105,21 @@
                 accesskey="&hidePassword.accesskey;"
                 tooltiptext="&showPassword.tooltip;"
                 oncommand="togglePasswordView();" hidden="true"/>
-      </row>
-      <row align="center">
+      </html:row>
+      <html:row align="center">
         <label id="usernameField_lbl" control="usernameField_text"
                value="&usernameField.label;"
                tooltiptext="&usernameField.tooltip;"/>
         <html:input id="usernameField_text" is="q-textbox"
                  tooltiptext="&usernameField.tooltip;"/>
-      </row>
-      <row align="center">
+      </html:row>
+      <html:row align="center">
         <label id="passwordField_lbl" control="passwordField_text"
                align="center" value="&passwordField.label;"
                tooltiptext="&passwordField.tooltip;"/>
         <html:input id="passwordField_text" is="q-textbox"
                  tooltiptext="&passwordField.tooltip;"/>
-      </row>
-    </rows>
+      </html:row>
   </grid>
   <hbox id="guessFromPage_box">
     <button id="guessFromPage_btn" label="&guessfrompage.label;"

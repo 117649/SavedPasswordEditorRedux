@@ -21,13 +21,6 @@
 
         }
 
-        connectedCallback() {
-            if (this.delayConnectedCallback()) {
-                return;
-            }
-
-        }
-
         set indefinite(val) {
             return this.setAttribute("indefinite", val ? "true" : "false");
         }
