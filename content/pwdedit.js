@@ -57,11 +57,11 @@ window.addEventListener(
                         passwordField: "" };
 
     if (editorMode == 0)
-      el("header").setAttribute("value", peStrBundle.getString("newlogin"));
+      $("header").setAttribute("value", peStrBundle.getString("newlogin"));
     else if (editorMode == 2)
-      el("header").setAttribute("value", peStrBundle.getString("clonelogin"));
+      $("header").setAttribute("value", peStrBundle.getString("clonelogin"));
     else
-      el("header").setAttribute(
+      $("header").setAttribute(
         "value", peStrBundle.getString(oldSignons.length > 1 ? "editmultlogin"
                                                            : "editlogin"));
 

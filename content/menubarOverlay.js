@@ -83,11 +83,10 @@
           getService(Components.interfaces.nsIPrefService).
           getBranch("extensions.savedpasswordeditor.");
 
-      function menuitemDynamic(evt) {
+      function menuitemDynamic (evt) {
         var mi = document.getElementById("savedpasswordeditor-toolsmenuitem");
-        var renameTo =
-          prefBranch.getStringPref(
-            "rename_menuitem_to");
+        var renameTo = prefBranch.getStringPref("rename_menuitem_to");
+
         if (renameTo) {
           mi.setAttribute("label", renameTo);
           mi.removeAttribute("tooltiptext");
@@ -110,11 +109,10 @@
           popup.addEventListener("popupshowing", menuitemDynamic, false);
       }
 
-      function appmenuitemDynamic(evt) {
+      function appmenuitemDynamic (evt) {
         var mi = document.getElementById("savedpasswordeditor-appmenuitem");
-        var renameTo =
-          prefBranch.getStringPref(
-            "rename_menuitem_to");
+        var renameTo = prefBranch.getStringPref("rename_menuitem_to");
+
         if (renameTo) {
           mi.setAttribute("label", renameTo);
           mi.removeAttribute("tooltiptext");
