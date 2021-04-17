@@ -26,7 +26,7 @@ function showRestartNotification(verb, window) {
   window.PopupNotifications.show(
     window.gBrowser.selectedBrowser,
     'addon-install-restart',
-    'Saved Password Editor ' + verb + ', but a restart is required to ' + (verb == 'upgraded' || verb == 're-enabled' ? 'enable' : 'remove') + ' add-on functionality.',
+    'Saved Password Editor Redux' + verb + ', but a restart is required to ' + (verb == 'upgraded' || verb == 're-enabled' ? 'enable' : 'remove') + ' add-on functionality.',
     'addons-notification-icon',
     {
       label: 'Restart Now',
