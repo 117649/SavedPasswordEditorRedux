@@ -2,7 +2,7 @@
 
 Saved Password Editor for Waterfox G3 & Firefox Developer Edition (with [userChromeJS](https://github.com/xiaoxiaoflood/firefox-scripts) or [bootstrapLoader](https://github.com/xiaoxiaoflood/firefox-scripts/tree/master/extensions/bootstrapLoader)) - __[download here!](https://github.com/117649/SavedPasswordEditorRedux/releases/latest)__
 
-Originally created by [Daniel Dawson](mailto:danielcdawson@gmail.com)
+Originally created by [Daniel Dawson](https://github.com/ddawson/Saved-Password-Editor)
 
 Please read the tips.
 
