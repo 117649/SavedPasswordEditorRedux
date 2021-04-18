@@ -29,11 +29,11 @@ Cu.import("resource://gre/modules/Services.jsm");
 
 var prefs = Services.prefs.getBranch("extensions.savedpasswordeditor.");
 
-const el = aEl => document.getElementById(aEl);
+const $ = aEl => document.getElementById(aEl);
 
 window.addEventListener(
   "load",
-  function () { el("entershortcut_lbl").style.visibility = "hidden"; },
+  () => { $("entershortcut_lbl").style.visibility = "hidden"; },
   false);
 
 var keycodesToSymbols = {}, symbolsToKeycodes = {};
@@ -77,15 +77,15 @@ var keycodesToSymbols = {}, symbolsToKeycodes = {};
 }
 
 function synctopref () {
-  var value = el("opensp_shortcut_key").value;
+  var value = $("opensp_shortcut_key").value;
   prefs.setIntPref("openspkeycode",
                    value in symbolsToKeycodes ? symbolsToKeycodes[value] : 0);
   return value;
 }
 
 function captureshortcut (evt) {
-  el("entershortcut_lbl").style.visibility = "visible";
-  var btn = el("opensp_keypressrecv");
+  $("entershortcut_lbl").style.visibility = "visible";
+  var btn = $("opensp_keypressrecv");
   btn.addEventListener("keypress", keycapture, false);
   btn.focus();
 }
@@ -94,17 +94,15 @@ function keycapture (evt) {
   var modifiers = [];
   [["ctrlKey", "control"], ["altKey", "alt"],
    ["metaKey", "meta"], ["shiftKey", "shift"]].forEach(
-    function (m, idx, ary) {
-      if (evt[m[0]]) modifiers.push(m[1]);
-    });
+    m => { if (evt[m[0]]) modifiers.push(m[1]); });
   modifiers = modifiers.join(",");
 
   if (evt.charCode == 0 || evt.location == 3 /* keypad */)
     var char = keycodesToSymbols[evt.keyCode];
   else
     var char = String.fromCharCode(evt.charCode);
-  var modTxt = el("opensp_shortcut_modifiers"),
-      keyTxt = el("opensp_shortcut_key");
+  var modTxt = $("opensp_shortcut_modifiers"),
+      keyTxt = $("opensp_shortcut_key");
   modTxt.value = modifiers;
   var inpEvt = document.createEvent("Event");
   inpEvt.initEvent("input", true, true);
@@ -115,25 +113,25 @@ function keycapture (evt) {
   keyTxt.dispatchEvent(inpEvt);
 
   evt.stopPropagation();
-  el("entershortcut_lbl").style.visibility = "hidden";
-  el("opensp_keypressrecv").
+  $("entershortcut_lbl").style.visibility = "hidden";
+  $("opensp_keypressrecv").
     removeEventListener("keypress", keycapture, false);
-  el("opensp_shortcut_capturebtn").focus();
+  $("opensp_shortcut_capturebtn").focus();
 }
 
 function toggle_displayMenuitem () {
-  var rmi_lbl = el("renameMenuitem_lbl"), rmi_text = el("renameMenuitem_text");
-  if (el("displayMenuitem_ck").checked)
+  var rmi_lbl = $("renameMenuitem_lbl"), rmi_text = $("renameMenuitem_text");
+  if ($("displayMenuitem_ck").checked)
     rmi_lbl.disabled = rmi_text.disabled = false;
   else
     rmi_lbl.disabled = rmi_text.disabled = true;
 }
 
 function toggle_alwaysShowPasswords () {
-  var fp_ck = el("forcepromptformasterpassword_ck"),
-      sp_rg = el("showPassword_rg");
+  var fp_ck = $("forcepromptformasterpassword_ck"),
+      sp_rg = $("showPassword_rg");
 
-  if (el("alwaysshowpasswords_ck").checked) {
+  if ($("alwaysshowpasswords_ck").checked) {
     fp_ck.disabled = false;
     sp_rg.disabled = true;
   } else {
@@ -144,11 +142,11 @@ function toggle_alwaysShowPasswords () {
 
 if (Cc["@mozilla.org/xre/app-info;1"].getService(Ci.nsIXULAppInfo).ID ==
     "{a79fe89b-6662-4ff4-8e88-09950ad4dfde}") {
-  el("displayMenuitem_ck").hidden =
-    el("renameMenuitem_lbl").hidden =
-    el("renameMenuitem_text").hidden =
-    el("opensp_shortcut_box").hidden =
-    el("entershortcut_lbl").hidden = true;
+  $("displayMenuitem_ck").hidden =
+    $("renameMenuitem_lbl").hidden =
+    $("renameMenuitem_text").hidden =
+    $("opensp_shortcut_box").hidden =
+    $("entershortcut_lbl").hidden = true;
 } else
   toggle_displayMenuitem();
 

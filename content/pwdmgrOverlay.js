@@ -71,7 +71,7 @@ function showPasswords() {
 
 window.addEventListener(
   "load",
-  function (ev) {
+  function _loadHandler (ev) {
     if (spEditor.prefs.getBoolPref("always_show_passwords"))
       showPasswords();
 
@@ -115,12 +115,13 @@ window.addEventListener(
     //   dropMarkerStl = dropMarker.style;
     // dropMarkerStl.marginTop = innerBtnCS.marginTop;
     // dropMarkerStl.marginBottom = innerBtnCS.marginBottom;
+    window.removeEventListener("load", _loadHandler, false);
   },
   false);
 
 document.getElementById("signonsTree").addEventListener(
   "select",
-  function (ev) {
+  () => {
     if (!spEditor.selectionsEnabled) return;
     var selections = GetTreeSelections(spEditor.signonsTree);
     if (selections.length > 0
@@ -202,7 +203,7 @@ var spEditor = {
     ev.stopPropagation();
   },
 
-  _mergeSignonProps: function (oldSignon, newProps) {
+  _mergeSignonProps: (oldSignon, newProps) => {
     var merged = {};
     for (let prop in newProps)
       if (newProps[prop] === undefined)
@@ -219,7 +220,7 @@ var spEditor = {
     return newSignon;
   },
 
-  _getFilterSet: function () {
+  _getFilterSet: () => {
     if (window.signons) {
       let treeView = signonsTreeView;
       return treeView._filterSet.length ? treeView._filterSet : signons;
@@ -347,7 +348,6 @@ var spEditor = {
             error = true;
         }
       }
-
       if (error) {
         Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
           getService(Components.interfaces.nsIPromptService).

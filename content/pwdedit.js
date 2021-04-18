@@ -18,7 +18,7 @@
 
 "use strict";
 
-const el = aEl => document.getElementById(aEl);
+const $ = aEl => document.getElementById(aEl);
 
 const Cc = Components.classes,
       Ci = Components.interfaces,
@@ -34,7 +34,7 @@ var pwdCurHidden, genStrBundle, peStrBundle, haveOldSignon,
 window.addEventListener(
   "DOMContentLoaded",
   function dclHandler (ev) {
-    var pwdField = el("password_text");
+    var pwdField = $("password_text");
     pwdCurHidden = (pwdField.type == "password");
     pwdField.setAttribute("type", "password");
     window.removeEventListener("DOMContentLoaded", dclHandler, false);
@@ -44,8 +44,8 @@ window.addEventListener(
 window.addEventListener(
   "load",
   function loadHandler (ev) {
-    genStrBundle = el("general-string-bundle");
-    peStrBundle = el("pwdedit-string-bundle");
+    genStrBundle = $("general-string-bundle");
+    peStrBundle = $("pwdedit-string-bundle");
 
     oldSignons = window.arguments[0];
     editorMode = window.arguments[1];
@@ -57,11 +57,11 @@ window.addEventListener(
                         passwordField: "" };
 
     if (editorMode == 0)
-      el("header").setAttribute("value", peStrBundle.getString("newlogin"));
+      $("header").setAttribute("value", peStrBundle.getString("newlogin"));
     else if (editorMode == 2)
-      el("header").setAttribute("value", peStrBundle.getString("clonelogin"));
+      $("header").setAttribute("value", peStrBundle.getString("clonelogin"));
     else
-      el("header").setAttribute(
+      $("header").setAttribute(
         "value", peStrBundle.getString(oldSignons.length > 1 ? "editmultlogin"
                                                            : "editlogin"));
 
@@ -70,7 +70,7 @@ window.addEventListener(
     var props = [ "hostname", "formSubmitURL", "httpRealm",
                   "username", "password", "usernameField", "passwordField" ];
     for (let propName of props) {
-      let tbox = el(propName + "_text");
+      let tbox = $(propName + "_text");
       if (compositeSignon[propName] !== undefined) {
         tbox.indefinite = false;
         tbox.autoreindef = false;
@@ -82,8 +82,8 @@ window.addEventListener(
     }
 
     if (oldSignons.length > 1) {
-      el("type_group").style.display = "none";
-      el("type_caption").style.display = "none";
+      $("type_group").style.display = "none";
+      $("type_caption").style.display = "none";
 
       let haveWebLogin = false, haveAnnotatedLogin = false;
       for (let i = 0; i < oldSignons.length; i++) {
@@ -94,10 +94,10 @@ window.addEventListener(
       }
 
       if (haveAnnotatedLogin)
-        el("formSubmitURL_lbl").disabled = el("formSubmitURL_text").disabled =
+        $("formSubmitURL_lbl").disabled = $("formSubmitURL_text").disabled =
           true;
       if (haveWebLogin)
-        el("httpRealm_lbl").disabled = el("httpRealm_text").disabled =
+        $("httpRealm_lbl").disabled = $("httpRealm_text").disabled =
           true;
 
     } else {
@@ -106,12 +106,12 @@ window.addEventListener(
         type = 0;
       else
         type = 1;
-      el("type_group").selectedIndex = type;
+      $("type_group").selectedIndex = type;
 
       handle_typeSelect();
 
       if (editorMode == 1)
-        el("type_group").disabled = true;
+        $("type_group").disabled = true;
     }
 
     window.setTimeout(afterLoadHandler, 1);
@@ -123,9 +123,9 @@ function afterLoadHandler () {
   var pwdShownInSPWin = window.arguments[2];
   var alwaysShowPwds = prefs.getBoolPref("always_show_passwords");
   var showpwd = prefs.getIntPref("showpassword");
-  var pwdField = el("password_text");
-  var showpwdButton = el("showPassword_btn");
-  var hidepwdButton = el("hidePassword_btn");
+  var pwdField = $("password_text");
+  var showpwdButton = $("showPassword_btn");
+  var hidepwdButton = $("hidePassword_btn");
 
   if (alwaysShowPwds && (pwdShownInSPWin || (haveOldSignon ? login() : true)))
     pwdCurHidden = false;
@@ -187,27 +187,27 @@ function login () {
 }
 
 function handle_typeSelect () {
-  var idx = el("type_group").selectedIndex;
+  var idx = $("type_group").selectedIndex;
   if (idx == 0) {
-    el("formSubmitURL_lbl").disabled = el("formSubmitURL_text").disabled =
-      el("usernameField_lbl").disabled = el("usernameField_text").disabled =
-      el("passwordField_lbl").disabled = el("passwordField_text").disabled =
-      el("guessFromPage_btn").disabled = false;
-    el("httpRealm_lbl").disabled = el("httpRealm_text").disabled = true;
+    $("formSubmitURL_lbl").disabled = $("formSubmitURL_text").disabled =
+      $("usernameField_lbl").disabled = $("usernameField_text").disabled =
+      $("passwordField_lbl").disabled = $("passwordField_text").disabled =
+      $("guessFromPage_btn").disabled = false;
+    $("httpRealm_lbl").disabled = $("httpRealm_text").disabled = true;
   } else {
-    el("formSubmitURL_lbl").disabled = el("formSubmitURL_text").disabled =
-      el("usernameField_lbl").disabled = el("usernameField_text").disabled =
-      el("passwordField_lbl").disabled = el("passwordField_text").disabled =
-      el("guessFromPage_btn").disabled = true;
-    el("httpRealm_lbl").disabled = el("httpRealm_text").disabled = false;
+    $("formSubmitURL_lbl").disabled = $("formSubmitURL_text").disabled =
+      $("usernameField_lbl").disabled = $("usernameField_text").disabled =
+      $("passwordField_lbl").disabled = $("passwordField_text").disabled =
+      $("guessFromPage_btn").disabled = true;
+    $("httpRealm_lbl").disabled = $("httpRealm_text").disabled = false;
   }
 }
 
 function togglePasswordView () {
   var focusTarget;
-  var pwdField = el("password_text");
-  var showpwdButton = el("showPassword_btn");
-  var hidepwdButton = el("hidePassword_btn");
+  var pwdField = $("password_text");
+  var showpwdButton = $("showPassword_btn");
+  var hidepwdButton = $("hidePassword_btn");
   if (pwdField.type == "password") {
     if (pwdField.value != "" && !login()) return;
     pwdField.removeAttribute("type");
@@ -221,7 +221,7 @@ function togglePasswordView () {
     focusTarget = showpwdButton;
   }
 
-  window.setTimeout(function () { focusTarget.focus(); }, 1);
+  window.setTimeout(() => { focusTarget.focus(); }, 1);
 }
 
 function guessParameters () {
@@ -232,8 +232,8 @@ function guessParameters () {
     .gBrowser.selectedBrowser.messageManager;
 
   // Save existing username and password in editor
-  oldUsername = el("username_text").value;
-  oldPassword = el("password_text").value;
+  oldUsername = $("username_text").value;
+  oldPassword = $("password_text").value;
 
   // Ask frame script to find login form(s)
   var resultHandler = {
@@ -250,11 +250,11 @@ function guessParameters () {
       }
 
       if (aLoginForms.length > 1) {
-        el("prevForm_btn").hidden = false;
-        el("nextForm_btn").hidden = false;
+        $("prevForm_btn").hidden = false;
+        $("nextForm_btn").hidden = false;
       } else {
-        el("prevForm_btn").hidden = true;
-        el("nextForm_btn").hidden = true;
+        $("prevForm_btn").hidden = true;
+        $("nextForm_btn").hidden = true;
       }
 
       loginForms = aLoginForms;
@@ -270,34 +270,34 @@ function guessParameters () {
 function _fillFromForm (aIdx) {
   curLoginIdx = aIdx;
   var loginForm = loginForms[aIdx];
-  el("hostname_text").value = loginForm.hostname;
-  el("formSubmitURL_text").value = loginForm.formSubmitURL;
-  el("usernameField_text").value = loginForm.usernameField;
-  el("passwordField_text").value = loginForm.passwordField;
+  $("hostname_text").value = loginForm.hostname;
+  $("formSubmitURL_text").value = loginForm.formSubmitURL;
+  $("usernameField_text").value = loginForm.usernameField;
+  $("passwordField_text").value = loginForm.passwordField;
   if (loginForm.password == "") {
-    el("username_text").value = oldUsername;
-    el("password_text").value = oldPassword;
+    $("username_text").value = oldUsername;
+    $("password_text").value = oldPassword;
   } else {
-    el("username_text").value = loginForm.username;
-    el("password_text").value = loginForm.password;
+    $("username_text").value = loginForm.username;
+    $("password_text").value = loginForm.password;
   }
 
   for (let prfx of ["hostname", "formSubmitURL", "username", "password",
                          "usernameField", "passwordField"]) {
     let chgEvt = document.createEvent("Event");
     chgEvt.initEvent("change", true, true);
-    el(prfx + "_text").dispatchEvent(chgEvt);
+    $(prfx + "_text").dispatchEvent(chgEvt);
   }
 
   if (curLoginIdx == 0)
-    el("prevForm_btn").disabled = true;
+    $("prevForm_btn").disabled = true;
   else
-    el("prevForm_btn").disabled = false;
+    $("prevForm_btn").disabled = false;
 
   if (curLoginIdx == loginForms.length - 1)
-    el("nextForm_btn").disabled = true;
+    $("nextForm_btn").disabled = true;
   else
-    el("nextForm_btn").disabled = false;
+    $("nextForm_btn").disabled = false;
 }
 
 function prevForm () {
@@ -309,13 +309,13 @@ function nextForm () {
 }
 
 function setNewSignon () {
-  var hostname = el("hostname_text"),
-      formSubmitURL = el("formSubmitURL_text"),
-      httpRealm = el("httpRealm_text"),
-      username = el("username_text"),
-      password = el("password_text"),
-      usernameField = el("usernameField_text"),
-      passwordField = el("passwordField_text");
+  var hostname = $("hostname_text"),
+      formSubmitURL = $("formSubmitURL_text"),
+      httpRealm = $("httpRealm_text"),
+      username = $("username_text"),
+      password = $("password_text"),
+      usernameField = $("usernameField_text"),
+      passwordField = $("passwordField_text");
   var newProps = {
     hostname: hostname.qvalue,
     username: username.qvalue,
@@ -325,7 +325,7 @@ function setNewSignon () {
   if (oldSignons.length > 1)
     var type = -1;
   else
-    var type = el("type_group").selectedIndex;
+    var type = $("type_group").selectedIndex;
 
   if (type == -1) {
     newProps.formSubmitURL =
