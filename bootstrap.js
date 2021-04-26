@@ -19,6 +19,7 @@ const man = `
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/browserMenubarOverlay.xhtml
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/toolbarOverlay.xhtml
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/contextmenuOverlay.xhtml
+overlay about:addons                           chrome://savedpasswordeditor/content/aboutaddons.xhtml
 `;
 
 function showRestartNotification(verb, window) {
@@ -93,6 +94,7 @@ function startup(data, reason) {
         await chromeManifest.parse();
         if (_win.document.createXULElement) {
           Overlays.load(chromeManifest, _win.document.defaultView);
+          _win.gBrowser.tabs.filter(x=>x.linkedBrowser.currentURI.spec == 'about:addons' && x.linkedBrowser.contentWindow).forEach(x=>Overlays.load(chromeManifest, x.linkedBrowser.contentWindow));
         }
       }(win));
     }
