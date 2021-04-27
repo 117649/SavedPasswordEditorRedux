@@ -4,6 +4,7 @@
 
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 Cu.import("resource://gre/modules/Services.jsm");
+Cu.import("resource://gre/modules/AddonManager.jsm");
 
 const appinfo = Services.appinfo;
 const options = {
@@ -60,7 +61,9 @@ function showRestartNotification(verb, window) {
   );
 }
 
-function install() { }
+async function install(data, reason) { 
+  (await AddonManager.getAddonByID(`${data.id}`)).__AddonInternal__.signedState = AddonManager.SIGNEDSTATE_NOT_REQUIRED;
+}
 
 function uninstall() { }
 
