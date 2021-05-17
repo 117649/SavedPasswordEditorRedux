@@ -2,7 +2,7 @@
 /* exported install uninstall startup shutdown */
 "use strict";
 
-const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
+const { classes: Cc, interfaces: Ci, utils: Cu } = Components;
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/AddonManager.jsm");
 
@@ -20,7 +20,6 @@ const man = `
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/browserMenubarOverlay.xhtml
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/toolbarOverlay.xhtml
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/contextmenuOverlay.xhtml
-overlay about:addons                           chrome://savedpasswordeditor/content/aboutaddons.xhtml
 `;
 
 function showRestartNotification(verb, window) {
@@ -49,7 +48,7 @@ function showRestartNotification(verb, window) {
     [{
       label: 'Not Now',
       accessKey: 'N',
-      callback: () => {},
+      callback: () => { },
     }],
     {
       popupIconURL: 'chrome://savedpasswordeditor/skin/addon-install-restart.svg',
@@ -61,8 +60,8 @@ function showRestartNotification(verb, window) {
   );
 }
 
-async function install(data, reason) { 
-  (await AddonManager.getAddonByID(`${data.id}`)).__AddonInternal__.signedState = AddonManager.SIGNEDSTATE_NOT_REQUIRED;
+function install(data, reason) {
+
 }
 
 function uninstall() { }
@@ -72,9 +71,9 @@ function startup(data, reason) {
   try {
     var loader = new DefaultPreferencesLoader();
     loader.parseUri(
-        "chrome://savedpasswordeditor-defaults/content/preferences/prefs.js");
-  } catch (ex) {}
-  
+      "chrome://savedpasswordeditor-defaults/content/preferences/prefs.js");
+  } catch (ex) { }
+
   Components.utils.import("chrome://savedpasswordeditor/content/ChromeManifest.jsm");
   Components.utils.import("chrome://savedpasswordeditor/content/Overlays.jsm");
   Components.utils.import("resource:///modules/CustomizableUI.jsm");
@@ -90,20 +89,19 @@ function startup(data, reason) {
     while (enumerator.hasMoreElements()) {
       const win = enumerator.getNext();
 
-      (async function(_win) {
+      (async function (_win) {
         const chromeManifest = new ChromeManifest(() => {
           return man;
         }, options);
         await chromeManifest.parse();
         if (_win.document.createXULElement) {
           Overlays.load(chromeManifest, _win.document.defaultView);
-          _win.gBrowser.tabs.filter(x=>x.linkedBrowser.currentURI.spec == 'about:addons' && x.linkedBrowser.contentWindow).forEach(x=>Overlays.load(chromeManifest, x.linkedBrowser.contentWindow));
         }
       }(win));
     }
   }
 
-  (async function() {
+  (async function () {
     const chromeManifest = new ChromeManifest(() => {
       return man;
     }, options);
@@ -117,6 +115,14 @@ function startup(data, reason) {
       }
     };
     Services.obs.addObserver(documentObserver, "chrome-document-loaded");
+  }());
+
+  (async function () {
+    try {
+      Services.prefs.getBoolPref("extensions.savedpasswordeditor.hide_warring") ?
+        (await AddonManager.getAddonByID(`${data.id}`)).__AddonInternal__.signedState = AddonManager.SIGNEDSTATE_NOT_REQUIRED
+        : (await AddonManager.getAddonByID(`${data.id}`)).__AddonInternal__.signedState === AddonManager.SIGNEDSTATE_NOT_REQUIRED ? (await AddonManager.getAddonByID(`${data.id}`)).__AddonInternal__.signedState = AddonManager.SIGNEDSTATE_MISSING : '';
+    } catch (error) { }
   }());
 }
 

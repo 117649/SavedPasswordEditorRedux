@@ -13,7 +13,7 @@
     <contributor>PlastikManiac (key icon) - http://plastikmaniac.deviantart.com/</contributor>
     <iconURL>chrome://savedpasswordeditor/skin/key32.png</iconURL>
     <optionsURL>chrome://savedpasswordeditor/content/prefwindow.xhtml</optionsURL>
-    <optionsType>3</optionsType>
+    <optionsType>1</optionsType>
     <homepageURL>https://addons.thunderbird.net/addon/classic-password-editor/</homepageURL>
 
     <icon64URL>chrome://savedpasswordeditor/skin/key64.png</icon64URL>
