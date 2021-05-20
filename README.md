@@ -11,3 +11,4 @@ Please read the tips.
   * I just tossed old files [someone saved](https://github.com/xiaoxiaoflood/firefox-scripts/tree/master/chrome/utils/passwordmgr) and addon's code together. Sadly no l10n files were packed thus password manager will only display in english.
 * :warning: If using Waterfox and/or bootstrapLoader the browser __must__ be restarted after installation!
   * (If using userChromeJS the startup cache may need to be cleared between updates.)
+* You can hide warring for signature in `about:addons` by create and set extensions.savedpasswordeditor.hide_warring to true in about:config.
