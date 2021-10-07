@@ -665,112 +665,20 @@ class Overlays {
 
     const widget = CustomizableUI.getWidget(id);
     if (!widget || widget.provider != CustomizableUI.PROVIDER_API) {
-      // this needs the binding applied on the toolbar in order for the widget to be immediately placed there,
-      // and since its placements won't be restored until it's created, we have to search for it in all existing areas
-      let areaId = null;
-      const areas = CustomizableUI.areas;
-      for (const area of areas) {
-        // this will throw if called too early for an area whose placements have not been fetched yet,
-        // it's ok because once they are, the widget will be placed in it anyway
-        try {
-          const inArea = CustomizableUI.getWidgetIdsInArea(area);
-          if (inArea.indexOf(id) > -1) {
-            if (CustomizableUI.getAreaType(area) != CustomizableUI.TYPE_TOOLBAR) {
-              break;
-            }
-
-            areaId = area;
-            this.tempAppendAllToolbars(aWindow, area);
-            break;
-          }
-        } catch (ex) { }
-      }
-
       try {
         CustomizableUI.createWidget(this.getWidgetData(aWindow, node, palette));
       } catch (ex) {
         Cu.reportError(ex);
       }
-
-      if (areaId) {
-        this.tempRestoreAllToolbars(aWindow, areaId);
-      }
     } else {
-      const placement = CustomizableUI.getPlacementOfWidget(id, aWindow);
-      const areaNode = (placement) ? aWindow.document.getElementById(placement.area) : null;
-      if (areaNode && areaNode.nodeName == 'toolbar' && !areaNode._init) {
-        this.tempAppendToolbar(aWindow, areaNode);
-      }
-
       try {
         CustomizableUI.ensureWidgetPlacedInWindow(id, aWindow);
       } catch (ex) {
         Cu.reportError(ex);
       }
-
-      if (areaNode) {
-        this.tempRestoreToolbar(areaNode);
-      }
     }
 
-    // this.traceBack(aWindow, {
-    // 	action: 'appendButton',
-    // 	node: node
-    // });
     return node;
-  }
-
-  tempAppendToolbar(aWindow, node) {
-    if (node.tempAppend) {
-      Cu.reportError('tempAppend already exists!');
-      return;
-    }
-
-    node.tempAppend = {
-      parent: node.parentNode,
-      sibling: node.nextSibling,
-      container: aWindow.document.createElement('box')
-    };
-
-    setAttribute(node.tempAppend.container, 'style', 'position: fixed; top: 4000px; left: 4000px; opacity: 0.001;');
-    aWindow.document.documentElement.appendChild(node.tempAppend.container);
-
-    try {
-      node.tempAppend.container.appendChild(node);
-    } catch (ex) {
-      Cu.reportError(ex);
-    }
-  }
-
-  tempRestoreToolbar(node) {
-    if (node.tempAppend) {
-      try {
-        node.tempAppend.parent.insertBefore(node.tempAppend.container.firstChild, node.tempAppend.sibling);
-      } catch (ex) {
-        Cu.reportError(ex);
-      }
-
-      node.tempAppend.container.parentNode.removeChild(node.tempAppend.container);
-      delete node.tempAppend;
-    }
-  }
-
-  tempAppendAllToolbars(aWindow, aToolbarId) {
-    Windows.callOnAll(bWindow => {
-      const wToolbar = bWindow.document.getElementById(aToolbarId);
-      if (wToolbar && !wToolbar._init) {
-        this.tempAppendToolbar(bWindow, wToolbar);
-      }
-    }, aWindow.document.documentElement.getAttribute('windowtype'));
-  }
-
-  tempRestoreAllToolbars(aWindow, aToolbarId) {
-    Windows.callOnAll(bWindow => {
-      const wToolbar = bWindow.document.getElementById(aToolbarId);
-      if (wToolbar) {
-        this.tempRestoreToolbar(wToolbar);
-      }
-    }, aWindow.document.documentElement.getAttribute('windowtype'));
   }
 
   getWidgetData(aWindow, node, palette) {
