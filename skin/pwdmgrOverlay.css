@@ -27,7 +27,7 @@
 #speMenuBtn + button{
   -moz-appearance: none;
   min-width: unset;
-  margin: 0;
+  /* margin: 0; */
 }
 
 #speMenuBtn > button {
