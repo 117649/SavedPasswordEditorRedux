@@ -4,11 +4,21 @@
 "use strict";
 
 const {AppConstants} = ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+const {ChromeManifest} = ChromeUtils.import("chrome://savedpasswordeditor/content/ChromeManifest.jsm");
+const {Overlays} = ChromeUtils.import("chrome://savedpasswordeditor/content/Overlays.jsm");
+const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-//delay connectedCallback() of tabs till prefwindow is defined so it won't be run multiple times and cause trouble.
+// delay connectedCallback() of tabs till tabs inserted into DOM so it won't be run multiple times and cause trouble.
+let delayTabsConnectedCallback = false;
 customElements.get('tabs').prototype.delayConnectedCallback = function() {
-  return !customElements.get('prefwindow');
+  return delayTabsConnectedCallback;
 };
+
+Object.defineProperty(customElements.get("tab").prototype, "container", {
+  get() {
+    return this.parentNode;
+  }
+});
 
 class Preferences extends MozXULElement {
   constructor() {
@@ -19,10 +29,10 @@ class Preferences extends MozXULElement {
       this.observe(subject, topic, data);
     };
 
-    this.service = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService);
-    this.rootBranch = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
+    this.service = Services.prefs;
+    this.rootBranch = Services.prefs;
     this.defaultBranch = this.service.getDefaultBranch("");
-    this.rootBranchInternal = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
+    this.rootBranchInternal = Services.prefs;
 
     /**
      * We want to call _constructAfterChildren after all child
@@ -126,8 +136,7 @@ class Preference extends MozXULElement {
     // from any previous opens of a child dialog instead of the value from
     // preferences, to pick up any edits a user may have made.
 
-    const secMan = Cc["@mozilla.org/scriptsecuritymanager;1"]
-        .getService(Ci.nsIScriptSecurityManager);
+    const secMan = Services.scriptSecurityManager;
     if (this.preferences.type == "child" &&
         !this.instantApply && window.opener &&
         secMan.isSystemPrincipal(window.opener.document.nodePrincipal)) {
@@ -406,11 +415,9 @@ class Preference extends MozXULElement {
   }
 
   _reportUnknownType() {
-    const consoleService = Cc["@mozilla.org/consoleservice;1"]
-        .getService(Ci.nsIConsoleService);
     const msg = "<preference> with id='" + this.id + "' and name='" +
               this.name + "' has unknown type '" + this.type + "'.";
-    consoleService.logStringMessage(msg);
+    Services.console.logStringMessage(msg);
   }
 
   setElementValue(aElement) {
@@ -483,6 +490,11 @@ class Preference extends MozXULElement {
       }
     }
 
+    const preference = document.getElementById(aElement.getAttribute("preference"));
+    return preference.getValueByType(aElement);
+  }
+
+  getValueByType(aElement) {
     /**
      * Read the value of an attribute from an element, assuming the
      * attribute is a property on the element's node API. If the property
@@ -598,18 +610,8 @@ class PrefPane extends MozXULElement {
   }
 
   connectedCallback() {
-    if (this._initialized) {
+    if (this._initialized || !this.loaded) {
       return;
-    }
-
-    // PrefPane overlay have to be move earlier to here otherwise tabs elements won't load properly. see ln 1551
-    // But this may be the cause of EMSG <Uncaught (in promise) undefined> shows up
-    if (this.src) {
-      Components.utils.import("chrome://savedpasswordeditor/content/ChromeManifest.jsm");
-      Components.utils.import("chrome://savedpasswordeditor/content/Overlays.jsm");
-
-      const ov = new Overlays(new ChromeManifest(), window.document.defaultView);
-      ov.load(this.src);
     }
 
     const fragment = this.fragment;
@@ -617,9 +619,9 @@ class PrefPane extends MozXULElement {
     const childNodes = [...this.childNodes];
     this.appendChild(fragment);
     contentBox.append(...childNodes);
+
     this.initializeAttributeInheritance();
 
-    this._loaded = false;
     this._deferredValueUpdateElements = new Set();
     this._content = this.getElementsByClassName('content-box')[0];
 
@@ -693,15 +695,14 @@ class PrefPane extends MozXULElement {
   }
 
   get DeferredTask() {
-    const module = {};
-    ChromeUtils.import("resource://gre/modules/DeferredTask.jsm", module);
+    const {DeferredTask} = ChromeUtils.import("resource://gre/modules/DeferredTask.jsm");
     Object.defineProperty(this, "DeferredTask", {
       configurable: true,
       enumerable: true,
       writable: true,
-      value: module.DeferredTask,
+      value: DeferredTask,
     });
-    return module.DeferredTask;
+    return DeferredTask;
   }
 
   get contentHeight() {
@@ -712,6 +713,9 @@ class PrefPane extends MozXULElement {
   }
 
   writePreferences(aFlushToDisk) {
+    if (!this.loaded) {
+      return;
+    }
     // Write all values to preferences.
     if (this._deferredValueUpdateElements.size) {
       this._finalizeDeferredElements();
@@ -725,9 +729,7 @@ class PrefPane extends MozXULElement {
       preference.batching = false;
     }
     if (aFlushToDisk) {
-      const psvc = Cc["@mozilla.org/preferences-service;1"]
-          .getService(Ci.nsIPrefService);
-      psvc.savePrefFile(null);
+      Services.prefs.savePrefFile(null);
     }
   }
 
@@ -909,6 +911,26 @@ class PaneButton extends customElements.get('radio') {
 }
 
 class PrefWindow extends MozXULElement {
+  /**
+   * Derived bindings can set this to true to cause us to skip
+   * reading the browser.preferences.instantApply pref in the constructor.
+   * Then they can set instantApply to their wished value. -->
+   */
+  _instantApplyInitialized = false;
+  // Controls whether changed pref values take effect immediately.
+  instantApply = false;
+  _currentPane = null;
+  _initialized = false;
+  _animateTimer = null;
+  _fadeTimer = null;
+  _animateDelay = 15;
+  _animateIncrement = 40;
+  _fadeDelay = 5;
+  _fadeIncrement = 0.40;
+  _animateRemainder = 0;
+  _currentHeight = 0;
+  _multiplier = 0;
+
   constructor() {
     super();
 
@@ -919,8 +941,7 @@ class PrefWindow extends MozXULElement {
         return false;
       }
 
-      const secMan = Cc["@mozilla.org/scriptsecuritymanager;1"]
-          .getService(Ci.nsIScriptSecurityManager);
+      const secMan = Services.scriptSecurityManager;
       if (this.type == "child" && window.opener &&
           secMan.isSystemPrincipal(window.opener.document.nodePrincipal)) {
         const pdocEl = window.opener.document.documentElement;
@@ -976,11 +997,9 @@ class PrefWindow extends MozXULElement {
         for (let i = 0; i < panes.length; ++i)
           panes[i].writePreferences(false);
 
-        const psvc = Cc["@mozilla.org/preferences-service;1"]
-            .getService(Ci.nsIPrefService);
-        psvc.savePrefFile(null);
-      }
-
+          Services.prefs.savePrefFile(null);
+        }
+  
       return true;
     });
 
@@ -1050,7 +1069,7 @@ class PrefWindow extends MozXULElement {
   }
 
   connectedCallback() {
-    if (this._initialized) {
+    if (this._initialized || this.delayConnectedCallback()) {
       return;
     }
 
@@ -1070,11 +1089,17 @@ class PrefWindow extends MozXULElement {
     fragmentLastChild.append(...otherChildren);
 
     updateAttribute("dlgbuttons", "accept,cancel");
-    updateAttribute("persist", "lastSelected screenX screenY");
-    updateAttribute("closebuttonlabel", MozXULElement.parseXULToFragment(`<div attr="&uiTour.infoPanel.close;" />`, ["chrome://browser/locale/browser.dtd"]).childNodes[0].attributes[0].value);
-    updateAttribute("closebuttonaccesskey", "C");
+    updateAttribute("persist", "screenX screenY");
     updateAttribute("role", "dialog");
-    updateAttribute("title", MozXULElement.parseXULToFragment(`<div attr="&preferencesCmd2.label;" />`, ["chrome://browser/locale/browser.dtd"]).childNodes[0].attributes[0].value);
+
+    // get close button label
+    MozXULElement.insertFTLIfNeeded("toolkit/printing/printPreview.ftl");
+    const closeButton = this.querySelector("button[dlgtype='cancel']");
+    document.l10n.setAttributes(closeButton, "printpreview-close");
+    document.l10n.translateElements([closeButton]).then(() => {
+      updateAttribute("closebuttonlabel", closeButton.getAttribute("label"));
+      updateAttribute("closebuttonaccesskey", closeButton.getAttribute("accesskey"));
+    });
 
     if (this.hasAttribute("ondialogaccept")) {
       const f = new Function("event", this.getAttribute("ondialogaccept"));
@@ -1100,27 +1125,6 @@ class PrefWindow extends MozXULElement {
       const f = new Function("event", this.getAttribute("ondialogdisclosure"));
       this.addEventListener("dialogdisclosure", event => f.call(this, event));
     }
-    /**
-     * Derived bindings can set this to true to cause us to skip
-     * reading the browser.preferences.instantApply pref in the constructor.
-     * Then they can set instantApply to their wished value. -->
-     */
-    this._instantApplyInitialized = false;
-
-    // Controls whether changed pref values take effect immediately.
-    this.instantApply = false;
-
-    this._currentPane = null;
-    this._initialized = false;
-    this._animateTimer = null;
-    this._fadeTimer = null;
-    this._animateDelay = 15;
-    this._animateIncrement = 40;
-    this._fadeDelay = 5;
-    this._fadeIncrement = 0.40;
-    this._animateRemainder = 0;
-    this._currentHeight = 0;
-    this._multiplier = 0;
 
     window.addEventListener("unload", this.disconnectedCallback);
 
@@ -1203,8 +1207,7 @@ class PrefWindow extends MozXULElement {
         if (!this._mStrBundle) {
           // need to create string bundle manually instead of using <xul:stringbundle/>
           // see bug 63370 for details
-          this._mStrBundle = Cc["@mozilla.org/intl/stringbundle;1"]
-              .getService(Ci.nsIStringBundleService)
+          this._mStrBundle = Services.strings
               .createBundle("chrome://global/locale/dialog.properties");
         }
         return this._mStrBundle;
@@ -1426,9 +1429,7 @@ class PrefWindow extends MozXULElement {
 
     if (this.type != "child") {
       if (!this._instantApplyInitialized) {
-        const psvc = Cc["@mozilla.org/preferences-service;1"]
-            .getService(Ci.nsIPrefBranch);
-        this.instantApply = psvc.getBoolPref("browser.preferences.instantApply");
+        this.instantApply = Services.prefs.getBoolPref("browser.preferences.instantApply");
       }
       if (this.instantApply) {
         const docElt = document.documentElement;
@@ -1509,13 +1510,17 @@ class PrefWindow extends MozXULElement {
   }
 
   get lastSelected() {
+    if (!this.hasAttribute("lastSelected")) {
+      const val = Services.xulStore.getValue(this, "persist", "lastSelected");
+      this.setAttribute('lastSelected', val);
+      return val;
+    }
     return this.getAttribute('lastSelected');
   }
 
   set lastSelected(val) {
     this.setAttribute("lastSelected", val);
-    const {Services} = ChromeUtils.import('resource://gre/modules/Services.jsm');
-    Services.xulStore.persist(this, "lastSelected");
+    Services.xulStore.setValue(this, "persist", "lastSelected", val);
     return val;
   }
 
@@ -1531,9 +1536,7 @@ class PrefWindow extends MozXULElement {
   }
 
   get _shouldAnimate() {
-    const psvc = Cc["@mozilla.org/preferences-service;1"]
-        .getService(Ci.nsIPrefBranch);
-    return psvc.getBoolPref("browser.preferences.animateFadeIn",
+    return Services.prefs.getBoolPref("browser.preferences.animateFadeIn",
       /Mac/.test(navigator.platform));
   }
 
@@ -1570,29 +1573,31 @@ class PrefWindow extends MozXULElement {
     if (!aPaneElement)
       return;
 
-    this._selector.selectedItem = document.getElementsByAttribute("pane", aPaneElement.id)[0];
-    if (!aPaneElement.loaded) {
-      const OverlayLoadObserver = function(aPane) {
-        this._pane = aPane;
-      };
-      OverlayLoadObserver.prototype = {
-        _outer: this,
-        observe() {
-          this._pane.loaded = true;
-          this._outer._fireEvent("paneload", this._pane);
-          this._outer._selectPane(this._pane);
+      this._selector.selectedItem = document.getElementsByAttribute("pane", aPaneElement.id)[0];
+      if (!aPaneElement.loaded) {
+        delayTabsConnectedCallback = true;
+        const src = aPaneElement.src;
+        if (src) {
+          const ov = new Overlays(new ChromeManifest(), window.document.defaultView);
+          ov.load(src).then(() => this._paneLoaded(aPaneElement));
+        } else {
+          this._paneLoaded(aPaneElement);
         }
-      };
-
-      const obs = new OverlayLoadObserver(aPaneElement);
-
-      // Pane overlay have to be move to earlier stage to load properly 
-      // document.loadOverlay(aPaneElement.src, obs);
-      obs.observe();
-    } else
+      } else
+        this._selectPane(aPaneElement);
+    }
+  
+    _paneLoaded(aPaneElement) {
+      aPaneElement.loaded = true;
+      aPaneElement.connectedCallback();
+      // now we can safely call connectedCallback for all tabs in this PrefPane
+      delayTabsConnectedCallback = false;
+      aPaneElement.querySelectorAll("tabs").forEach(tabs => tabs.connectedCallback());
+  
+      this._fireEvent("paneload", aPaneElement);
       this._selectPane(aPaneElement);
-  }
-
+    }
+  
   _fireEvent(aEventName, aTarget) {
     // Panel loaded, synthesize a load event.
     try {
@@ -1760,9 +1765,7 @@ class PrefWindow extends MozXULElement {
   }
 
   openWindow(aWindowType, aURL, aFeatures, aParams) {
-    const wm = Cc["@mozilla.org/appshell/window-mediator;1"]
-        .getService(Ci.nsIWindowMediator);
-    let win = aWindowType ? wm.getMostRecentWindow(aWindowType) : null;
+    let win = aWindowType ? Services.wm.getMostRecentWindow(aWindowType) : null;
     if (win) {
       if ("initWithParams" in win)
         win.initWithParams(aParams);
