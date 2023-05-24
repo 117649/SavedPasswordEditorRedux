@@ -37,6 +37,7 @@ prefwindow,
 prefwindow:root /* override :root from above */, 
 prefpane {
   -moz-box-orient: vertical;
+  flex-direction: column;
 }
 
 prefwindow > .paneDeckContainer {
