@@ -4,21 +4,17 @@
 
 /** * =================== SAVED SIGNONS CODE =================== ***/
 /* eslint-disable-next-line no-var */
-var { AppConstants } = ChromeUtils.import(
-  "resource://gre/modules/AppConstants.jsm"
+var { AppConstants } = ChromeUtils.importESModule(
+  "resource://gre/modules/AppConstants.sys.mjs"
 );
 /* eslint-disable-next-line no-var */
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-ChromeUtils.defineModuleGetter(
+ChromeUtils.defineESModuleGetters(
   this,
-  "DeferredTask",
-  "resource://gre/modules/DeferredTask.jsm"
-);
-ChromeUtils.defineModuleGetter(
-  this,
-  "PlacesUtils",
-  "resource://gre/modules/PlacesUtils.jsm"
+  {DeferredTask:
+  "resource://gre/modules/DeferredTask.sys.mjs",
+  PlacesUtils:
+  "resource://gre/modules/PlacesUtils.sys.mjs"}
 );
 
 // Default value for signon table sorting
@@ -40,7 +36,7 @@ let removeAllButton;
 let signonsTree;
 
 let signonReloadDisplay = {
-  observe(subject, topic, data) {
+  async observe(subject, topic, data) {
     if (topic == "passwordmgr-storage-changed") {
       switch (data) {
         case "addLogin":
@@ -51,10 +47,10 @@ let signonReloadDisplay = {
             return;
           }
           signons.length = 0;
-          LoadSignons();
+          await LoadSignons();
           // apply the filter if needed
           if (filterField && filterField.value != "") {
-            FilterPasswords();
+            await FilterPasswords();
           }
           signonsTree.ensureRowIsVisible(
             signonsTree.view.selection.currentIndex
@@ -75,7 +71,7 @@ let dateAndTimeFormatter = new Services.intl.DateTimeFormat(undefined, {
   timeStyle: "short",
 });
 
-function Startup() {
+async function Startup() {
   // be prepared to reload the display if anything changes
   Services.obs.addObserver(signonReloadDisplay, "passwordmgr-storage-changed");
 
@@ -112,7 +108,7 @@ function Startup() {
       //   .add(sortField);
     });
 
-  LoadSignons();
+  await LoadSignons();
 
   // filter the table if requested by caller
   if (
@@ -120,7 +116,7 @@ function Startup() {
     window.arguments[0] &&
     window.arguments[0].filterString
   ) {
-    setFilter(window.arguments[0].filterString);
+    await setFilter(window.arguments[0].filterString);
   }
 
   FocusFilterBox();
@@ -133,9 +129,9 @@ function Shutdown() {
   );
 }
 
-function setFilter(aFilterString) {
+async function setFilter(aFilterString) {
   filterField.value = aFilterString;
-  FilterPasswords();
+  await FilterPasswords();
 }
 
 let signonsTreeView = {
@@ -151,6 +147,7 @@ let signonsTreeView = {
     }
 
     const signon = GetVisibleLogins()[row];
+    if(!signon) return;
 
     return PlacesUtils.urlWithSizeRef(window, "page-icon:" + signon.origin, 16);
   },
@@ -158,6 +155,7 @@ let signonsTreeView = {
   getCellText(row, column) {
     let time;
     let signon = GetVisibleLogins()[row];
+    if(!signon) return;
     switch (column.id) {
       case "siteCol":
         return signon.httpRealm
@@ -300,10 +298,10 @@ function SortTree(column, ascending) {
   }
 }
 
-function LoadSignons() {
+async function LoadSignons() {
   // loads signons into table
   try {
-    signons = Services.logins.getAllLogins();
+    signons = await Services.logins.getAllLogins();
   } catch (e) {
     signons = [];
   }
@@ -311,6 +309,7 @@ function LoadSignons() {
   signonsTreeView.rowCount = signons.length;
 
   // sort and display the table
+  signonsTree.view = null;
   signonsTree.view = signonsTree._view = signonsTreeView;
   // The sort column didn't change. SortTree (called by
   // SignonColumnSort) assumes we want to toggle the sort
@@ -364,7 +363,7 @@ function SignonSelected() {
   }
 }
 
-function DeleteSignon() {
+async function DeleteSignon() {
   let syncNeeded = !!signonsTreeView._filterSet.length;
   let tree = signonsTree;
   let view = signonsTreeView;
@@ -406,7 +405,7 @@ function DeleteSignon() {
     removeAllButton.setAttribute("disabled", "true");
   }
   tree.view.selection.selectEventsSuppressed = false;
-  FinalizeSignonDeletions(syncNeeded);
+  await FinalizeSignonDeletions(syncNeeded);
 }
 
 async function DeleteAllSignons() {
@@ -451,7 +450,7 @@ async function DeleteAllSignons() {
   // disable buttons
   removeButton.setAttribute("disabled", "true");
   removeAllButton.setAttribute("disabled", "true");
-  FinalizeSignonDeletions(syncNeeded);
+  await FinalizeSignonDeletions(syncNeeded);
   // Services.telemetry.getHistogramById("PWMGR_MANAGE_DELETED_ALL").add(1);
   Services.obs.notifyObservers(
     null,
@@ -466,7 +465,7 @@ async function TogglePasswordVisible() {
     togglePasswordsButton.label = showingPasswords ? "Hide Passwords" : "Show Passwords";
     togglePasswordsButton.accessKey = "P";
     document.getElementById("passwordCol").hidden = !showingPasswords;
-    FilterPasswords();
+    await FilterPasswords();
   }
 
   // Notify observers that the password visibility toggling is
@@ -501,8 +500,9 @@ async function AskUserShowPasswords() {
   ); // 0=="Yes" button
 }
 
-function FinalizeSignonDeletions(syncNeeded) {
+async function FinalizeSignonDeletions(syncNeeded) {
   for (let s = 0; s < deletedSignons.length; s++) {
+    if(!deletedSignons[s]) continue;
     Services.logins.removeLogin(deletedSignons[s]);
     // Services.telemetry.getHistogramById("PWMGR_MANAGE_DELETED").add(1);
     Services.obs.notifyObservers(
@@ -515,7 +515,7 @@ function FinalizeSignonDeletions(syncNeeded) {
   // See bug 405389.
   if (syncNeeded) {
     try {
-      signons = Services.logins.getAllLogins();
+      signons = await Services.logins.getAllLogins();
     } catch (e) {
       signons = [];
     }
@@ -523,7 +523,7 @@ function FinalizeSignonDeletions(syncNeeded) {
   deletedSignons.length = 0;
 }
 
-function HandleSignonKeyPress(e) {
+async function HandleSignonKeyPress(e) {
   // If editing is currently performed, don't do anything.
   if (signonsTree.getAttribute("editing")) {
     return;
@@ -533,7 +533,7 @@ function HandleSignonKeyPress(e) {
     (AppConstants.platform == "macosx" &&
       e.keyCode == KeyboardEvent.DOM_VK_BACK_SPACE)
   ) {
-    DeleteSignon();
+    await DeleteSignon();
     e.preventDefault();
   }
 }
@@ -581,8 +581,8 @@ function SignonColumnSort(column) {
   );
 }
 
-function SignonClearFilter() {
-  let singleSelection = signonsTreeView.selection.count == 1;
+async function SignonClearFilter() {
+  let singleSelection = signonsTreeView.selection?.count == 1;
 
   // Clear the Tree Display
   signonsTreeView.rowCount = 0;
@@ -590,7 +590,7 @@ function SignonClearFilter() {
   signonsTreeView._filterSet = [];
 
   // Just reload the list to make sure deletions are respected
-  LoadSignons();
+  await LoadSignons();
 
   // Restore selection
   if (singleSelection) {
@@ -663,9 +663,9 @@ function SignonSaveState() {
   }
 }
 
-function FilterPasswords() {
+async function FilterPasswords() {
   if (filterField.value == "") {
-    SignonClearFilter();
+    await SignonClearFilter();
     return;
   }
 
@@ -835,8 +835,8 @@ function escapeKeyHandler() {
 }
 
 function OpenMigrator() {
-  const { MigrationUtils } = ChromeUtils.import(
-    "resource:///modules/MigrationUtils.jsm"
+  const { MigrationUtils } = ChromeUtils.importESModule(
+    "resource:///modules/MigrationUtils.sys.mjs"
   );
   // We pass in the type of source we're using for use in telemetry:
   MigrationUtils.showMigrationWizard(window, [

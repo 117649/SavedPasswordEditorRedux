@@ -18,8 +18,6 @@
 
 "use strict";
 
-Components.utils.import("resource://gre/modules/Services.jsm");
-
 document.addEventListener(
   "DOMContentLoaded",
   function dclHandler(ev) {
@@ -41,7 +39,7 @@ function checkPasswordsShowing() {
     return !document.getElementById("passwordCol").hidden;
 }
 
-function showPasswords() {
+async function showPasswords() {
   if (!checkPasswordsShowing()) {
     let togglePasswords = document.getElementById("togglePasswords");
 
@@ -64,16 +62,16 @@ function showPasswords() {
       }
 
       document.getElementById("passwordCol").hidden = false;
-      FilterPasswords();
+      await FilterPasswords();
     }
   }
 }
 
 window.addEventListener(
   "load",
-  function _loadHandler (ev) {
+  async function _loadHandler (ev) {
     if (spEditor.prefs.getBoolPref("always_show_passwords"))
-      showPasswords();
+      await showPasswords();
 
     if (spEditor.prefs.getBoolPref("preselect_current_site")) {
       let wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].
@@ -177,26 +175,26 @@ var spEditor = {
   selectionsEnabled: true,
   userChangedMenuBtn: false,
 
-  menuBtnSel: function (ev, elem) {
+  menuBtnSel: async function (ev, elem) {
     this.userChangedMenuBtn = true;
     var mb = document.getElementById("speMenuBtn");
     switch (elem.id) {
       case "speMenuBtn_editSignon":
         mb.command = "edit_signon";
         mb.setAttribute("icon", "properties");
-        this.editSignon();
+        await this.editSignon();
         break;
 
       case "speMenuBtn_cloneSignon":
         mb.command = "clone_signon";
         mb.removeAttribute("icon");
-        this.cloneSignon();
+        await this.cloneSignon();
         break;
 
       case "speMenuBtn_newSignon":
         mb.command = "new_signon";
         mb.setAttribute("icon", "add");
-        this.newSignon();
+        await this.newSignon();
         break;
     }
 
@@ -230,7 +228,7 @@ var spEditor = {
     }
   },
 
-  editSignon: function () {
+  editSignon: async function () {
     this.selectionsEnabled = false;
     var selections = GetTreeSelections(this.signonsTree);
     if (selections.length < 1) return;
@@ -251,19 +249,18 @@ var spEditor = {
         Services.logins.modifyLogin(
           selSignons[i], this._mergeSignonProps(selSignons[i], ret.newSignon));
       var fv = document.getElementById("filter").value;
-      setFilter("");
-      setFilter(fv);
+      await setFilter("");
+      await setFilter(fv);
       this.signonsTree.view.selection.clearSelection();
     } catch (e) {
-      Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
-        getService(Components.interfaces.nsIPromptService).
+      Services.prompt.
         alert(window, this.genStrBundle.getString("error"),
           this.pmoStrBundle.getFormattedString("badnewentry",
             [e.message]));
     }
   },
 
-  cloneSignon: function () {
+  cloneSignon: async function () {
     this.selectionsEnabled = false;
     var selections = GetTreeSelections(this.signonsTree);
     if (selections.length != 1) return;
@@ -278,21 +275,20 @@ var spEditor = {
     this.selectionsEnabled = true;
     if (!ret.newSignon) return;
     try {
-      Services.logins.addLogin(this._mergeSignonProps(signon, ret.newSignon));
+      await Services.logins.addLoginAsync(this._mergeSignonProps(signon, ret.newSignon));
       var fv = document.getElementById("filter").value;
-      setFilter("");
-      setFilter(fv);
+      await setFilter("");
+      await setFilter(fv);
       this.signonsTree.view.selection.clearSelection();
     } catch (e) {
-      Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
-        getService(Components.interfaces.nsIPromptService).
+      Services.prompt.
         alert(window, this.genStrBundle.getString("error"),
           this.pmoStrBundle.getFormattedString("badnewentry",
             [e.message]));
     }
   },
 
-  newSignon: function () {
+  newSignon: async function () {
     this.selectionsEnabled = false;
     var ret = { newSignon: null, callback: null };
     try {
@@ -312,14 +308,13 @@ var spEditor = {
         ret.newSignon.httpRealm, ret.newSignon.username,
         ret.newSignon.password, ret.newSignon.usernameField,
         ret.newSignon.passwordField);
-      Services.logins.addLogin(newSignon);
+      await Services.logins.addLoginAsync(newSignon);
       var fv = document.getElementById("filter").value;
-      setFilter("");
-      setFilter(fv);
+      await setFilter("");
+      await setFilter(fv);
       this.signonsTree.view.selection.clearSelection();
     } catch (e) {
-      Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
-        getService(Components.interfaces.nsIPromptService).
+      Services.prompt.
         alert(window, this.genStrBundle.getString("error"),
           this.pmoStrBundle.getFormattedString("badnewentry",
             [e.message]));

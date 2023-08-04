@@ -8,37 +8,13 @@
 
 this.EXPORTED_SYMBOLS = ["Overlays"];
 
-const {ConsoleAPI} = ChromeUtils.import("resource://gre/modules/Console.jsm");
-ChromeUtils.defineModuleGetter(
+ChromeUtils.defineESModuleGetters(
   this,
-  "Services",
-  "resource://gre/modules/Services.jsm"
+  {setTimeout:
+  "resource://gre/modules/Timer.sys.mjs"}
 );
-ChromeUtils.defineModuleGetter(
-  this,
-  "setTimeout",
-  "resource://gre/modules/Timer.jsm"
-);
-
-// eslint-disable-next-line no-unused-vars
-const oconsole = new ConsoleAPI({
-  prefix: "Overlays.jsm",
-  consoleID: "overlays-jsm",
-  maxLogLevel: "warn" // "all"
-});
 
 Components.utils.import("resource:///modules/CustomizableUI.jsm");
-
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-function setAttribute(obj, attr, val) {
-  if (!obj || !obj.setAttribute) {
-    return;
-  }
-  obj.setAttribute(attr, val);
-}
-
-XPCOMUtils.defineLazyModuleGetter(this, 'Windows', "chrome://savedpasswordeditor/content/Windows.jsm");
 
 const Globals = {};
 Globals.widgets = {};
@@ -665,7 +641,7 @@ class Overlays {
     const widget = CustomizableUI.getWidget(id);
     if (!widget || widget.provider != CustomizableUI.PROVIDER_API) {
       try {
-        CustomizableUI.createWidget(this.getWidgetData(aWindow, node, palette));
+        CustomizableUI.createWidget(this.getWidgetData(node, palette));
       } catch (ex) {
         Cu.reportError(ex);
       }
@@ -680,9 +656,9 @@ class Overlays {
     return node;
   }
 
-  getWidgetData(aWindow, node, palette) {
+  getWidgetData(node, palette) {
     // let's default this one
-    const data = {removable: true};
+    const data = { removable: true };
 
     if (node.attributes) {
       for (const attr of node.attributes) {
@@ -716,7 +692,7 @@ class Overlays {
     if (data.type == 'custom') {
       data.palette = palette;
 
-      data.onBuild = function(aDocument, aDestroy) {
+      data.onBuild = function (aDocument, aDestroy) {
         // Find the node in the DOM tree
         node = aDocument.getElementById(this.id);
 
@@ -743,7 +719,7 @@ class Overlays {
         // We get a placeholder for it, then we'll replace it later when the window overlays.
         if (!node && !aDestroy) {
           node = aDocument.importNode(Globals.widgets[this.id], true);
-          setAttribute(node, 'CUI_placeholder', 'true');
+          node?.setAttribute('CUI_placeholder', 'true');
           node.collapsed = true;
         }
 
@@ -752,23 +728,70 @@ class Overlays {
 
       const self = this;
       // unregisterArea()'ing the toolbar can nuke the nodes, we need to make sure ours are moved to the palette
-      data.onWidgetAfterDOMChange = function(aNode) {
+      data.onWidgetAfterDOMChange = function (aNode) {
         if (aNode.id == this.id &&
-        !aNode.parentNode &&
-        !self.trueAttribute(aNode.ownerDocument.documentElement, 'customizing') && // it always ends up in the palette in this case
-        this.palette) {
+          !aNode.parentNode &&
+          !self.trueAttribute(aNode.ownerDocument.documentElement, 'customizing') && // it always ends up in the palette in this case
+          this.palette) {
           this.palette.appendChild(aNode);
         }
       };
 
-      data.onWidgetDestroyed = function(aId) {
+      data.onWidgetDestroyed = function (aId) {
         if (aId == this.id) {
-          Windows.callOnAll(win => {
+          const browserEnumerator = Services.wm.getEnumerator('navigator:browser');
+          const handler = win => {
             const widget = data.onBuild(win.document, true);
             if (widget) {
               widget.remove();
             }
-          }, 'navigator:browser');
+          };
+          while (browserEnumerator.hasMoreElements()) {
+            const window = browserEnumerator.getNext();
+
+            if (!window || !window.addEventListener) {
+              continue;
+            }
+
+            if (window.document.readyState == "complete") {
+              try {
+                handler(window);
+              } catch (ex) {
+                Cu.reportError(ex);
+              }
+              continue;
+            }
+
+            const runOnce = function (event) {
+              try {
+                window.removeEventListener("load", runOnce, false);
+              } catch (ex) {
+                if (ex.message == "can't access dead object") {
+                  const scriptError = Cc["@mozilla.org/scripterror;1"].createInstance(Ci.nsIScriptError);
+                  scriptError.init(
+                    "Can't access dead object. This shouldn't cause any problems.",
+                    ex.sourceName || ex.fileName || null,
+                    ex.sourceLine || null,
+                    ex.lineNumber || null,
+                    ex.columnNumber || null,
+                    scriptError.warningFlag,
+                    "XPConnect JavaScript"
+                  );
+                  Services.console.logMessage(scriptError);
+                }
+                Cu.reportError(ex);
+              } // Prevents some can't access dead object errors
+              if (event !== undefined) {
+                try {
+                  handler(window);
+                } catch (ex) {
+                  Cu.reportError(ex);
+                }
+              }
+            };
+
+            window.addEventListener("load", runOnce, false);
+          }
           CustomizableUI.removeListener(this);
         }
       };

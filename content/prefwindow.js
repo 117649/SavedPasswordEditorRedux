@@ -25,8 +25,6 @@ try {
   
 }
 
-Cu.import("resource://gre/modules/Services.jsm");
-
 var prefs = Services.prefs.getBranch("extensions.savedpasswordeditor.");
 
 const $ = aEl => document.getElementById(aEl);

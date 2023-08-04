@@ -21,7 +21,7 @@
 const Cc = Components.classes,
       Ci = Components.interfaces,
       Cu = Components.utils;
-Cu.import("resource://gre/modules/XPCOMUtils.jsm");
+var { XPCOMUtils } = ChromeUtils.importESModule("resource://gre/modules/XPCOMUtils.sys.mjs");
 
 var EXPORTED_SYMBOLS = ["SavedPasswordEditor"];
 

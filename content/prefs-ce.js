@@ -3,10 +3,9 @@
 /* eslint no-var: 2, prefer-const: 2, no-new-func: 0, class-methods-use-this: 0 */
 "use strict";
 
-const {AppConstants} = ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+const {AppConstants} = ChromeUtils.importESModule("resource://gre/modules/AppConstants.sys.mjs");
 const {ChromeManifest} = ChromeUtils.import("chrome://savedpasswordeditor/content/ChromeManifest.jsm");
 const {Overlays} = ChromeUtils.import("chrome://savedpasswordeditor/content/Overlays.jsm");
-const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 // delay connectedCallback() of tabs till tabs inserted into DOM so it won't be run multiple times and cause trouble.
 let delayTabsConnectedCallback = false;
@@ -610,6 +609,7 @@ class PrefPane extends MozXULElement {
   }
 
   connectedCallback() {
+    if (this.delayConnectedCallback()) { return }
     if (this._initialized || !this.loaded) {
       return;
     }
@@ -695,7 +695,7 @@ class PrefPane extends MozXULElement {
   }
 
   get DeferredTask() {
-    const {DeferredTask} = ChromeUtils.import("resource://gre/modules/DeferredTask.jsm");
+    const {DeferredTask} = ChromeUtils.importESModule("resource://gre/modules/DeferredTask.sys.mjs");
     Object.defineProperty(this, "DeferredTask", {
       configurable: true,
       enumerable: true,
