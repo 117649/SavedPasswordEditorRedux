@@ -25,7 +25,7 @@ var { XPCOMUtils } = ChromeUtils.importESModule("resource://gre/modules/XPCOMUti
 
 var EXPORTED_SYMBOLS = ["SavedPasswordEditor"];
 
-XPCOMUtils.defineLazyGetter(
+ChromeUtils.defineLazyGetter(
   this, "prefs", () =>
     Cc["@mozilla.org/preferences-service;1"].
       getService(Ci.nsIPrefService).
@@ -42,11 +42,11 @@ XPCOMUtils.defineLazyServiceGetter(
 XPCOMUtils.defineLazyServiceGetter(
   this, "promptSvc",
   "@mozilla.org/embedcomp/prompt-service;1", "nsIPromptService");
-XPCOMUtils.defineLazyGetter(
+ChromeUtils.defineLazyGetter(
   this, "genStrBundle", () =>
     stringSvc.createBundle(
       "chrome://savedpasswordeditor/locale/spe.properties"));
-XPCOMUtils.defineLazyGetter(
+ChromeUtils.defineLazyGetter(
   this, "pmoStrBundle", () =>
     stringSvc.createBundle(
       "chrome://savedpasswordeditor/locale/pwdmgrOverlay.properties"));
