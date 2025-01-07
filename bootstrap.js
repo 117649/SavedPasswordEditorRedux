@@ -3,7 +3,7 @@
 "use strict";
 
 const { classes: Cc, interfaces: Ci, utils: Cu } = Components;
-ChromeUtils.importESModule("resource://gre/modules/AddonManager.sys.mjs");
+const { AddonManager } = ChromeUtils.importESModule("resource://gre/modules/AddonManager.sys.mjs");
 
 const appinfo = Services.appinfo;
 const options = {
@@ -66,16 +66,15 @@ function install(data, reason) {
 function uninstall() { }
 
 function startup(data, reason) {
-  Components.utils.import("chrome://savedpasswordeditor/content/defaultPreferencesLoader.jsm");
+  const { DefaultPreferencesLoader } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/defaultPreferencesLoader.mjs");
   try {
     var loader = new DefaultPreferencesLoader();
     loader.parseUri(
       "chrome://savedpasswordeditor-defaults/content/preferences/prefs.js");
   } catch (ex) { }
 
-  Components.utils.import("chrome://savedpasswordeditor/content/ChromeManifest.jsm");
-  Components.utils.import("chrome://savedpasswordeditor/content/Overlays.jsm");
-  Components.utils.import("resource:///modules/CustomizableUI.jsm");
+  const { ChromeManifest } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/ChromeManifest.mjs");
+  const { Overlays } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/Overlays.mjs");
 
   const window = Services.wm.getMostRecentWindow('navigator:browser');
   if (reason === ADDON_UPGRADE || reason === ADDON_DOWNGRADE) {
@@ -116,13 +115,12 @@ function startup(data, reason) {
     Services.obs.addObserver(documentObserver, "chrome-document-loaded");
   }());
 
-  (async function () {
-    try {
-      Services.prefs.getBoolPref("extensions.savedpasswordeditor.hide_warning") ?
-        (await AddonManager.getAddonByID(`${data.id}`)).__AddonInternal__.signedState = AddonManager.SIGNEDSTATE_NOT_REQUIRED
-        : (await AddonManager.getAddonByID(`${data.id}`)).__AddonInternal__.signedState === AddonManager.SIGNEDSTATE_NOT_REQUIRED ? (await AddonManager.getAddonByID(`${data.id}`)).__AddonInternal__.signedState = AddonManager.SIGNEDSTATE_MISSING : '';
-    } catch (error) { }
-  }());
+  AddonManager.getAddonByID(data.id).then(addon => {
+    Services.prefs.getBoolPref("extensions.savedpasswordeditor.hide_warning") ?
+      addon.__AddonInternal__.signedState = AddonManager.SIGNEDSTATE_NOT_REQUIRED
+      : addon.__AddonInternal__.signedState = AddonManager.SIGNEDSTATE_MISSING;
+    }
+  );
 }
 
 function shutdown(data, reason) {

@@ -18,12 +18,10 @@
 
 "use strict";
 
-var EXPORTED_SYMBOLS = ["SavedPasswordEditor"];
-
 const htmlNamespaceResolver =
   aPrefix => aPrefix == "xhtml" ? "http://www.w3.org/1999/xhtml" : null;
 
-var SavedPasswordEditor = {
+export var SavedPasswordEditor = {
   getFormData (aElement) {
     const HTMLInputElement =
       aElement.ownerDocument.defaultView.HTMLInputElement;

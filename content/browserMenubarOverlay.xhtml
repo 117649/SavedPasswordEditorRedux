@@ -23,8 +23,8 @@
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/javascript"><![CDATA[
-    Components.utils.import(
-      "chrome://savedpasswordeditor/content/SavedPasswordEditor.jsm");
+    try { var { SavedPasswordEditor } = ChromeUtils.importESModule(
+      "chrome://savedpasswordeditor/content/SavedPasswordEditor.mjs"); } catch (e) { }
   ]]></script>
 
   <commandset>

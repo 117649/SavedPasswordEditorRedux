@@ -1,8 +1,6 @@
 /* exported ChromeManifest */
 "use strict";
 
-this.EXPORTED_SYMBOLS = ["ChromeManifest"];
-
 /**
  * A default map, which assumes a default value on get() if the key doesn't exist
  */
@@ -40,7 +38,7 @@ class DefaultMap extends Map {
  * A parser for chrome.manifest files. Implements a subset of
  * https://developer.mozilla.org/en-US/docs/Mozilla/Chrome_Registration
  */
-class ChromeManifest {
+export class ChromeManifest {
   /**
    * Constucts the chrome.manifest parser
    *

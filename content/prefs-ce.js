@@ -4,8 +4,8 @@
 "use strict";
 
 const {AppConstants} = ChromeUtils.importESModule("resource://gre/modules/AppConstants.sys.mjs");
-const {ChromeManifest} = ChromeUtils.import("chrome://savedpasswordeditor/content/ChromeManifest.jsm");
-const {Overlays} = ChromeUtils.import("chrome://savedpasswordeditor/content/Overlays.jsm");
+const {ChromeManifest} = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/ChromeManifest.mjs");
+const {Overlays} = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/Overlays.mjs");
 
 // delay connectedCallback() of tabs till tabs inserted into DOM so it won't be run multiple times and cause trouble.
 let delayTabsConnectedCallback = false;

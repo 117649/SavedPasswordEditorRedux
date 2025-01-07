@@ -6,15 +6,14 @@
 
 "use strict";
 
-this.EXPORTED_SYMBOLS = ["Overlays"];
-
+const lazy = {};
 ChromeUtils.defineESModuleGetters(
-  this,
+  lazy,
   {setTimeout:
   "resource://gre/modules/Timer.sys.mjs"}
 );
 
-Components.utils.import("resource:///modules/CustomizableUI.jsm");
+const { CustomizableUI } = ChromeUtils.importESModule("resource:///modules/CustomizableUI.sys.mjs");
 
 const Globals = {};
 Globals.widgets = {};
@@ -23,7 +22,7 @@ Globals.widgets = {};
  * The overlays class, providing support for loading overlays like they used to work. This class
  * should likely be called through its static method Overlays.load()
  */
-class Overlays {
+export class Overlays {
   /**
    * Load overlays for the given window using the overlay provider, which can for example be a
    * ChromeManifest object.
@@ -227,7 +226,7 @@ class Overlays {
     }
 
     if (this.document.readyState == "complete") {
-      setTimeout(() => {
+      lazy.setTimeout(() => {
         this._finish();
 
         // Now execute load handlers since we are done loading scripts

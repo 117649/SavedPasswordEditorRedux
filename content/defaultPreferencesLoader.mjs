@@ -12,12 +12,10 @@
 
 const { utils: Cu, classes: Cc, interfaces: Ci } = Components;
 
-var EXPORTED_SYMBOLS = ['DefaultPreferencesLoader'];
-
 /**
  * Read defaults/preferences/* and set Services.pref default branch
  */
-function DefaultPreferencesLoader(installPath, prefDir) {
+export function DefaultPreferencesLoader(installPath, prefDir) {
     var readFrom = [];
 
     this.readFrom = readFrom;

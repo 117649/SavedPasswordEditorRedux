@@ -18,8 +18,8 @@
 
 "use strict";
 
-Components.utils.import(
-  "chrome://savedpasswordeditor/content/SavedPasswordEditor.jsm");
+try { var { SavedPasswordEditor } = ChromeUtils.importESModule(
+  "chrome://savedpasswordeditor/content/SavedPasswordEditor.mjs"); } catch (e) { }
 
 window.addEventListener(
   "load",

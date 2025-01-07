@@ -18,8 +18,7 @@
 
 "use strict";
 
-const Cu = Components.utils;
-Cu.import("chrome://savedpasswordeditor/content/SavedPasswordEditor.jsm");
+try { var { SavedPasswordEditor } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/SavedPasswordEditor.mjs"); } catch (e) { }
 
 window.messageManager.loadFrameScript(
   "chrome://savedpasswordeditor/content/frame-script.js", true);
