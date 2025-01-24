@@ -1,7 +1,7 @@
 # Functional content
 ## Chrome
 content	savedpasswordeditor		content/
-content	savedpasswordeditor-defaults defaults/
+content	_savedpasswordeditor    /
 
 # Language-specific content
 locale	savedpasswordeditor	bg	locale/bg/

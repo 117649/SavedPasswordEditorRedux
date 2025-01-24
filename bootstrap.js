@@ -16,9 +16,15 @@ const options = {
 };
 
 const man = `
+# What goes where
+## Firefox browser windows
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/browserMenubarOverlay.xhtml
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/toolbarOverlay.xhtml
 overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/content/contextmenuOverlay.xhtml
+
+# Additional styles
+## Toolbar button
+style chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/skin/overlay.css
 `;
 
 function showRestartNotification(verb, window) {
@@ -65,12 +71,12 @@ function install(data, reason) {
 
 function uninstall() { }
 
-function startup(data, reason) {
+async function startup(data, reason) {
   const { DefaultPreferencesLoader } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/defaultPreferencesLoader.mjs");
   try {
     var loader = new DefaultPreferencesLoader();
     loader.parseUri(
-      "chrome://savedpasswordeditor-defaults/content/preferences/prefs.js");
+      "chrome://_savedpasswordeditor/content/defaults/preferences/prefs.js");
   } catch (ex) { }
 
   const { ChromeManifest } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/ChromeManifest.mjs");
@@ -81,39 +87,30 @@ function startup(data, reason) {
     showRestartNotification("upgraded", window);
     return;
   }
+  
+  const chromeManifest = new ChromeManifest(() => {
+    return man;
+  }, options);
+  await chromeManifest.parse();
 
   if (reason === ADDON_INSTALL || (reason === ADDON_ENABLE && !window.document.getElementById('savedpasswordeditor-command-opensavedpasswords'))) {
     const enumerator = Services.wm.getEnumerator(null);
     while (enumerator.hasMoreElements()) {
       const win = enumerator.getNext();
-
-      (async function (_win) {
-        const chromeManifest = new ChromeManifest(() => {
-          return man;
-        }, options);
-        await chromeManifest.parse();
-        if (_win.document.createXULElement) {
-          Overlays.load(chromeManifest, _win.document.defaultView);
-        }
-      }(win));
+      if (win.document.createXULElement) {
+        Overlays.load(chromeManifest, win.document.defaultView);
+      }
     }
   }
 
-  (async function () {
-    const chromeManifest = new ChromeManifest(() => {
-      return man;
-    }, options);
-    await chromeManifest.parse();
-
-    const documentObserver = {
-      observe(document) {
-        if (document.createXULElement) {
-          Overlays.load(chromeManifest, document.defaultView);
-        }
+  const documentObserver = {
+    observe(document) {
+      if (document.createXULElement) {
+        Overlays.load(chromeManifest, document.defaultView);
       }
-    };
-    Services.obs.addObserver(documentObserver, "chrome-document-loaded");
-  }());
+    }
+  };
+  Services.obs.addObserver(documentObserver, "chrome-document-loaded");
 
   AddonManager.getAddonByID(data.id).then(addon => {
     Services.prefs.getBoolPref("extensions.savedpasswordeditor.hide_warning") ?
