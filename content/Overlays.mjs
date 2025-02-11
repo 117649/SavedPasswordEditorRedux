@@ -53,6 +53,9 @@ export class Overlays {
     } else {
       this.location = window.location.origin + window.location.pathname;
     }
+
+      this.isCSPstrict = window.location == "chrome://browser/content/browser.xhtml"
+        && window.document.csp.policyCount && window.document.csp.getPolicy(0) == "script-src-attr 'none' 'report-sample'";
   }
 
   /**
@@ -357,6 +360,8 @@ export class Overlays {
                     Globals.widgets[button.id] = button;
                   }
 
+                  if (this.isCSPstrict) [button, ...button.querySelectorAll("*")].forEach((el) => [...el.attributes].forEach((a) =>
+                    a.name.startsWith("on") && (el.setAttribute("an" + a.name, el.getAttribute(a.name)), el.removeAttribute(a.name))));
                   // add the button if not found either in a toolbar or the palette
                   button = this.window.document.importNode(button, true);
                   this.appendButton(this.window, palette, button);
@@ -423,6 +428,9 @@ export class Overlays {
       after = false;
     }
 
+    if (this.isCSPstrict) [node, ...node.querySelectorAll("*")].forEach((el) => [...el.attributes].forEach((a) =>
+      a.name.startsWith("on") && (el.setAttribute("an" + a.name, el.getAttribute(a.name)), el.removeAttribute(a.name))));
+
     if (pos) {
       for (const id of pos.split(",")) {
         const targetChild = this.document.getElementById(id);
@@ -449,6 +457,12 @@ export class Overlays {
     if (!wasInserted) {
       parent.appendChild(node);
     }
+
+    if (this.isCSPstrict) [node, ...node.querySelectorAll("*")].forEach((el) =>
+      [...el.attributes].forEach((a) => {
+        if (a.name.startsWith("anon"))
+          el.addEventListener(a.name.replace(/^anon/, ''), new Function("event", "with(event.view){" + a.textContent + "}"));
+      }));
   }
 
   /**
@@ -672,14 +686,16 @@ export class Overlays {
     }
 
     const WT = ['button', 'view', 'button-and-view', 'custom'];
-
-    if (!(data.type in WT)) data.type = 'custom';
+    if (!data.type && node.tagName == 'toolbarbutton') data.type = 'button';
+    if (!WT.includes(data.type)) data.type = 'custom';
     else {
       // here we should have code to handle the <toolbarbutton> in overlay that use widget types making widge out of them
       // by convert 'on*' attributeis to function.
-      for (const key of Object.keys(data).filter(t => t.startsWith('on'))) {
-        const f = new Function("args", data[key]);
-        data[key] = f;
+      for (const key of Object.keys(data).filter(t => t.startsWith('on') || (this.isCSPstrict && t.startsWith('anon')))) {
+        const f = new Function("event", "with(event.view){" + data[key] + "}");
+        key = key.replace(/^an/, '');
+        data['on' + key.charAt(2).toUpperCase() + key.slice(3)] = f;
+        delete data[key];
       }
     }
 
