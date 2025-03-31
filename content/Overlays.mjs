@@ -56,6 +56,14 @@ export class Overlays {
 
       this.isCSPstrict = window.location == "chrome://browser/content/browser.xhtml"
         && window.document.csp.policyCount && window.document.csp.getPolicy(0) == "script-src-attr 'none' 'report-sample'";
+      Services.scriptloader.loadSubScript("data:application/javascript," + encodeURIComponent(
+      `function insertInlineEventHandler(node, textContent) {
+              let tName = \`SPE_\${Math.random().toString(36).substring(2, 9)}\`;
+              new Function('node',\`with(Cu.getGlobalForObject(node)){window.\${tName} = event=>{\${textContent}}}\`).call(node,node);
+              let res = Cu.getGlobalForObject(node).window[tName];
+              delete Cu.getGlobalForObject(node).window[tName];
+              return res;
+          }`), this);
   }
 
   /**
@@ -461,7 +469,7 @@ export class Overlays {
     if (this.isCSPstrict) [node, ...node.querySelectorAll("*")].forEach((el) =>
       [...el.attributes].forEach((a) => {
         if (a.name.startsWith("anon"))
-          el.addEventListener(a.name.replace(/^anon/, ''), new Function("event", "with(event.view){" + a.textContent + "}"));
+          el.addEventListener(a.name.replace(/^anon/, ''), this.insertInlineEventHandler(el, a.textContent));
       }));
   }
 
@@ -692,7 +700,7 @@ export class Overlays {
       // here we should have code to handle the <toolbarbutton> in overlay that use widget types making widge out of them
       // by convert 'on*' attributeis to function.
       for (let key of Object.keys(data).filter(t => t.startsWith('on') || (this.isCSPstrict && t.startsWith('anon')))) {
-        const f = new Function("event", "with(event.view){" + data[key] + "}");
+        const f = this.insertInlineEventHandler(node, data[key]);
         key = key.replace(/^an/, '');
         data['on' + key.charAt(2).toUpperCase() + key.slice(3)] = f;
         delete data[key];
