@@ -27,6 +27,8 @@ overlay chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/cont
 style chrome://browser/content/browser.xhtml chrome://savedpasswordeditor/skin/overlay.css
 `;
 
+const sandboxes = Services.wm.getMostRecentWindow('navigator:browser')?.UC.sandboxes ?? new WeakMap();
+
 function showRestartNotification(verb, window) {
   window.PopupNotifications._currentNotifications.shift();
   window.PopupNotifications.show(
@@ -81,6 +83,8 @@ async function startup(data, reason) {
 
   const { ChromeManifest } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/ChromeManifest.mjs");
   const { Overlays } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/Overlays.mjs");
+
+  Overlays.prototype.sandboxes = sandboxes;
 
   const window = Services.wm.getMostRecentWindow('navigator:browser');
   if (reason === ADDON_UPGRADE || reason === ADDON_DOWNGRADE) {
