@@ -54,17 +54,28 @@ export class Overlays {
       this.location = window.location.origin + window.location.pathname;
     }
 
-      this.isCSPstrict = window.location == "chrome://browser/content/browser.xhtml"
-        && window.document.csp.policyCount && window.document.csp.getPolicy(0) == "script-src-attr 'none' 'report-sample'";
-      Services.scriptloader.loadSubScript("data:application/javascript," + encodeURIComponent(
-      `function insertInlineEventHandler(node, textContent) {
-              let tName = \`SPE_\${Math.random().toString(36).substring(2, 9)}\`;
-              new Function('node',\`with(Cu.getGlobalForObject(node)){window.\${tName} = event=>{\${textContent}}}\`).call(node,node);
-              let res = Cu.getGlobalForObject(node).window[tName];
-              delete Cu.getGlobalForObject(node).window[tName];
-              return res;
-          }`), this);
+    this.isCSPstrict = window.location == "chrome://browser/content/browser.xhtml"
+      && window.document.csp.policyCount && window.document.csp.getPolicy(0) == "script-src-attr 'none' 'report-sample'";
+    if (!this.sandboxes) this.sandboxes = new WeakMap();
+    if (!this.sandboxes.getSandbox) this.sandboxes.getSandbox = function (obj) {
+      let global = Cu.getGlobalForObject(obj);
+      if (this.has(global)) return this.get(global);
+      let sandbox = Cu.Sandbox(Services.scriptSecurityManager.getSystemPrincipal(), {
+        sandboxPrototype: global,
+        sameZoneAs: global,
+        wantXrays: false,
+        sandboxName: "OverlaySandbox",
+      });
+      this.set(global, sandbox);
+      if (global.window == global) global.addEventListener('unload', () => {
+        this.delete(global);
+        Cu.nukeSandbox(sandbox);
+      });
+      return sandbox;
+    };
   }
+
+  _insertInlineEventHandler = (node, textContent) => Cu.evalInSandbox(`(function(event){${textContent}})`, this.sandboxes.getSandbox(node));
 
   /**
    * A shorthand to this.window.document
@@ -469,7 +480,7 @@ export class Overlays {
     if (this.isCSPstrict) [node, ...node.querySelectorAll("*")].forEach((el) =>
       [...el.attributes].forEach((a) => {
         if (a.name.startsWith("anon"))
-          el.addEventListener(a.name.replace(/^anon/, ''), this.insertInlineEventHandler(el, a.textContent));
+          el.addEventListener(a.name.replace(/^anon/, ''), this._insertInlineEventHandler(el, a.textContent));
       }));
   }
 
@@ -700,7 +711,7 @@ export class Overlays {
       // here we should have code to handle the <toolbarbutton> in overlay that use widget types making widge out of them
       // by convert 'on*' attributeis to function.
       for (let key of Object.keys(data).filter(t => t.startsWith('on') || (this.isCSPstrict && t.startsWith('anon')))) {
-        const f = this.insertInlineEventHandler(node, data[key]);
+        const f = this._insertInlineEventHandler(node, data[key]);
         key = key.replace(/^an/, '');
         data['on' + key.charAt(2).toUpperCase() + key.slice(3)] = f;
         delete data[key];
