@@ -611,7 +611,7 @@ async function SignonClearFilter() {
 
 function FocusFilterBox() {
   if (filterField.getAttribute("focused") != "true") {
-    filterField.focus();
+    filterField.select();
   }
 }
 
