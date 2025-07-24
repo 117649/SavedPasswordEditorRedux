@@ -54,8 +54,10 @@ export class Overlays {
       this.location = window.location.origin + window.location.pathname;
     }
 
-    this.isCSPstrict = window.location == "chrome://browser/content/browser.xhtml"
-      && window.document.csp.policyCount && window.document.csp.getPolicy(0).includes('script-src');
+    this.isCSPstrict = !(window.document.csp ?? window.document.policyContainer.csp).getAllowsInline(
+      Ci.nsIContentSecurityPolicy.SCRIPT_SRC_ATTR_DIRECTIVE,
+      false, "", false, null, null, "", 0, 1
+    )
     if (!this.sandboxes) this.sandboxes = new WeakMap();
     if (!this.getSandbox) this.getSandbox = function (obj) {
       let global = Cu.getGlobalForObject(obj);
@@ -622,7 +624,12 @@ export class Overlays {
           "data:application/javascript," + encodeURIComponent(node.textContent);
         // It would be great if we could have script errors show the right url, but for now
         // loadSubScript will have to do.
-        Services.scriptloader.loadSubScript(dataURL, this.window);
+        let isDone = false;
+        ChromeUtils.compileScript(dataURL).then(script => {
+          script.executeInGlobal(this.window);
+          isDone = true;
+        });
+        Services.tm.spinEventLoopUntil("Wait for eval'd script to load", () => isDone);
       } catch (ex) {
         Cu.reportError(ex);
       }
