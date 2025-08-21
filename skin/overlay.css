@@ -24,7 +24,7 @@
 
 #savedpasswordeditor-toolsmenuitem, #savedpasswordeditor-appmenuitem,
 toolbar[iconsize="small"] #savedpasswordeditor-button {
-  list-style-image: url('chrome://savedpasswordeditor/skin/key16.png');
+  --menuitem-icon: url('chrome://savedpasswordeditor/skin/key16.png');
 }
 
 /* Australis */

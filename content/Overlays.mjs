@@ -13,7 +13,7 @@ ChromeUtils.defineESModuleGetters(
   "resource://gre/modules/Timer.sys.mjs"}
 );
 
-const { CustomizableUI } = ChromeUtils.importESModule("resource:///modules/CustomizableUI.sys.mjs");
+const { CustomizableUI } = ChromeUtils.importESModule("moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs");
 
 const Globals = {};
 Globals.widgets = {};
