@@ -233,6 +233,11 @@ export class Overlays {
           if (attrName == "selectedIndex" && element.localName == "deck") {
             this._decksToResolve.set(element, attrValue);
           } else if (
+            // Skip corrupted "-moz-missing" values in Firefox 143+ (Bug 1979014)
+            // Also skip "false" values for boolean attributes since CSS changed
+            // from [attr="true"] to [attr]
+            // by @onemen of TMP 4e19e14
+            (!String(attrValue).startsWith("-moz-missing") && attrValue !== "false") &&
             (element != this.document.documentElement ||
             !["height", "screenX", "screenY", "sizemode", "width"].includes(
               attrName)) &&
