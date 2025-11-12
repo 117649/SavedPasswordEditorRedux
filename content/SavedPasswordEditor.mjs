@@ -31,16 +31,16 @@ ChromeUtils.defineLazyGetter(
       getBranch("extensions.savedpasswordeditor."));
 XPCOMUtils.defineLazyServiceGetter(
   lazy, "pwdSvc",
-  "@mozilla.org/login-manager;1", "nsILoginManager");
+  "@mozilla.org/login-manager;1", Ci.nsILoginManager);
 XPCOMUtils.defineLazyServiceGetter(
   lazy, "stringSvc",
-  "@mozilla.org/intl/stringbundle;1", "nsIStringBundleService");
+  "@mozilla.org/intl/stringbundle;1", Ci.nsIStringBundleService);
 XPCOMUtils.defineLazyServiceGetter(
   lazy, "alertsSvc",
-  "@mozilla.org/alerts-service;1", "nsIAlertsService");
+  "@mozilla.org/alerts-service;1", Ci.nsIAlertsService);
 XPCOMUtils.defineLazyServiceGetter(
   lazy, "promptSvc",
-  "@mozilla.org/embedcomp/prompt-service;1", "nsIPromptService");
+  "@mozilla.org/embedcomp/prompt-service;1", Ci.nsIPromptService);
 ChromeUtils.defineLazyGetter(
   lazy, "genStrBundle", () =>
     lazy.stringSvc.createBundle(
