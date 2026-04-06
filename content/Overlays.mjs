@@ -78,7 +78,7 @@ export class Overlays {
     };
   }
 
-  _insertInlineEventHandler = (node, textContent) => Cu.evalInSandbox(`(function(event){${textContent}})`, this.getSandbox(node));
+  _insertInlineEventHandler = (node, textContent) => Cu.evalInSandbox(`(function(event){${textContent}})`, this.getSandbox(node), null, node.baseURI + `?inline#${node.id}`,1);
 
   /**
    * A shorthand to this.window.document
