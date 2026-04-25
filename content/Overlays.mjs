@@ -15,8 +15,7 @@ ChromeUtils.defineESModuleGetters(
 
 const { CustomizableUI } = ChromeUtils.importESModule("moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs");
 
-const Globals = {};
-Globals.widgets = {};
+const evtInline = new WeakMap();
 
 /**
  * The overlays class, providing support for loading overlays like they used to work. This class
@@ -54,16 +53,16 @@ export class Overlays {
       this.location = window.location.origin + window.location.pathname;
     }
 
-    this.isCSPstrict = !(window.document.csp ?? window.document.policyContainer.csp).getAllowsInline(
-      Ci.nsIContentSecurityPolicy.SCRIPT_SRC_ATTR_DIRECTIVE,
-      false, "", false, null, null, "", 0, 1
-    )
+    this.isCSPstrict = evtInline.getOrInsertComputed(window, _ => {
+      const csp = window.document.csp ?? window.document.policyContainer.csp;
+      return !csp.getAllowsInline(Ci.nsIContentSecurityPolicy.SCRIPT_SRC_ATTR_DIRECTIVE, false, "", false, null, null, "", 0, 1);
+    });
     if (!this.sandboxes) this.sandboxes = new WeakMap();
-    if (!this.getSandbox) this.getSandbox = function (obj) {
+    if (!this.getSandbox) this.getSandbox = (obj) => {
       let global = Cu.getGlobalForObject(obj);
       if (ChromeUtils.getClassName(global) == "Sandbox") return global;
       if (this.sandboxes.has(global)) return this.sandboxes.get(global);
-      let sandbox = Cu.Sandbox(Services.scriptSecurityManager.getSystemPrincipal(), {
+      const sandbox = Cu.Sandbox(Services.scriptSecurityManager.getSystemPrincipal(), {
         sandboxPrototype: global,
         sameZoneAs: global,
         wantXrays: false,
@@ -78,7 +77,7 @@ export class Overlays {
     };
   }
 
-  _insertInlineEventHandler = (node, textContent) => Cu.evalInSandbox(`(function(event){${textContent}})`, this.getSandbox(node), null, node.baseURI + `?inline#${node.id}`,1);
+  _insertInlineEventHandler = (node, textContent) => Cu.evalInSandbox(`(function(event){${textContent}})`, this.getSandbox(node), null, node.baseURI + `?inline#${node.id}`);
 
   /**
    * A shorthand to this.window.document
@@ -357,48 +356,85 @@ export class Overlays {
         this._insertElement(this.document.documentElement, node);
         return true;
       } else if (node.localName == "toolbarpalette") {
-        const toolboxes = this.window.document.querySelectorAll('toolbox');
-        for (const toolbox of toolboxes) {
-          let palette = toolbox.palette;
-
-          if (palette &&
-					this.window.gCustomizeMode._stowedPalette &&
-					this.window.gCustomizeMode._stowedPalette.id == node.id &&
-					palette == this.window.gCustomizeMode.visiblePalette) {
-            palette = this.window.gCustomizeMode._stowedPalette;
-          }
-
-          if (palette && (palette.id == node.id || (node.id == "BrowserToolbarPalette" && toolbox == this.window.gNavToolbox))) {
-            for (let button of node.childNodes) {
-              if (button.id) {
-                const existButton = this.window.document.getElementById(button.id);
-
-                // If it's a placeholder created by us to deal with CustomizableUI, just use it.
-                if (this.trueAttribute(existButton, 'CUI_placeholder')) {
-                  this.removeAttribute(existButton, 'CUI_placeholder');
-                  existButton.collapsed = false;
-                  this.appendButton(this.window, palette, existButton);
-
-                // we shouldn't be changing widgets, or adding with same id as other nodes
-                } else if (!existButton) {
-                  // Save a copy of the widget node in the sandbox,
-                  // so CUI can use it when opening a new window without having to wait for the overlay.
-                  if (!Globals.widgets[button.id]) {
-                    Globals.widgets[button.id] = button;
+        let box;
+        if (target) {
+          if (node.id == "BrowserToolbarPalette") {
+            try {
+              CustomizableUI.beginBatchUpdate();
+              for (const button of node.childNodes) {
+                const widget = CustomizableUI.getWidget(button.id);
+                if (!widget || widget.provider != CustomizableUI.PROVIDER_API) {
+                  const data = { removable: true };
+                  if (button.attributes) {
+                    for (const attr of button.attributes) {
+                      data[attr.name] = attr.value === 'true' ? true : attr.value === 'false' ? false : attr.value;
+                    }
                   }
 
-                  if (this.isCSPstrict) [button, ...button.querySelectorAll("*")].forEach((el) => [...el.attributes].forEach((a) =>
-                    a.name.startsWith("on") && (el.setAttribute("an" + a.name, el.getAttribute(a.name)), el.removeAttribute(a.name))));
-                  // add the button if not found either in a toolbar or the palette
-                  button = this.window.document.importNode(button, true);
-                  this.appendButton(this.window, palette, button);
+                  const validTypes = ['button', 'view', 'button-and-view', 'custom'];
+                  if (!data.type) {
+                    data.type = button.tagName == 'toolbarbutton' ? 'button' : 'custom';
+                  } else if (!validTypes.includes(data.type)) {
+                    data.type = 'custom';
+                  }
+
+                  // Convert on* attributes to event handlers
+                  if (data.type !== 'custom') {
+                    for (const key of Object.keys(data).filter(t => t.startsWith('on'))) {
+                      data['on' + key.charAt(2).toUpperCase() + key.slice(3)] = this._insertInlineEventHandler(button, data[key]);
+                    }
+                  }
+
+                  // createWidget() defaults the removable state to true as of bug 947987
+                  if (!data.removable && !data.defaultArea) {
+                    data.defaultArea = button.parentNode?.id ?? this.window.gNavToolbox.palette.id;
+                  }
+
+                  if (data.type == 'custom') {
+                    data.palette = this.window.gNavToolbox.palette;
+                    data.onBuild = (aDocument) => {
+                      const parent = aDocument.createXULElement("box");
+                      parent.appendChild(button);
+                      if (data.onbuild) this._insertInlineEventHandler(button, data.onbuild).call(data, parent.firstChild, aDocument);
+                      return parent.firstChild;
+                    };
+                  }
+                  CustomizableUI.createWidget(data);
+                } else {
+                  try {
+                    CustomizableUI.ensureWidgetPlacedInWindow(button.id, this.window);
+                  } catch (ex) {
+                    Cu.reportError(ex);
+                  }
                 }
               }
+            } finally {
+              CustomizableUI.endBatchUpdate();
             }
-            break;
+            return true;
           }
+          box = target.closest("toolbox");
+        } else {
+          // These vanish from the document but still exist via the palette property
+          let boxes = [...this.document.getElementsByTagName("toolbox")];
+          box = boxes.find(box => box.palette && box.palette.id == node.id);
+          let palette = box ? box.palette : null;
+
+          if (!palette) {
+            console.debug(
+              `The palette for ${node.id
+              } could not be found, deferring to later`
+            );
+            return false;
+          }
+
+          target = palette;
         }
-        return true;
+
+        this._toolbarsToResolve.push(...box.querySelectorAll("toolbar"));
+        this._toolbarsToResolve.push(
+          ...this.document.querySelectorAll(`toolbar[toolboxid="${box.id}"]`)
+        );
       } else if (!target) {
         if (node.hasAttribute("insertafter") || node.hasAttribute("insertbefore")) {
           this._insertElement(this.document.documentElement, node);
@@ -660,192 +696,5 @@ export class Overlays {
 
     const winUtils = this.window.windowUtils;
     winUtils.loadSheetUsingURIString(url, winUtils.AUTHOR_SHEET);
-  }
-
-  trueAttribute(obj, attr) {
-    if (!obj || !obj.getAttribute) {
-      return false;
-    }
-
-    return (obj.getAttribute(attr) == 'true');
-  }
-
-  removeAttribute(obj, attr) {
-    if (!obj || !obj.removeAttribute) {
-      return;
-    }
-    obj.removeAttribute(attr);
-  }
-
-  appendButton(aWindow, palette, node) {
-    if (!node.parentNode) {
-      palette.appendChild(node);
-    }
-    const id = node.id;
-
-    const widget = CustomizableUI.getWidget(id);
-    if (!widget || widget.provider != CustomizableUI.PROVIDER_API) {
-      try {
-        CustomizableUI.createWidget(this.getWidgetData(node, palette));
-      } catch (ex) {
-        Cu.reportError(ex);
-      }
-    } else {
-      try {
-        CustomizableUI.ensureWidgetPlacedInWindow(id, aWindow);
-      } catch (ex) {
-        Cu.reportError(ex);
-      }
-    }
-
-    return node;
-  }
-
-  getWidgetData(node, palette) {
-    // let's default this one
-    const data = { removable: true };
-
-    if (node.attributes) {
-      for (const attr of node.attributes) {
-        if (attr.value == 'true') {
-          data[attr.name] = true;
-        } else if (attr.value == 'false') {
-          data[attr.name] = false;
-        } else {
-          data[attr.name] = attr.value;
-        }
-      }
-    }
-
-    const WT = ['button', 'view', 'button-and-view', 'custom'];
-    if (!data.type && node.tagName == 'toolbarbutton') data.type = 'button';
-    if (!WT.includes(data.type)) data.type = 'custom';
-    else {
-      // here we should have code to handle the <toolbarbutton> in overlay that use widget types making widge out of them
-      // by convert 'on*' attributeis to function.
-      for (let key of Object.keys(data).filter(t => t.startsWith('on') || (this.isCSPstrict && t.startsWith('anon')))) {
-        const f = this._insertInlineEventHandler(node, data[key]);
-        key = key.replace(/^an/, '');
-        data['on' + key.charAt(2).toUpperCase() + key.slice(3)] = f;
-        delete data[key];
-      }
-    }
-
-    // createWidget() defaults the removable state to true as of bug 947987
-    if (!data.removable && !data.defaultArea) {
-      data.defaultArea = (node.parentNode) ? node.parentNode.id : palette.id;
-    }
-
-    if (data.type == 'custom') {
-      data.palette = palette;
-
-      data.onBuild = function (aDocument, aDestroy) {
-        // Find the node in the DOM tree
-        node = aDocument.getElementById(this.id);
-
-        // If it doesn't exist, find it in a palette.
-        // We make sure the button is in either place at all times.
-        if (!node) {
-          const toolboxes = aDocument.querySelectorAll('toolbox');
-          for (const toolbox of toolboxes) {
-            let tbPalette = toolbox.palette;
-            if (tbPalette) {
-              if (tbPalette == aDocument.defaultView.gCustomizeMode.visiblePalette) {
-                tbPalette = aDocument.defaultView.gCustomizeMode._stowedPalette;
-              }
-              const child = [...tbPalette.childNodes].find(item => item.id == this.id, this);
-              if (child) {
-                node = child;
-                break;
-              }
-            }
-          }
-        }
-
-        // If it doesn't exist there either, CustomizableUI is using the widget information before it has been overlayed (i.e. opening a new window).
-        // We get a placeholder for it, then we'll replace it later when the window overlays.
-        if (!node && !aDestroy) {
-          node = aDocument.importNode(Globals.widgets[this.id], true);
-          node?.setAttribute('CUI_placeholder', 'true');
-          node.collapsed = true;
-        }
-
-        return node;
-      };
-
-      const self = this;
-      // unregisterArea()'ing the toolbar can nuke the nodes, we need to make sure ours are moved to the palette
-      data.onWidgetAfterDOMChange = function (aNode) {
-        if (aNode.id == this.id &&
-          !aNode.parentNode &&
-          !self.trueAttribute(aNode.ownerDocument.documentElement, 'customizing') && // it always ends up in the palette in this case
-          this.palette) {
-          this.palette.appendChild(aNode);
-        }
-      };
-
-      data.onWidgetDestroyed = function (aId) {
-        if (aId == this.id) {
-          const browserEnumerator = Services.wm.getEnumerator('navigator:browser');
-          const handler = win => {
-            const widget = data.onBuild(win.document, true);
-            if (widget) {
-              widget.remove();
-            }
-          };
-          while (browserEnumerator.hasMoreElements()) {
-            const window = browserEnumerator.getNext();
-
-            if (!window || !window.addEventListener) {
-              continue;
-            }
-
-            if (window.document.readyState == "complete") {
-              try {
-                handler(window);
-              } catch (ex) {
-                Cu.reportError(ex);
-              }
-              continue;
-            }
-
-            const runOnce = function (event) {
-              try {
-                window.removeEventListener("load", runOnce, false);
-              } catch (ex) {
-                if (ex.message == "can't access dead object") {
-                  const scriptError = Cc["@mozilla.org/scripterror;1"].createInstance(Ci.nsIScriptError);
-                  scriptError.init(
-                    "Can't access dead object. This shouldn't cause any problems.",
-                    ex.sourceName || ex.fileName || null,
-                    ex.sourceLine || null,
-                    ex.lineNumber || null,
-                    ex.columnNumber || null,
-                    scriptError.warningFlag,
-                    "XPConnect JavaScript"
-                  );
-                  Services.console.logMessage(scriptError);
-                }
-                Cu.reportError(ex);
-              } // Prevents some can't access dead object errors
-              if (event !== undefined) {
-                try {
-                  handler(window);
-                } catch (ex) {
-                  Cu.reportError(ex);
-                }
-              }
-            };
-
-            window.addEventListener("load", runOnce, false);
-          }
-          CustomizableUI.removeListener(this);
-        }
-      };
-
-      CustomizableUI.addListener(data);
-    }
-
-    return data;
   }
 }
