@@ -96,17 +96,16 @@ export class Overlays {
     const unloadedOverlays = new Set(this._collectOverlays(this.document).concat(urls));
     let forwardReferences = [];
     this.unloadedScripts = [];
-    const unloadedSheets = [];
     this._toolbarsToResolve = [];
     const xulStore = Services.xulStore;
     this.persistedIDs = new Set();
 
     // Load css styles from the registry
     for (const sheet of this.overlayProvider.style.get(this.location, false)) {
-      unloadedSheets.push(sheet);
+      this.loadCSS(sheet);
     }
 
-    if (!unloadedOverlays.size && !unloadedSheets.length) {
+    if (!unloadedOverlays.size) {
       return;
     }
 
@@ -145,7 +144,7 @@ export class Overlays {
 
       // Load css styles from the registry
       for (const sheet of this.overlayProvider.style.get(url, false)) {
-        unloadedSheets.push(sheet);
+        this.loadCSS(sheet);
       }
 
       // Load css processing instructions from the overlay
@@ -160,7 +159,7 @@ export class Overlays {
         const node = stylesheets.snapshotItem(i);
         const match = node.nodeValue.match(/href=["']([^"']*)["']/);
         if (match) {
-          unloadedSheets.push(new URL(match[1], node.baseURI).href);
+          this.loadCSS(new URL(match[1], node.baseURI).href);
         }
       }
 
@@ -214,11 +213,6 @@ export class Overlays {
         `Could not resolve ${forwardReferences.length} references`,
         forwardReferences
       );
-    }
-
-    // Loading the sheets now to avoid race conditions with xbl bindings
-    for (const sheet of unloadedSheets) {
-      this.loadCSS(sheet);
     }
 
     this._decksToResolve = new Map();
@@ -695,6 +689,12 @@ export class Overlays {
     console.debug(`Loading ${url} into ${this.window.location}`);
 
     const winUtils = this.window.windowUtils;
-    winUtils.loadSheetUsingURIString(url, winUtils.AUTHOR_SHEET);
+    try {
+      winUtils.loadSheetUsingURIString(url, winUtils.AUTHOR_SHEET);
+    } catch (ex) {
+      if (ex.result != Cr.NS_ERROR_INVALID_ARG) {
+        throw ex;
+      }
+    }
   }
 }
