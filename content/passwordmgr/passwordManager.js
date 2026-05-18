@@ -803,10 +803,9 @@ function UpdateContextMenu() {
 
 async function masterPasswordLogin(noPasswordCallback) {
   // This does no harm if master password isn't set.
-  let tokendb = Cc["@mozilla.org/security/pk11tokendb;1"].createInstance(
-    Ci.nsIPK11TokenDB
+  let token = Cc["@mozilla.org/security/internalkeytoken;1"].createInstance(
+    Ci.nsIPKCS11Token
   );
-  let token = tokendb.getInternalKeyToken();
 
   // If there is no master password, still give the user a chance to opt-out of displaying passwords
   if (token.checkPassword("")) {
