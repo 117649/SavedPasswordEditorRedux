@@ -242,8 +242,7 @@ function guessParameters () {
         "SavedPasswordEditor:loginformsresults", resultHandler);
 
       if (aLoginForms.length == 0) {
-        Cc["@mozilla.org/embedcomp/prompt-service;1"].
-          getService(Ci.nsIPromptService).
+        Services.prompt.
           alert(window, genStrBundle.getString("error"),
                 peStrBundle.getString("nologinform"));
         return;
@@ -350,8 +349,7 @@ function setNewSignon () {
   }
 
   if (!newProps.hostname && newProps.hostname !== undefined) {
-    Cc["@mozilla.org/embedcomp/prompt-service;1"].
-      getService(Ci.nsIPromptService).
+    Services.prompt.
       alert(window, genStrBundle.getString("error"),
             peStrBundle.getString("emptyhost"));
     return false;
@@ -361,8 +359,7 @@ function setNewSignon () {
        && newProps.formSubmitURL !== undefined)
       || (type == 1 && !newProps.httpRealm
           && newProps.httpRealm !== undefined)) {
-    Cc["@mozilla.org/embedcomp/prompt-service;1"].
-      getService(Ci.nsIPromptService).
+    Services.prompt.
       alert(window, genStrBundle.getString("error"),
             peStrBundle.getString("emptysecondary"));
     return false;
@@ -373,8 +370,7 @@ function setNewSignon () {
       && newProps.username !== undefined
       && (newProps.formSubmitURL !== undefined
           || newProps.httpRealm !== undefined)) {
-    Cc["@mozilla.org/embedcomp/prompt-service;1"].
-      getService(Ci.nsIPromptService).
+    Services.prompt.
       alert(window, genStrBundle.getString("error"),
             peStrBundle.getString("multduplogins"));
     return false;

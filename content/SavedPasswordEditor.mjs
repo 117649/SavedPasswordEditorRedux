@@ -38,9 +38,6 @@ XPCOMUtils.defineLazyServiceGetter(
 XPCOMUtils.defineLazyServiceGetter(
   lazy, "alertsSvc",
   "@mozilla.org/alerts-service;1", Ci.nsIAlertsService);
-XPCOMUtils.defineLazyServiceGetter(
-  lazy, "promptSvc",
-  "@mozilla.org/embedcomp/prompt-service;1", Ci.nsIPromptService);
 ChromeUtils.defineLazyGetter(
   lazy, "genStrBundle", () =>
     lazy.stringSvc.createBundle(
@@ -93,7 +90,7 @@ export var SavedPasswordEditor = {
         lazy.pwdSvc.addLogin(newSignon);
         showAlert(lazy.genStrBundle.GetStringFromName("logininfosaved"));
       } catch (e) {
-        lazy.promptSvc.alert(
+        Services.prompt.alert(
           aWindow,
           lazy.genStrBundle.GetStringFromName("error"),
           lazy.pmoStrBundle.formatStringFromName("badnewentry", [e.message], 1));
@@ -121,7 +118,7 @@ export var SavedPasswordEditor = {
       lazy.pwdSvc.modifyLogin(SavedPasswordEditor.oldSignon, newSignon);
       showAlert(lazy.genStrBundle.GetStringFromName("logininfochanged"));
     } catch (e) {
-      lazy.promptSvc.alert(
+      Services.prompt.alert(
         aParentWindow,
         lazy.genStrBundle.GetStringFromName("error"),
         lazy.genStrBundle.formatStringFromName("failed", [e.message], 1));
@@ -138,7 +135,7 @@ export var SavedPasswordEditor = {
         lazy.pwdSvc.removeLogin(spe._signonMap[target.label]);
         showAlert(lazy.genStrBundle.GetStringFromName("logininfodeleted"));
       } catch (e) {
-        lazy.promptSvc.alert(
+        Services.prompt.alert(
           window,
           lazy.genStrBundle.GetStringFromName("error"),
           lazy.genStrBundle.formatStringFromName("failed", [e.message], 1));
@@ -190,7 +187,7 @@ export var SavedPasswordEditor = {
     this._deleting = false;
 
     if (signons.length == 0) {
-      lazy.promptSvc.alert(
+      Services.prompt.alert(
         aWindow,
         lazy.genStrBundle.GetStringFromName("error"),
         lazy.genStrBundle.GetStringFromName("nologinstoedit"));
@@ -213,7 +210,7 @@ export var SavedPasswordEditor = {
     this._deleting = true;
 
     if (signons.length == 0) {
-      lazy.promptSvc.alert(
+      Services.prompt.alert(
         aWindow,
         lazy.genStrBundle.GetStringFromName("error"),
         lazy.genStrBundle.GetStringFromName("nologinstodelete"));
@@ -222,11 +219,11 @@ export var SavedPasswordEditor = {
         let res;
         if (prefs.getBoolPref("confirm_ctxmenu_delete")) {
           let cs = { value: false };
-          res = lazy.promptSvc.confirmEx(
+          res = Services.prompt.confirmEx(
             aWindow, lazy.genStrBundle.GetStringFromName("deletinglogininfo"),
             lazy.genStrBundle.GetStringFromName("deletingareyousure"),
-            lazy.promptSvc.STD_YES_NO_BUTTONS | lazy.promptSvc.BUTTON_POS_1_DEFAULT
-            | lazy.promptSvc.BUTTON_DELAY_ENABLE, null, null, null,
+            Services.prompt.STD_YES_NO_BUTTONS | Services.prompt.BUTTON_POS_1_DEFAULT
+            | Services.prompt.BUTTON_DELAY_ENABLE, null, null, null,
             lazy.genStrBundle.GetStringFromName("deletingdontask"), cs);
           if (res == 0 && cs.value)
             lazy.prefs.setBoolPref("confirm_ctxmenu_delete", false);
@@ -238,7 +235,7 @@ export var SavedPasswordEditor = {
           showAlert(lazy.genStrBundle.GetStringFromName("logininfodeleted"));
         }
       } catch (e) {
-        lazy.promptSvc.alert(
+        Services.prompt.alert(
           aWindow,
           lazy.genStrBundle.GetStringFromName("error"),
           lazy.genStrBundle.formatStringFromName("failed", [e.message], 1));

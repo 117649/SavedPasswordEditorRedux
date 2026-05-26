@@ -344,8 +344,7 @@ var spEditor = {
         }
       }
       if (error) {
-        Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
-          getService(Components.interfaces.nsIPromptService).
+        Services.prompt.
           alert(window, this.genStrBundle.getString("error"),
             this.pmoStrBundle.getString(
               selSignons.length == 1 ? "badurl" : "badmulturl"));
