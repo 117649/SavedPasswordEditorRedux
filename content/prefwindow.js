@@ -31,8 +31,15 @@ const $ = aEl => document.getElementById(aEl);
 
 window.addEventListener(
   "load",
-  () => { $("entershortcut_lbl").style.visibility = "hidden"; },
-  false);
+  () => {
+    customElements.define("prefwindow", class PrefWindowInstant extends PrefWindow { _instantApplyInitialized = true; instantApply = true; });
+    if (window.toString() == "[object ChromeWindow]") window.sizeToContent();
+    $("entershortcut_lbl").style.visibility = "hidden";
+  }, false);
+
+$("displayMenuitem_ck").addEventListener("command", toggle_displayMenuitem, false);
+$("opensp_shortcut_capturebtn").addEventListener("command", captureshortcut, false);
+$("alwaysshowpasswords_ck").addEventListener("command", toggle_alwaysShowPasswords, false);
 
 var keycodesToSymbols = {}, symbolsToKeycodes = {};
 {

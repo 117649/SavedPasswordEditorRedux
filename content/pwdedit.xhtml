@@ -26,11 +26,7 @@
 <dialog id="pwdedit"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml"
         title="&savedpasswordeditor.title;"
-        buttons="accept,cancel"
-        ondialogaccept="return setNewSignon();">
-  <script type="text/javascript"><![CDATA[
-    this.addEventListener("dialogaccept",_=> {return setNewSignon()});
-    ]]></script>
+        buttons="accept,cancel">
   <stringbundleset id="stringbundleset">
     <stringbundle id="general-string-bundle"
                   src="chrome://savedpasswordeditor/locale/spe.properties"/>
@@ -42,7 +38,7 @@
   <label id="header"/>
   <html:fieldset id="type_groupbox">
     <caption id="type_caption" label="&signontype.label;"/>
-    <radiogroup id="type_group" oncommand="handle_typeSelect();">
+    <radiogroup id="type_group">
       <radio id="type_form" label="&type_form.label;"
              accesskey="&type_form.accesskey;"
              tooltiptext="&type_form.tooltip;"/>
@@ -99,12 +95,11 @@
                  tooltiptext="&password.tooltip;"/>
         <button id="showPassword_btn" label="&showPassword.label;"
                 accesskey="&showPassword.accesskey;"
-                tooltiptext="&showPassword.tooltip;"
-                oncommand="togglePasswordView();"/>
+                tooltiptext="&showPassword.tooltip;"/>
         <button id="hidePassword_btn" label="&hidePassword.label;"
                 accesskey="&hidePassword.accesskey;"
                 tooltiptext="&showPassword.tooltip;"
-                oncommand="togglePasswordView();" hidden="true"/>
+                hidden="true"/>
       </html:row>
       <html:row align="center">
         <label id="usernameField_lbl" control="usernameField_text"
@@ -125,14 +120,14 @@
     <button id="guessFromPage_btn" label="&guessfrompage.label;"
             accesskey="&guessfrompage.accesskey;"
             tooltiptext="&guessfrompage.tooltip;"
-            oncommand="guessParameters();" flex="1"/>
+            flex="1"/>
     <button id="prevForm_btn" label="&prevform.label;"
             accesskey="&prevform.accesskey;"
-            tooltiptext="&prevform.tooltip;" oncommand="prevForm();"
+            tooltiptext="&prevform.tooltip;"
             hidden="true" flex="1"/>
     <button id="nextForm_btn" label="&nextform.label;"
             accesskey="&nextform.accesskey;"
-            tooltiptext="&nextform.tooltip;" oncommand="nextForm();"
+            tooltiptext="&nextform.tooltip;"
             hidden="true" flex="1"/>
   </hbox>
 </dialog>

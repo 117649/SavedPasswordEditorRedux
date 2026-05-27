@@ -62,6 +62,9 @@ let signonReloadDisplay = {
   },
 };
 
+window.addEventListener("load", Startup, false);
+window.addEventListener("unload", Shutdown, false);
+
 // Formatter for localization.
 let dateFormatter = new Services.intl.DateTimeFormat(undefined, {
   dateStyle: "medium",
@@ -91,6 +94,38 @@ async function Startup() {
   if (Services.policies && !Services.policies.isAllowed("passwordReveal")) {
     togglePasswordsButton.hidden = true;
   }
+
+  filterField.addEventListener("input", FilterPasswords, false);
+  signonsTree.addEventListener("keypress", HandleSignonKeyPress, false);
+  signonsTree.addEventListener("select", SignonSelected, false);
+
+  removeButton.addEventListener("command", DeleteSignon, false);
+  removeAllButton.addEventListener("command", DeleteAllSignons, false);
+  togglePasswordsButton.addEventListener("command", TogglePasswordVisible, false);
+  
+  document.querySelector('key[keycode="VK_ESCAPE"]').addEventListener("command", escapeKeyHandler, false);
+  document.querySelector('key[key="w"]').addEventListener("command", escapeKeyHandler, false);
+  document.querySelector('key[key="f"]').addEventListener("command", FocusFilterBox, false);
+  document.querySelector('key[key="k"]').addEventListener("command", FocusFilterBox, false);
+
+  document.getElementById("signonsTreeContextMenu").addEventListener("popupshowing", UpdateContextMenu, false);
+  document.getElementById("context-copysiteurl").addEventListener("command", CopySiteUrl, false);
+  document.getElementById("context-launchsiteurl").addEventListener("command", LaunchSiteUrl, false);
+  document.getElementById("context-copyusername").addEventListener("command", CopyUsername, false);
+  document.getElementById("context-copypassword").addEventListener("command", CopyPassword, false);
+  document.getElementById("context-editusername").addEventListener("command", _ => EditCellInSelectedRow("username"), false);
+  document.getElementById("context-editpassword").addEventListener("command", _ => EditCellInSelectedRow("password"), false);
+
+  document.getElementById("edit_signon").addEventListener("command", _ => spEditor.editSignon(), false);
+  document.getElementById("clone_signon").addEventListener("command", _ => spEditor.cloneSignon(), false);
+  document.getElementById("new_signon").addEventListener("command", _ => spEditor.newSignon(), false);
+  document.getElementById("visit_site").addEventListener("command", _ => spEditor.visitSite(), false);
+
+  document.getElementById("speMenuBtn_editSignon").addEventListener("command", event => spEditor.menuBtnSel(event, event.currentTarget), false);
+  document.getElementById("speMenuBtn_cloneSignon").addEventListener("command", event => spEditor.menuBtnSel(event, event.currentTarget), false);
+  document.getElementById("speMenuBtn_newSignon").addEventListener("command", event => spEditor.menuBtnSel(event, event.currentTarget), false);
+  document.querySelector('button[label="Import"]').addEventListener("command", OpenMigrator, false);
+  document.querySelector('button[label="Close"]').addEventListener("command", _ => window.close(), false);
 
   document
     .getElementsByTagName("treecols")[0]

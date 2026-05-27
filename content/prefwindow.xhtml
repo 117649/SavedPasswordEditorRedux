@@ -26,7 +26,6 @@
 
 <prefwindow
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml"
-    onload="customElements.define('prefwindow', class PrefWindowInstant extends PrefWindow {_instantApplyInitialized = true; instantApply = true;}); if (window.toString() == '[object ChromeWindow]') window.sizeToContent();"
     id="savedpasswordeditor-prefwindow" title="&prefwindow.title;">
   <prefpane>
     <preferences>
@@ -62,8 +61,7 @@
       <html:legend>&opensp_group.caption;</html:legend>
       <checkbox id="displayMenuitem_ck" label="&displayMenuitem.label;"
                 tooltiptext="&displayMenuitem.tooltip;"
-                preference="pref-display-menuitem"
-                oncommand="toggle_displayMenuitem();"/>
+                preference="pref-display-menuitem"/>
       <hbox id="renameMenuitem_row" align="center" class="indent">
         <label id="renameMenuitem_lbl" value="&renameMenuitemTo.label;"
                tooltiptext="&renameMenuitemTo.tooltip;"/>
@@ -84,8 +82,7 @@
                  onsynctopreference="return synctopref();"/>
         <button id="opensp_shortcut_capturebtn"
                 label="&captureshortcut.label;"
-                tooltiptext="&captureshortcut.tooltip;"
-                oncommand="captureshortcut(event);"/>
+                tooltiptext="&captureshortcut.tooltip;"/>
         <button id="opensp_keypressrecv" tabindex="-1"/>
       </hbox>
       <label id="entershortcut_lbl" value="&entershortcut.label;"/>
@@ -104,8 +101,7 @@
                 preference="pref-preselect-current-site"/>
       <checkbox id="alwaysshowpasswords_ck" label="&alwaysShowPasswords.label;"
                 tooltiptext="&alwaysShowPasswords.tooltip;"
-                preference="pref-alwaysshowpasswords"
-                oncommand="toggle_alwaysShowPasswords();"/>
+                preference="pref-alwaysshowpasswords"/>
       <checkbox id="forcepromptformasterpassword_ck" class="indent"
                 label="&alwaysPromptForMasterPassword.label;"
                 tooltiptext="&alwaysPromptForMasterPassword.tooltip;"

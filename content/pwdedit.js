@@ -38,6 +38,14 @@ window.addEventListener(
     pwdCurHidden = (pwdField.type == "password");
     pwdField.setAttribute("type", "password");
     window.removeEventListener("DOMContentLoaded", dclHandler, false);
+
+    document.documentElement.addEventListener("dialogaccept", setNewSignon);
+    $("type_group").addEventListener("command", handle_typeSelect, false);
+    $("showPassword_btn").addEventListener("command", togglePasswordView, false);
+    $("hidePassword_btn").addEventListener("command", togglePasswordView, false);
+    $("guessFromPage_btn").addEventListener("command", guessParameters, false);
+    $("prevForm_btn").addEventListener("command", prevForm, false);
+    $("nextForm_btn").addEventListener("command", nextForm, false);
   },
   false);
 
