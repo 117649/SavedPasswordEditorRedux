@@ -103,9 +103,6 @@ async function Startup() {
       }
 
       SignonColumnSort(sortField);
-      // Services.telemetry
-      //   .getKeyedHistogramById("PWMGR_MANAGE_SORTED")
-      //   .add(sortField);
     });
 
   await LoadSignons();
@@ -451,7 +448,6 @@ async function DeleteAllSignons() {
   removeButton.setAttribute("disabled", "true");
   removeAllButton.setAttribute("disabled", "true");
   await FinalizeSignonDeletions(syncNeeded);
-  // Services.telemetry.getHistogramById("PWMGR_MANAGE_DELETED_ALL").add(1);
   Services.obs.notifyObservers(
     null,
     "weave:telemetry:histogram",
@@ -471,9 +467,6 @@ async function TogglePasswordVisible() {
   // Notify observers that the password visibility toggling is
   // completed.  (Mostly useful for tests)
   Services.obs.notifyObservers(null, "passwordmgr-password-toggle-complete");
-  // Services.telemetry
-  // .getHistogramById("PWMGR_MANAGE_VISIBILITY_TOGGLED")
-  // .add(showingPasswords);
   Services.obs.notifyObservers(
     null,
     "weave:telemetry:histogram",
@@ -504,7 +497,6 @@ async function FinalizeSignonDeletions(syncNeeded) {
   for (let s = 0; s < deletedSignons.length; s++) {
     if(!deletedSignons[s]) continue;
     Services.logins.removeLogin(deletedSignons[s]);
-    // Services.telemetry.getHistogramById("PWMGR_MANAGE_DELETED").add(1);
     Services.obs.notifyObservers(
       null,
       "weave:telemetry:histogram",
@@ -718,7 +710,6 @@ async function CopyPassword() {
   let row = signonsTree.currentIndex;
   let password = signonsTreeView.getCellText(row, { id: "passwordCol" });
   clipboard.copyString(password);
-  // Services.telemetry.getHistogramById("PWMGR_MANAGE_COPIED_PASSWORD").add(1);
   Services.obs.notifyObservers(
     null,
     "weave:telemetry:histogram",
@@ -734,7 +725,6 @@ function CopyUsername() {
   let row = signonsTree.currentIndex;
   let username = signonsTreeView.getCellText(row, { id: "userCol" });
   clipboard.copyString(username);
-  // Services.telemetry.getHistogramById("PWMGR_MANAGE_COPIED_USERNAME").add(1);
   Services.obs.notifyObservers(
     null,
     "weave:telemetry:histogram",
