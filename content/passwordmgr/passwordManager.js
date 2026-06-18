@@ -833,7 +833,7 @@ async function masterPasswordLogin(noPasswordCallback) {
   );
 
   // If there is no master password, still give the user a chance to opt-out of displaying passwords
-  if (token.checkPassword("")) {
+  if (!token.hasPassword) {
     return noPasswordCallback ? noPasswordCallback() : true;
   }
 

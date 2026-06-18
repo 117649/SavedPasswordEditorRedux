@@ -185,7 +185,7 @@ function login () {
   var token = Components.classes["@mozilla.org/security/pk11tokendb;1"].
                 createInstance(Components.interfaces.nsIPK11TokenDB).
                 getInternalKeyToken();
-  if (!token.checkPassword("")) {
+  if (token.hasPassword) {
     try {
       token.login(true);
     } catch (e) { }
