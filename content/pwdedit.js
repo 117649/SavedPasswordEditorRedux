@@ -64,14 +64,9 @@ window.addEventListener(
                         username: "", password: "", usernameField: "",
                         passwordField: "" };
 
-    if (editorMode == 0)
-      $("header").setAttribute("value", peStrBundle.getString("newlogin"));
-    else if (editorMode == 2)
-      $("header").setAttribute("value", peStrBundle.getString("clonelogin"));
-    else
-      $("header").setAttribute(
-        "value", peStrBundle.getString(oldSignons.length > 1 ? "editmultlogin"
-                                                           : "editlogin"));
+    if (editorMode == 0) $("header").textContent = peStrBundle.getString("newlogin");
+    else if (editorMode == 2) $("header").textContent = peStrBundle.getString("clonelogin");
+    else $("header").textContent = peStrBundle.getString(oldSignons.length > 1 ? "editmultlogin" : "editlogin");
 
     var compositeSignon = intersectSignonProps(oldSignons);
 

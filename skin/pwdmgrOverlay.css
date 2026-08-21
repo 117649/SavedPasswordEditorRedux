@@ -19,17 +19,30 @@
 @namespace "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
 #speMenuBtn {
-  margin-right: -3px;
-  border-width: 0px;
-  padding: 0px;
+  margin-inline-end: 0;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  -moz-context-properties: fill, fill-opacity;
+  fill: currentColor;
+  fill-opacity: 1;
 }
 
-#speMenuBtn + button{
-  -moz-appearance: none;
-  min-width: unset;
-  /* margin: 0; */
+#speMenuBtn + button {
+  min-width: 0;
+  margin-inline-start: -1px;
+  padding-inline: 4px;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
 }
 
-#speMenuBtn > button {
-  margin-right: 0px;
+#speMenuBtn + button .button-menu-dropmarker {
+  width: 12px;
+  height: 12px;
 }
+
+#speMenuBtn .button-icon {
+  margin-inline-end: 4px;
+}
+
+#speMenuBtnPopup *|*.menu-icon { margin-top: 0; margin-inline-end: 4px; }
+#speMenuBtn_newSignon > *|*.menu-icon { transform: translateY(-1px); }

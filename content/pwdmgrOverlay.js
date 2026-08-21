@@ -131,12 +131,11 @@ document.getElementById("signonsTree").addEventListener(
         removeAttribute("disabled");
       if (!spEditor.userChangedMenuBtn) {
         document.getElementById("speMenuBtn").command = "edit_signon";
-        document.getElementById("speMenuBtn").
-          setAttribute("icon", "properties");
+        document.getElementById("speMenuBtn").setAttribute("image", "chrome://global/skin/icons/edit.svg");
       }
     } else {
       document.getElementById("speMenuBtn").command = "new_signon";
-      document.getElementById("speMenuBtn").setAttribute("icon", "add");
+      document.getElementById("speMenuBtn").setAttribute("image", "chrome://global/skin/icons/plus.svg");
       document.getElementById("key_editSignon").
         setAttribute("disabled", "true");
       document.getElementById("edit_signon").setAttribute("disabled", "true");
@@ -178,22 +177,20 @@ var spEditor = {
   menuBtnSel: async function (ev, elem) {
     this.userChangedMenuBtn = true;
     var mb = document.getElementById("speMenuBtn");
+    mb.setAttribute("image", elem.getAttribute("image"));
     switch (elem.id) {
       case "speMenuBtn_editSignon":
         mb.command = "edit_signon";
-        mb.setAttribute("icon", "properties");
         await this.editSignon();
         break;
 
       case "speMenuBtn_cloneSignon":
         mb.command = "clone_signon";
-        mb.removeAttribute("icon");
         await this.cloneSignon();
         break;
 
       case "speMenuBtn_newSignon":
         mb.command = "new_signon";
-        mb.setAttribute("icon", "add");
         await this.newSignon();
         break;
     }

@@ -35,7 +35,7 @@
   </stringbundleset>
   <script src="chrome://savedpasswordeditor/content/qtextbox.js"/>
   <script type="text/javascript" src="pwdedit.js"/>
-  <label id="header"/>
+  <html:h1 id="header" class="heading-medium"/>
   <html:fieldset id="type_groupbox">
     <caption id="type_caption" label="&signontype.label;"/>
     <radiogroup id="type_group">
@@ -48,10 +48,19 @@
     </radiogroup>
   </html:fieldset>
   <html:style>
+    #header {
+      margin: 0 0 8px;
+      padding: 6px 8px;
+      color: white;
+      background-color: light-dark(#0061e0, #0a84ff);
+      border-radius: 3px;
+    }
+
     grid {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
+      row-gap: 4px;
     }
 
     rows,row{
@@ -59,6 +68,10 @@
     }
     row > :first-child {
       grid-column-start: 1;
+    }
+
+    #guessFromPage_box {
+      margin-block-start: 4px;
     }
   </html:style>
   <grid>
