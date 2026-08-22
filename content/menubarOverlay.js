@@ -83,8 +83,8 @@
           getService(Components.interfaces.nsIPrefService).
           getBranch("extensions.savedpasswordeditor.");
 
-      function menuitemDynamic (evt) {
-        var mi = document.getElementById("savedpasswordeditor-toolsmenuitem");
+      function menuitemDynamic (id) {
+        var mi = document.getElementById(id);
         var renameTo = prefBranch.getStringPref("rename_menuitem_to");
 
         if (renameTo) {
@@ -104,42 +104,16 @@
         return true;
       }
 
-      function register_menuitemDynamic(popup) {
+      function register_menuitemDynamic(popup, id) {
         if (popup)
-          popup.addEventListener("popupshowing", menuitemDynamic, false);
-      }
-
-      function appmenuitemDynamic (evt) {
-        var mi = document.getElementById("savedpasswordeditor-appmenuitem");
-        var renameTo = prefBranch.getStringPref("rename_menuitem_to");
-
-        if (renameTo) {
-          mi.setAttribute("label", renameTo);
-          mi.removeAttribute("tooltiptext");
-          mi.removeAttribute("accesskey");
-          mi.setAttribute("style", "list-style-image:none;");
-        } else {
-          mi.setAttribute("label", mi.getAttribute("standardlabel"));
-          mi.setAttribute(
-            "tooltiptext", mi.getAttribute("standardtooltiptext"));
-          mi.setAttribute("accesskey", mi.getAttribute("standardaccesskey"));
-          mi.removeAttribute("style");
-        }
-        var hidden = !prefBranch.getBoolPref("display_menuitem");
-        mi.hidden = hidden;
-        return true;
-      }
-
-      function register_appmenuitemDynamic(popup) {
-        if (popup)
-          popup.addEventListener("popupshowing", appmenuitemDynamic, false);
+          popup.addEventListener("popupshowing", () => menuitemDynamic(id), false);
       }
 
       observe(null, null, "opensp");
 
-      register_menuitemDynamic(document.getElementById("menu_ToolsPopup"));
-      register_menuitemDynamic(document.getElementById("taskPopup"));
-      register_appmenuitemDynamic(document.getElementById("appmenu-popup"));
+      register_menuitemDynamic(document.getElementById("menu_ToolsPopup"), "savedpasswordeditor-toolsmenuitem");
+      register_menuitemDynamic(document.getElementById("taskPopup"), "savedpasswordeditor-toolsmenuitem");
+      register_menuitemDynamic(document.getElementById("appmenu-popup"), "savedpasswordeditor-appmenuitem");
       window.removeEventListener("load", init_menuitemDynamic, false);
     },
     false);

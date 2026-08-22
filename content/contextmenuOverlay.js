@@ -28,20 +28,14 @@ addEventListener(
   function _loadHandler () {
     const prefix = "savedpasswordeditor-";
 
-    function showItem (aId) {
-      document.getElementById(prefix + aId).hidden = false;
-    }
-
-    function hideItem (aId) {
-      document.getElementById(prefix + aId).hidden = true;
-    }
-
     var contextshowingHandler = {
       receiveMessage ({ data }) {
         SavedPasswordEditor.updateLoginInfo(data);
         let idList = ["ctxmenuseparator",
                       "savelogininfo", "editlogininfo", "deletelogininfo"];
-        idList.forEach(data ? showItem : hideItem);
+        idList.forEach(id => {
+          document.getElementById(prefix + id).hidden = !data;
+        });
       },
     };
 
