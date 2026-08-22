@@ -18,22 +18,13 @@
 
 "use strict";
 
-try { var { SavedPasswordEditor } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/SavedPasswordEditor.mjs"); } catch (e) { }
-
-window.messageManager.loadFrameScript(
-  "chrome://savedpasswordeditor/content/frame-script.js", true);
-
-addEventListener(
-  "load",
-  function _loadHandler () {
+function contextMenuLoadHandler () {
     const prefix = "savedpasswordeditor-";
 
-    var contextshowingHandler = {
+    const contextshowingHandler = {
       receiveMessage ({ data }) {
         SavedPasswordEditor.updateLoginInfo(data);
-        let idList = ["ctxmenuseparator",
-                      "savelogininfo", "editlogininfo", "deletelogininfo"];
-        idList.forEach(id => {
+        ["ctxmenuseparator", "savelogininfo", "editlogininfo", "deletelogininfo"].forEach(id => {
           document.getElementById(prefix + id).hidden = !data;
         });
       },
@@ -41,6 +32,9 @@ addEventListener(
 
     window.messageManager.addMessageListener(
       "SavedPasswordEditor:contextshowing", contextshowingHandler);
-    removeEventListener("load", _loadHandler, false);
-  },
-  false);
+    Overlay.addCleanup(() => window.messageManager.removeMessageListener(
+      "SavedPasswordEditor:contextshowing", contextshowingHandler));
+}
+
+window.addEventListener("load", contextMenuLoadHandler, { once: true });
+Overlay.addCleanup(() => window.removeEventListener("load", contextMenuLoadHandler));

@@ -63,12 +63,9 @@ export var SavedPasswordEditor = {
     const HTMLInputElement =
       aElement.ownerDocument.defaultView.HTMLInputElement;
 
-    if (aElement instanceof HTMLInputElement && aElement.form) {
-      var form = aElement.form;
-    } else
-      return null;
+    if (!(aElement instanceof HTMLInputElement) || !aElement.form) return null;
 
-    var data = extractLoginForm(form, aElement.ownerDocument.defaultView);
+    const data = extractLoginForm(aElement.form, aElement.ownerDocument.defaultView);
     if (!data) return null;
 
     return {

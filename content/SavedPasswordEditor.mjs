@@ -127,9 +127,7 @@ export var SavedPasswordEditor = {
   },
 
   _handleDisambigSelection: async function (aEvt) {
-    var spe = SavedPasswordEditor, target = aEvt.target,
-        window = target.ownerDocument.defaultView,
-        dp = el(window, "savedpasswordeditor-disambig-popup");
+    var spe = SavedPasswordEditor, target = aEvt.target, window = target.ownerDocument.defaultView;
 
     if (spe._deleting) {
       try {

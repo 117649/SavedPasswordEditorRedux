@@ -21,11 +21,6 @@
           "chrome://savedpasswordeditor/locale/browserOverlay.dtd">
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/javascript"><![CDATA[
-    try { var { SavedPasswordEditor } = ChromeUtils.importESModule(
-      "chrome://savedpasswordeditor/content/SavedPasswordEditor.mjs"); } catch (e) { }
-  ]]></script>
-
   <commandset>
     <command id="savedpasswordeditor-command-opensavedpasswords"
              oncommand="SavedPasswordEditor.openSavedPasswords();"/>

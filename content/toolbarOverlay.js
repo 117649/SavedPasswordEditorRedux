@@ -18,14 +18,7 @@
 
 "use strict";
 
-try { var { SavedPasswordEditor } = ChromeUtils.importESModule(
-  "chrome://savedpasswordeditor/content/SavedPasswordEditor.mjs"); } catch (e) { }
-
-window.addEventListener(
-  "load",
-  function _loadHandler () {
-    window.removeEventListener("load", _loadHandler, false);
-
+function toolbarLoadHandler () {
     const btnId = "savedpasswordeditor-button";
     const btnPos = {
       "navigator:browser": [["nav-bar", null],],
@@ -34,49 +27,44 @@ window.addEventListener(
       "msgcompose": [["composeToolbar2", null],
                      ["composeToolbar", "throbber-box"],],
     };
-    var wtype = document.documentElement.getAttribute("windowtype");
+    const wtype = document.documentElement.getAttribute("windowtype");
 
     if (!(wtype in btnPos)) return;
 
     const prefName = "extensions.savedpasswordeditor.addedButtonTo";
-    var prefs = Components.classes["@mozilla.org/preferences-service;1"].
-               getService(Components.interfaces.nsIPrefService).getBranch("");
-    if (prefs.prefHasUserValue(prefName))
-      var addedButtonTo = prefs.getCharPref(prefName).split(",");
-    else
-      var addedButtonTo = [];
+    const prefs =
+      Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("");
+    const addedButtonTo = prefs.prefHasUserValue(prefName) ? prefs.getCharPref(prefName).split(",") : [];
+    if (addedButtonTo.includes(wtype)) return;
 
-    if (addedButtonTo.indexOf(wtype) == -1) {
-      if (document.getElementById("PanelUI-menu-button")) {
-        /* Australis */
+    const btn = document.getElementById(btnId);
+    if (document.getElementById("PanelUI-menu-button")) {
+      /* Australis */
 
-        var btn = document.getElementById(btnId);
-        if (!btn || btn.parentNode.place == "palette")
-          CustomizableUI.addWidgetToArea("savedpasswordeditor-button",
-                                         "nav-bar");
-      } else {
-        /* Old-style toolbar */
+      if (!btn || btn.parentNode.place == "palette") CustomizableUI.addWidgetToArea(btnId, "nav-bar");
+    } else {
+      /* Old-style toolbar */
 
-        let toolbar, before;
-        for (let [tbId, beforeId] of btnPos[wtype]) {
-          toolbar = document.getElementById(tbId);
-          if (!toolbar) continue;
-          before = beforeId ? document.getElementById(beforeId) : null;
-          break;
-        }
-
-        if (!toolbar) return;
-
-        var btn = document.getElementById(btnId);
-        if (!btn || btn.parentNode.tagName == "toolbarpalette") {
-          toolbar.insertItem(btnId, before);
-          toolbar.setAttribute("currentset", toolbar.currentSet);
-          document.persist(toolbar.id, "currentset");
-        }
+      let toolbar, before;
+      for (const [tbId, beforeId] of btnPos[wtype]) {
+        toolbar = document.getElementById(tbId);
+        if (!toolbar) continue;
+        before = beforeId ? document.getElementById(beforeId) : null;
+        break;
       }
 
-      addedButtonTo.push(wtype);
-      prefs.setCharPref(prefName, addedButtonTo.join(","));
+      if (!toolbar) return;
+
+      if (!btn || btn.parentNode.tagName == "toolbarpalette") {
+        toolbar.insertItem(btnId, before);
+        toolbar.setAttribute("currentset", toolbar.currentSet);
+        document.persist(toolbar.id, "currentset");
+      }
     }
-  },
-  false);
+
+    addedButtonTo.push(wtype);
+    prefs.setCharPref(prefName, addedButtonTo.join(","));
+}
+
+window.addEventListener("load", toolbarLoadHandler, { once: true });
+Overlay.addCleanup(() => window.removeEventListener("load", toolbarLoadHandler));

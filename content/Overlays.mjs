@@ -16,6 +16,8 @@ ChromeUtils.defineESModuleGetters(
 const { CustomizableUI } = ChromeUtils.importESModule("moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs");
 
 const evtInline = new WeakMap();
+const overlayInstances = new WeakMap();
+const widgetOwners = new Map();
 
 /**
  * The overlays class, providing support for loading overlays like they used to work. This class
@@ -32,9 +34,8 @@ export class Overlays {
    */
   static load(overlayProvider, window) {
     const instance = new Overlays(overlayProvider, window);
-
-    const urls = overlayProvider.overlay.get(instance.location, false);
-    return instance.load(urls);
+    instance.ready = instance.load(overlayProvider.overlay.get(instance.location, false));
+    return instance;
   }
 
   /**
@@ -47,16 +48,9 @@ export class Overlays {
   constructor(overlayProvider, window) {
     this.overlayProvider = overlayProvider;
     this.window = window;
-    if (window.location.protocol == "about:") {
-      this.location = window.location.protocol + window.location.pathname;
-    } else {
-      this.location = window.location.origin + window.location.pathname;
-    }
-
-    this.isCSPstrict = evtInline.getOrInsertComputed(window, _ => {
-      const csp = window.document.csp ?? window.document.policyContainer.csp;
-      return !csp.getAllowsInline(Ci.nsIContentSecurityPolicy.SCRIPT_SRC_ATTR_DIRECTIVE, false, "", false, null, null, "", 0, 1);
-    });
+    overlayInstances.set(window, this);
+    this.cleanups = [];
+    this.inlineHandlers = new WeakMap();
     if (!this.sandboxes) this.sandboxes = new WeakMap();
     if (!this.getSandbox) this.getSandbox = (obj) => {
       let global = Cu.getGlobalForObject(obj);
@@ -75,15 +69,47 @@ export class Overlays {
       });
       return sandbox;
     };
+    if (window.location.protocol == "about:") {
+      this.location = window.location.protocol + window.location.pathname;
+    } else {
+      this.location = window.location.origin + window.location.pathname;
+    }
+
+    this.isCSPstrict = evtInline.getOrInsertComputed(window, _ => {
+      const csp = window.document.csp ?? window.document.policyContainer.csp;
+      return !csp.getAllowsInline(Ci.nsIContentSecurityPolicy.SCRIPT_SRC_ATTR_DIRECTIVE, false, "", false, null, null, "", 0, 1);
+    });
+    this._windowUnload = () => this.unload();
+    window.addEventListener("unload", this._windowUnload, { once: true });
   }
 
-  _insertInlineEventHandler = (node, textContent) => Cu.evalInSandbox(`(function(event){${textContent}})`, this.getSandbox(node), null, node.baseURI + `?inline#${node.id}`);
+  _insertInlineEventHandler(node, textContent) {
+    const handlers = this.inlineHandlers.getOrInsertComputed(node, _ => new Map());
+    return handlers.getOrInsertComputed(textContent, _ =>
+      Cu.evalInSandbox(`(function(event){${textContent}})`,
+        this.getSandbox(node), null, node.baseURI + `?inline#${node.id}`));
+  }
 
   /**
    * A shorthand to this.window.document
    */
   get document() {
     return this.window.document;
+  }
+
+  then(...args) { return this.ready.then(...args); }
+  catch(...args) { return this.ready.catch(...args); }
+  finally(...args) { return this.ready.finally(...args); }
+
+  addCleanup(callback) { this.cleanups.push(callback); }
+
+  unload() {
+    if (this.unloading) return;
+    this.unloading = true;
+    for (let i = this.cleanups.length - 1; i >= 0; --i) { try { this.cleanups[i](); } catch (ex) { Cu.reportError(ex); } }
+    this.cleanups.length = 0;
+    overlayInstances.delete(this.window);
+    this.window.removeEventListener("unload", this._windowUnload);
   }
 
   /**
@@ -112,6 +138,7 @@ export class Overlays {
     for (const url of unloadedOverlays) {
       unloadedOverlays.delete(url);
       const doc = await this.fetchOverlay(url);
+      if (this.unloading) return;
 
       console.debug(`Applying ${url} to ${this.location}`);
 
@@ -163,16 +190,11 @@ export class Overlays {
         }
       }
 
-      const t_unloadedOverlays = [];
       // Prepare loading further nested xul overlays from the overlay
-      t_unloadedOverlays.push(...this._collectOverlays(doc));
+      for (const overlayUrl of this._collectOverlays(doc)) { unloadedOverlays.add(overlayUrl); }
 
       // Prepare loading further nested xul overlays from the registry
-      for (const overlayUrl of this.overlayProvider.overlay.get(url, false)) {
-        t_unloadedOverlays.push(overlayUrl);
-      }
-
-      t_unloadedOverlays.forEach(o => unloadedOverlays.add(o));
+      for (const overlayUrl of this.overlayProvider.overlay.get(url, false)) { unloadedOverlays.add(overlayUrl); }
 
       // Run through all overlay nodes on the first level (hookup nodes). Scripts will be deferred
       // until later for simplicity (c++ code seems to process them earlier?).
@@ -250,6 +272,7 @@ export class Overlays {
 
     if (this.document.readyState == "complete") {
       lazy.setTimeout(() => {
+        if (this.unloading) return;
         this._finish();
 
         // Now execute load handlers since we are done loading scripts
@@ -266,13 +289,7 @@ export class Overlays {
           this._fireEventListener(listener);
         }
       });
-    } else {
-      this.document.defaultView.addEventListener(
-        "load",
-        this._finish.bind(this),
-        {once: true}
-      );
-    }
+    } else { this.window.addEventListener("load", () => { if (!this.unloading) this._finish(); }, {once: true}); }
   }
 
   _finish() {
@@ -356,7 +373,7 @@ export class Overlays {
             try {
               CustomizableUI.beginBatchUpdate();
               for (const button of node.childNodes) {
-                const widget = CustomizableUI.getWidget(button.id);
+                let widget = CustomizableUI.getWidget(button.id);
                 if (!widget || widget.provider != CustomizableUI.PROVIDER_API) {
                   const data = { removable: true };
                   if (button.attributes) {
@@ -365,17 +382,16 @@ export class Overlays {
                     }
                   }
 
-                  const validTypes = ['button', 'view', 'button-and-view', 'custom'];
                   if (!data.type) {
                     data.type = button.tagName == 'toolbarbutton' ? 'button' : 'custom';
-                  } else if (!validTypes.includes(data.type)) {
-                    data.type = 'custom';
-                  }
+                  } else if (!['button', 'view', 'button-and-view', 'custom'].includes(data.type)) { data.type = 'custom'; }
 
                   // Convert on* attributes to event handlers
                   if (data.type !== 'custom') {
                     for (const key of Object.keys(data).filter(t => t.startsWith('on'))) {
-                      data['on' + key.charAt(2).toUpperCase() + key.slice(3)] = this._insertInlineEventHandler(button, data[key]);
+                      data['on' + key.charAt(2).toUpperCase() + key.slice(3)] = event =>
+                        overlayInstances.get(event.target.ownerDocument.defaultView)
+                          ?._insertInlineEventHandler(event.target, data[key]).call(event.target, event);
                     }
                   }
 
@@ -393,13 +409,24 @@ export class Overlays {
                       return parent.firstChild;
                     };
                   }
-                  CustomizableUI.createWidget(data);
+                  widget = CustomizableUI.createWidget(data);
                 } else {
                   try {
                     CustomizableUI.ensureWidgetPlacedInWindow(button.id, this.window);
                   } catch (ex) {
                     Cu.reportError(ex);
                   }
+                }
+                if (widget?.provider == CustomizableUI.PROVIDER_API) {
+                  const widgetId = button.id;
+                  widgetOwners.set(widgetId, (widgetOwners.get(widgetId) ?? 0) + 1);
+                  this.addCleanup(() => {
+                    const owners = widgetOwners.get(widgetId) - 1;
+                    if (owners) { widgetOwners.set(widgetId, owners); } else {
+                      widgetOwners.delete(widgetId);
+                      CustomizableUI.destroyWidget(widgetId);
+                    }
+                  });
                 }
               }
             } finally {
@@ -471,19 +498,12 @@ export class Overlays {
       this._toolbarsToResolve.push(...node.querySelectorAll("toolbar"));
     }
 
-    const nodes = node.querySelectorAll('script');
-    for (const script of nodes) {
-      this.deferredLoad.push(...this.loadScript(script));
-    }
+    for (const script of node.querySelectorAll('script')) { this.deferredLoad.push(...this.loadScript(script)); }
 
     let wasInserted = false;
     let pos = node.getAttribute("insertafter");
-    let after = true;
-
-    if (!pos) {
-      pos = node.getAttribute("insertbefore");
-      after = false;
-    }
+    const after = Boolean(pos);
+    pos ||= node.getAttribute("insertbefore");
 
     if (this.isCSPstrict) [node, ...node.querySelectorAll("*")].forEach((el) => [...el.attributes].forEach((a) =>
       a.name.startsWith("on") && (el.setAttribute("an" + a.name, el.getAttribute(a.name)), el.removeAttribute(a.name))));
@@ -514,6 +534,7 @@ export class Overlays {
     if (!wasInserted) {
       parent.appendChild(node);
     }
+    this.addCleanup(() => node.remove());
 
     if (this.isCSPstrict) [node, ...node.querySelectorAll("*")].forEach((el) =>
       [...el.attributes].forEach((a) => {
@@ -691,6 +712,7 @@ export class Overlays {
     const winUtils = this.window.windowUtils;
     try {
       winUtils.loadSheetUsingURIString(url, winUtils.AUTHOR_SHEET);
+      this.addCleanup(() => { if (!this.window.closed) { winUtils.removeSheetUsingURIString(url, winUtils.AUTHOR_SHEET); } });
     } catch (ex) {
       if (ex.result != Cr.NS_ERROR_INVALID_ARG) {
         throw ex;

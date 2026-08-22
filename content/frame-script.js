@@ -18,12 +18,12 @@
 
 "use strict";
 
-const Ci = Components.interfaces, Cu = Components.utils;
+{
+
+const Ci = Components.interfaces;
 const { SavedPasswordEditor } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/SavedPasswordEditor-frame.mjs");
 
-addEventListener(
-  "contextmenu",
-  aEvent => {
+function contextmenuHandler (aEvent) {
     var target = aEvent.target;
     if (Ci.nsIDOMXULElement
         && target instanceof Ci.nsIDOMXULElement)  // SeaMonkey, why?
@@ -32,17 +32,23 @@ addEventListener(
     sendSyncMessage(
       "SavedPasswordEditor:contextshowing",
       SavedPasswordEditor.getFormData(target));
-  },
-  false);
+}
 
-addMessageListener(
-  "SavedPasswordEditor:getlocation",
-  () => {
+function getLocationHandler () {
     let loc = content.location;
     sendAsyncMessage("SavedPasswordEditor:returnlocation",
                      `${loc.protocol}//${loc.host}`);
-  });
+}
 
-addMessageListener(
-  "SavedPasswordEditor:scanforloginforms",
-  SavedPasswordEditor.scanForLoginForms);
+function shutdownHandler () {
+  removeEventListener("contextmenu", contextmenuHandler, false);
+  removeMessageListener("SavedPasswordEditor:getlocation", getLocationHandler);
+  removeMessageListener("SavedPasswordEditor:scanforloginforms", SavedPasswordEditor.scanForLoginForms);
+  removeMessageListener("SavedPasswordEditor:shutdown", shutdownHandler);
+}
+
+addEventListener("contextmenu", contextmenuHandler, false);
+addMessageListener("SavedPasswordEditor:getlocation", getLocationHandler);
+addMessageListener("SavedPasswordEditor:scanforloginforms", SavedPasswordEditor.scanForLoginForms);
+addMessageListener("SavedPasswordEditor:shutdown", shutdownHandler);
+}

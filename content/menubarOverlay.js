@@ -20,19 +20,16 @@
 
 {
   let shortcutKey, shortcutKeycode, shortcutModifiers;
-  let Cc = Components.classes, Ci = Components.interfaces;
-  let prefsSvc = Cc["@mozilla.org/preferences-service;1"]
-    .getService(Ci.nsIPrefService);
-  let prefs = prefsSvc.getBranch("extensions.savedpasswordeditor.");
+  const prefs =
+    Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService)
+    .getBranch("extensions.savedpasswordeditor.");
 
-  let observe = (aSubject, aTopic, aData) => {
+  const observe = (aSubject, aTopic, aData) => {
     if (aData.startsWith("opensp")) {
-      let keyObj = document.getElementById(
-        "savedpasswordeditor-key-opensavedpasswords");
-      let miObj = document.getElementById(
-        "savedpasswordeditor-toolsmenuitem");
-      let key = prefs.getCharPref("openspkey");
-      let keyMods = prefs.getCharPref("openspkeymodifiers");
+      const keyObj = document.getElementById("savedpasswordeditor-key-opensavedpasswords");
+      const miObj = document.getElementById("savedpasswordeditor-toolsmenuitem");
+      const key = prefs.getCharPref("openspkey");
+      const keyMods = prefs.getCharPref("openspkeymodifiers");
 
       if (key.length <= 1) {
         shortcutKey = key;
@@ -49,21 +46,17 @@
       miObj.setAttribute("acceltext", "");
       miObj.removeAttribute("acceltext");
 
-      shortcutModifiers = [];
-      var keyElemModList = keyMods.replace(" ", ",").split(",");
-      [["control", "ctrlKey"], ["alt", "altKey"], ["meta", "metaKey"],
-       ["shift", "shiftKey"]].forEach(e => {
-        shortcutModifiers.push(
-          [e[1], (keyElemModList.indexOf(e[0]) != -1)]);
-      });
+      const keyElemModList = keyMods.replace(" ", ",").split(",");
+      shortcutModifiers =
+        [["control", "ctrlKey"], ["alt", "altKey"], ["meta", "metaKey"], ["shift", "shiftKey"]]
+          .map(([name, property]) => [property, keyElemModList.indexOf(name) != -1]);
     }
   };
 
-  prefs.addObserver("", { observe }, false);
+  const prefObserver = { observe };
+  prefs.addObserver("", prefObserver, false);
 
-  window.addEventListener(
-    "keypress",
-    evt => {
+  function keypressHandler (evt) {
       if (shortcutKeycode != 0 ?
         evt.keyCode != shortcutKeycode
         : String.fromCharCode(evt.charCode) != shortcutKey)
@@ -72,20 +65,14 @@
       if (!shortcutModifiers.every(e => evt[e[0]] == e[1])) return;
       document.getElementById(
         "savedpasswordeditor-command-opensavedpasswords").doCommand();
-    },
-    false);
+  }
 
-  window.addEventListener(
-    "load",
-    function init_menuitemDynamic(evt) {
-      const prefBranch =
-        Components.classes["@mozilla.org/preferences-service;1"].
-          getService(Components.interfaces.nsIPrefService).
-          getBranch("extensions.savedpasswordeditor.");
+  window.addEventListener("keypress", keypressHandler, false);
 
+  function init_menuitemDynamic() {
       function menuitemDynamic (id) {
-        var mi = document.getElementById(id);
-        var renameTo = prefBranch.getStringPref("rename_menuitem_to");
+        const mi = document.getElementById(id);
+        const renameTo = prefs.getStringPref("rename_menuitem_to");
 
         if (renameTo) {
           mi.setAttribute("label", renameTo);
@@ -99,22 +86,27 @@
           mi.setAttribute("accesskey", mi.getAttribute("standardaccesskey"));
           mi.removeAttribute("style");
         }
-        var hidden = !prefBranch.getBoolPref("display_menuitem");
-        mi.hidden = hidden;
-        return true;
+        mi.hidden = !prefs.getBoolPref("display_menuitem");
       }
 
-      function register_menuitemDynamic(popup, id) {
-        if (popup)
-          popup.addEventListener("popupshowing", () => menuitemDynamic(id), false);
+      function registerDynamic(popup, id) {
+        if (!popup) return;
+        const handler = () => menuitemDynamic(id);
+        popup.addEventListener("popupshowing", handler, false);
+        Overlay.addCleanup(() => popup.removeEventListener("popupshowing", handler, false));
       }
 
       observe(null, null, "opensp");
 
-      register_menuitemDynamic(document.getElementById("menu_ToolsPopup"), "savedpasswordeditor-toolsmenuitem");
-      register_menuitemDynamic(document.getElementById("taskPopup"), "savedpasswordeditor-toolsmenuitem");
-      register_menuitemDynamic(document.getElementById("appmenu-popup"), "savedpasswordeditor-appmenuitem");
-      window.removeEventListener("load", init_menuitemDynamic, false);
-    },
-    false);
+      registerDynamic(document.getElementById("menu_ToolsPopup"), "savedpasswordeditor-toolsmenuitem");
+      registerDynamic(document.getElementById("taskPopup"), "savedpasswordeditor-toolsmenuitem");
+      registerDynamic(document.getElementById("appmenu-popup"), "savedpasswordeditor-appmenuitem");
+  }
+
+  window.addEventListener("load", init_menuitemDynamic, { once: true });
+  Overlay.addCleanup(() => {
+    prefs.removeObserver("", prefObserver);
+    window.removeEventListener("keypress", keypressHandler, false);
+    window.removeEventListener("load", init_menuitemDynamic);
+  });
 }
