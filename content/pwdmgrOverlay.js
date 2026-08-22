@@ -215,22 +215,24 @@ var spEditor = {
     return newSignon;
   },
 
-  _getFilterSet: () => {
-    if (window.signons) {
-      let treeView = signonsTreeView;
-      return treeView._filterSet.length ? treeView._filterSet : signons;
-    } else {
-      let filterField = document.getElementById("filter");
-      return _filterPasswords(filterField.value);
-    }
+  _refreshFilter: async function () {
+    var fv = document.getElementById("filter").value;
+    await setFilter("");
+    await setFilter(fv);
+    this.signonsTree.view.selection.clearSelection();
+  },
+
+  _showEntryError: function (e) {
+    Services.prompt.
+      alert(window, this.genStrBundle.getString("error"),
+        this.pmoStrBundle.getFormattedString("badnewentry", [e.message]));
   },
 
   editSignon: async function () {
     this.selectionsEnabled = false;
     var selections = GetTreeSelections(this.signonsTree);
     if (selections.length < 1) return;
-    let filterSet = this._getFilterSet();
-    var table = filterSet.length ? filterSet : signons;
+    var table = GetVisibleLogins();
     var selSignons = selections.map(el => table[el]);
     var ret = { newSignon: null, callback: null };
     window.openDialog(
@@ -243,26 +245,17 @@ var spEditor = {
 
     try {
       for (let i = 0; i < selSignons.length; i++)
-        Services.logins.modifyLogin(
-          selSignons[i], this._mergeSignonProps(selSignons[i], ret.newSignon));
-      var fv = document.getElementById("filter").value;
-      await setFilter("");
-      await setFilter(fv);
-      this.signonsTree.view.selection.clearSelection();
-    } catch (e) {
-      Services.prompt.
-        alert(window, this.genStrBundle.getString("error"),
-          this.pmoStrBundle.getFormattedString("badnewentry",
-            [e.message]));
-    }
+        await (Services.logins.modifyLoginAsync || Services.logins.modifyLogin).call(Services.logins, selSignons[i],
+            this._mergeSignonProps(selSignons[i], ret.newSignon));
+      await this._refreshFilter();
+    } catch (e) { this._showEntryError(e); }
   },
 
   cloneSignon: async function () {
     this.selectionsEnabled = false;
     var selections = GetTreeSelections(this.signonsTree);
     if (selections.length != 1) return;
-    let filterSet = this._getFilterSet();
-    var table = filterSet.length ? filterSet : signons;
+    var table = GetVisibleLogins();
     var signon = table[selections[0]];
     var ret = { newSignon: null, callback: null };
     window.openDialog(
@@ -272,17 +265,10 @@ var spEditor = {
     this.selectionsEnabled = true;
     if (!ret.newSignon) return;
     try {
-      await Services.logins.addLoginAsync(this._mergeSignonProps(signon, ret.newSignon));
-      var fv = document.getElementById("filter").value;
-      await setFilter("");
-      await setFilter(fv);
-      this.signonsTree.view.selection.clearSelection();
-    } catch (e) {
-      Services.prompt.
-        alert(window, this.genStrBundle.getString("error"),
-          this.pmoStrBundle.getFormattedString("badnewentry",
-            [e.message]));
-    }
+      await (Services.logins.addLoginAsync || Services.logins.addLogin).
+        call(Services.logins, this._mergeSignonProps(signon, ret.newSignon));
+      await this._refreshFilter();
+    } catch (e) { this._showEntryError(e); }
   },
 
   newSignon: async function () {
@@ -298,31 +284,16 @@ var spEditor = {
     this.selectionsEnabled = true;
     if (!ret.newSignon) return;
     try {
-      let newSignon =
-        Components.classes["@mozilla.org/login-manager/loginInfo;1"].
-          createInstance(Components.interfaces.nsILoginInfo);
-      newSignon.init(ret.newSignon.hostname, ret.newSignon.formSubmitURL,
-        ret.newSignon.httpRealm, ret.newSignon.username,
-        ret.newSignon.password, ret.newSignon.usernameField,
-        ret.newSignon.passwordField);
-      await Services.logins.addLoginAsync(newSignon);
-      var fv = document.getElementById("filter").value;
-      await setFilter("");
-      await setFilter(fv);
-      this.signonsTree.view.selection.clearSelection();
-    } catch (e) {
-      Services.prompt.
-        alert(window, this.genStrBundle.getString("error"),
-          this.pmoStrBundle.getFormattedString("badnewentry",
-            [e.message]));
-    }
+      await (Services.logins.addLoginAsync || Services.logins.addLogin).
+        call(Services.logins, this._mergeSignonProps({}, ret.newSignon));
+      await this._refreshFilter();
+    } catch (e) { this._showEntryError(e); }
   },
 
   visitSite: function () {
     var selections = GetTreeSelections(this.signonsTree);
     if (selections.length < 1) return;
-    let filterSet = this._getFilterSet();
-    var table = filterSet.length ? filterSet : signons;
+    var table = GetVisibleLogins();
     var selSignons = selections.map(el => table[el]);
 
     var curWin =

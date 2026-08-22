@@ -78,7 +78,7 @@ export var SavedPasswordEditor = {
   },
 
   saveLoginInfo: function (aWindow, aEvt) {
-    function _finish (aNewSignon) {
+    async function _finish (aNewSignon) {
       if (!aNewSignon) return;
       try {
         let newSignon = Cc["@mozilla.org/login-manager/loginInfo;1"].
@@ -87,7 +87,7 @@ export var SavedPasswordEditor = {
                        aNewSignon.httpRealm, aNewSignon.username,
                        aNewSignon.password, aNewSignon.usernameField,
                        aNewSignon.passwordField);
-        lazy.pwdSvc.addLogin(newSignon);
+        await (lazy.pwdSvc.addLoginAsync || lazy.pwdSvc.addLogin).call(lazy.pwdSvc, newSignon);
         showAlert(lazy.genStrBundle.GetStringFromName("logininfosaved"));
       } catch (e) {
         Services.prompt.alert(
@@ -105,7 +105,7 @@ export var SavedPasswordEditor = {
     this.curInfo = null;
   },
 
-  _finishEdit: function (aNewSignon, aParentWindow) {
+  _finishEdit: async function (aNewSignon, aParentWindow) {
     if (!aNewSignon) return;
 
     var newSignon = Cc["@mozilla.org/login-manager/loginInfo;1"].
@@ -115,7 +115,8 @@ export var SavedPasswordEditor = {
                    aNewSignon.password, aNewSignon.usernameField,
                    aNewSignon.passwordField);
     try {
-      lazy.pwdSvc.modifyLogin(SavedPasswordEditor.oldSignon, newSignon);
+      await (lazy.pwdSvc.modifyLoginAsync || lazy.pwdSvc.modifyLogin).
+        call(lazy.pwdSvc, SavedPasswordEditor.oldSignon, newSignon);
       showAlert(lazy.genStrBundle.GetStringFromName("logininfochanged"));
     } catch (e) {
       Services.prompt.alert(
@@ -125,14 +126,14 @@ export var SavedPasswordEditor = {
     }
   },
 
-  _handleDisambigSelection: function (aEvt) {
+  _handleDisambigSelection: async function (aEvt) {
     var spe = SavedPasswordEditor, target = aEvt.target,
         window = target.ownerDocument.defaultView,
         dp = el(window, "savedpasswordeditor-disambig-popup");
 
     if (spe._deleting) {
       try {
-        lazy.pwdSvc.removeLogin(spe._signonMap[target.label]);
+        await (lazy.pwdSvc.removeLoginAsync || lazy.pwdSvc.removeLogin).call(lazy.pwdSvc, spe._signonMap[target.label]);
         showAlert(lazy.genStrBundle.GetStringFromName("logininfodeleted"));
       } catch (e) {
         Services.prompt.alert(
@@ -203,7 +204,7 @@ export var SavedPasswordEditor = {
       this._showDisambig(aWindow, signons);
   },
 
-  deleteLoginInfo: function (aWindow) {
+  deleteLoginInfo: async function (aWindow) {
     var signons = lazy.pwdSvc.findLogins({}, this.curInfo.hostname,
                                     this.curInfo.formSubmitURL, null);
     this.curInfo = null;
@@ -231,7 +232,7 @@ export var SavedPasswordEditor = {
           res = 0;
 
         if (res == 0) {
-          lazy.pwdSvc.removeLogin(signons[0]);
+          await (lazy.pwdSvc.removeLoginAsync || lazy.pwdSvc.removeLogin).call(lazy.pwdSvc, signons[0]);
           showAlert(lazy.genStrBundle.GetStringFromName("logininfodeleted"));
         }
       } catch (e) {

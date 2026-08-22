@@ -21,6 +21,43 @@
 const htmlNamespaceResolver =
   aPrefix => aPrefix == "xhtml" ? "http://www.w3.org/1999/xhtml" : null;
 
+export function extractLoginForm (form, aWindow = form.ownerDocument.defaultView) {
+  const HTMLInputElement = aWindow.HTMLInputElement;
+  var passwordField = null;
+  for (var i = 0; i < form.elements.length; i++) {
+    let element = form.elements[i];
+    if (element instanceof HTMLInputElement && element.type.toLowerCase() == "password") {
+      passwordField = element;
+      break;
+    }
+  }
+  if (!passwordField) return null;
+
+  var usernameField = null;
+  for (i = i - 1; i >= 0; i--) {
+    let element = form.elements[i];
+    if (!element instanceof HTMLInputElement) continue;
+    let elType = (element.getAttribute("type") || "").toLowerCase();
+    if (!elType || elType == "text" || elType == "email" || elType == "url" || elType == "tel" || elType == "number") {
+      usernameField = element;
+      break;
+    }
+  }
+  if (!usernameField) return null;
+
+  var hostname = `${aWindow.location.protocol}//${aWindow.location.host}`;
+  var formAction = form.action;
+  var res;
+  if (formAction && formAction.startsWith("javascript:")) res = "javascript:";
+  else {
+    res = formAction ? /^([0-9-_A-Za-z]+:\/\/[^/]+)\//.exec(formAction) : [ null, hostname ];
+    if (!res) return null;
+    res = res[1];
+  }
+
+  return { hostname, formSubmitURL: res, usernameField, passwordField };
+}
+
 export var SavedPasswordEditor = {
   getFormData (aElement) {
     const HTMLInputElement =
@@ -31,65 +68,25 @@ export var SavedPasswordEditor = {
     } else
       return null;
 
-    var curDoc = aElement.ownerDocument;
-    var curLocation = curDoc.defaultView.location;
-    var hostname = `${curLocation.protocol}//${curLocation.host}`;
-    var passwordField = null;
-    for (var i = 0; i < form.elements.length; i++) {
-      let element = form.elements[i];
-      if (element instanceof HTMLInputElement
-          && element.type.toLowerCase() == "password") {
-        passwordField = element;
-        break;
-      }
-    }
-    if (!passwordField) return null;
-
-    var usernameField = null;
-    for (i = i - 1; i >= 0; i--) {
-      let element = form.elements[i];
-      if (!element instanceof HTMLInputElement) continue;
-      let elType = (element.getAttribute("type") || "").toLowerCase();
-      if (!elType || elType == "text" || elType == "email" || elType == "url"
-          || elType == "tel" || elType == "number") {
-        usernameField = element;
-        break;
-      }
-    }
-    if (!usernameField) return null;
-
-    var formAction = form.action;
-    var res;
-    if (formAction && formAction.startsWith("javascript:"))
-      res = "javascript:";
-    else {
-      res = formAction ? /^([0-9-_A-Za-z]+:\/\/[^/]+)\//.exec(formAction)
-                           : [ null, hostname ];
-      if (!res) return null;
-      res = res[1];
-    }
+    var data = extractLoginForm(form, aElement.ownerDocument.defaultView);
+    if (!data) return null;
 
     return {
-      hostname,
-      formSubmitURL: res,
-      username: usernameField.value,
-      password: passwordField.value,
-      usernameField: usernameField.name,
-      passwordField: passwordField.name,
+      hostname: data.hostname,
+      formSubmitURL: data.formSubmitURL,
+      username: data.usernameField.value,
+      password: data.passwordField.value,
+      usernameField: data.usernameField.name,
+      passwordField: data.passwordField.name,
     };
   },
 
   scanForLoginForms ({ target: aMM }) {
-    const HTMLDocument = aMM.content.HTMLDocument,
-          HTMLInputElement = aMM.content.HTMLInputElement;
+    const HTMLDocument = aMM.content.HTMLDocument;
 
     function walkTree (aWindow) {
       var curDoc = aWindow.document;
       if (!(curDoc instanceof HTMLDocument)) return [];
-
-      // Get the host prefix;
-      var curLocation = aWindow.location;
-      var hostname = curLocation.protocol + "//" + curLocation.host;
 
       // Locate likely login forms and their fields
       var loginForms = [];
@@ -97,47 +94,14 @@ export var SavedPasswordEditor = {
         "//xhtml:form", curDoc, htmlNamespaceResolver,
         aWindow.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
       for (var i = 0; i < forms.snapshotLength; i++) {
-        let form = forms.snapshotItem(i), pwdField = null, j;
-        for (j = 0; j < form.elements.length; j++) {
-          let element = form.elements[j];
-          if (element instanceof HTMLInputElement
-              && element.type == "password") {
-            pwdField = element;
-            break;
-          }
-        }
-        if (!pwdField) continue;
-
-        let unameField = null;
-        for (j = j - 1; j >= 0; j--) {
-          let element = form.elements[j];
-          if (!element instanceof HTMLInputElement) continue;
-          let elType = (element.getAttribute("type") || "").toLowerCase();
-          if (!elType || elType == "text" || elType == "email"
-              || elType == "url" || elType == "tel" || elType == "number") {
-            unameField = element;
-            break;
-          }
-        }
-        if (!unameField) continue;
-
-        // Construct the submit prefix
-        let formAction = form.action;
-        let res;
-        if (formAction && formAction.startsWith("javascript:"))
-          res = "javascript:";
-        else {
-          res = formAction ? /^([0-9-_A-Za-z]+:\/\/[^/]+)\//.exec(formAction)
-                           : [ null, hostname ];
-          if (!res) continue;
-          res = res[1];
-        }
+        let data = extractLoginForm(forms.snapshotItem(i), aWindow);
+        if (!data) continue;
 
         loginForms.push({
-          hostname, formSubmitURL: res,
-          username: unameField.value, password: pwdField.value,
-          usernameField: unameField.getAttribute("name"),
-          passwordField: pwdField.getAttribute("name"),
+          hostname: data.hostname, formSubmitURL: data.formSubmitURL,
+          username: data.usernameField.value, password: data.passwordField.value,
+          usernameField: data.usernameField.getAttribute("name"),
+          passwordField: data.passwordField.getAttribute("name"),
         });
       }
 
