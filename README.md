@@ -1,6 +1,6 @@
 # Saved Password Editor Redux #
 
-Saved Password Editor for Waterfox G3 & Firefox Developer Edition (with [userChromeJS](https://github.com/xiaoxiaoflood/firefox-scripts) or [bootstrapLoader](https://github.com/xiaoxiaoflood/firefox-scripts/tree/master/extensions/bootstrapLoader)) - __[download here!](https://github.com/117649/SavedPasswordEditorRedux/releases/latest)__
+Saved Password Editor for Waterfox G3 & Firefox Developer Edition (see [installation guide](https://onemen.github.io/tabmixplus-docs/other/installation/)) - __[download here!](https://github.com/117649/SavedPasswordEditorRedux/releases/latest)__
 
 Originally created by [Daniel Dawson](https://github.com/ddawson/Saved-Password-Editor)
 

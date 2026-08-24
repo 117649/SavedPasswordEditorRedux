@@ -7,14 +7,14 @@
 		<bootstrap>true</bootstrap>
     <multiprocessCompatible>true</multiprocessCompatible>
     <name>Saved Password Editor Redux</name>
-    <version>2.11.9</version>
+    <version>2.12.0</version>
     <description>Adds the ability to create and edit entries in the password manager.</description>
     <creator>Daniel Dawson &lt;danielcdawson@gmail.com&gt;</creator>
     <contributor>PlastikManiac (key icon) - http://plastikmaniac.deviantart.com/</contributor>
     <iconURL>chrome://savedpasswordeditor/skin/key32.png</iconURL>
     <optionsURL>chrome://savedpasswordeditor/content/prefwindow.xhtml</optionsURL>
     <optionsType>1</optionsType>
-    <homepageURL>https://addons.thunderbird.net/addon/classic-password-editor/</homepageURL>
+    <homepageURL>https://github.com/117649/SavedPasswordEditorRedux</homepageURL>
 
     <icon64URL>chrome://savedpasswordeditor/skin/key64.png</icon64URL>
 
