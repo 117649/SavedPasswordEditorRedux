@@ -131,6 +131,12 @@ async function startup(data, reason) {
     Overlays.prototype.sandboxes = sandboxes;
     updatedOverlays.prototype.sandboxes = sandboxes;
     Overlays.load = updatedOverlays.load;
+    if (updating) {
+      const loginEditing = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/LoginEditing.mjs");
+      const updatedLoginEditing = ChromeUtils.importESModule(`chrome://savedpasswordeditor/content/LoginEditing.mjs?${cacheToken}`);
+      Object.assign(loginEditing.LoginEditor, updatedLoginEditing.LoginEditor);
+      Object.assign(loginEditing.LoginOperations, updatedLoginEditing.LoginOperations);
+    }
     ({ SavedPasswordEditor } =
       ChromeUtils.importESModule(`chrome://savedpasswordeditor/content/SavedPasswordEditor.mjs?${cacheToken}`));
 

@@ -22,6 +22,7 @@ const Cc = Components.classes,
       Ci = Components.interfaces,
       Cu = Components.utils;
 var { XPCOMUtils } = ChromeUtils.importESModule("resource://gre/modules/XPCOMUtils.sys.mjs");
+var { LoginEditor, LoginOperations } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/LoginEditing.mjs");
 
 const lazy = {};
 ChromeUtils.defineLazyGetter(
@@ -81,13 +82,7 @@ export var SavedPasswordEditor = {
     async function _finish (aNewSignon) {
       if (!aNewSignon) return;
       try {
-        let newSignon = Cc["@mozilla.org/login-manager/loginInfo;1"].
-                        createInstance(Ci.nsILoginInfo);
-        newSignon.init(aNewSignon.hostname, aNewSignon.formSubmitURL,
-                       aNewSignon.httpRealm, aNewSignon.username,
-                       aNewSignon.password, aNewSignon.usernameField,
-                       aNewSignon.passwordField);
-        await (lazy.pwdSvc.addLoginAsync || lazy.pwdSvc.addLogin).call(lazy.pwdSvc, newSignon);
+        await LoginOperations.add(aNewSignon);
         showAlert(lazy.genStrBundle.GetStringFromName("logininfosaved"));
       } catch (e) {
         Services.prompt.alert(
@@ -97,26 +92,15 @@ export var SavedPasswordEditor = {
       }
     }
 
-    var ret = { newSignon: null, callback: _finish, parentWindow: null };
-    aWindow.openDialog(
-      "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
-      "centerscreen,dependent,dialog,chrome",
-      [this.curInfo], 0, false, ret);
+    LoginEditor.open(aWindow, { action: "new", logins: [this.curInfo], onAccept: _finish });
     this.curInfo = null;
   },
 
   _finishEdit: async function (aNewSignon, aParentWindow) {
     if (!aNewSignon) return;
 
-    var newSignon = Cc["@mozilla.org/login-manager/loginInfo;1"].
-                    createInstance(Ci.nsILoginInfo);
-    newSignon.init(aNewSignon.hostname, aNewSignon.formSubmitURL,
-                   aNewSignon.httpRealm, aNewSignon.username,
-                   aNewSignon.password, aNewSignon.usernameField,
-                   aNewSignon.passwordField);
     try {
-      await (lazy.pwdSvc.modifyLoginAsync || lazy.pwdSvc.modifyLogin).
-        call(lazy.pwdSvc, SavedPasswordEditor.oldSignon, newSignon);
+      await LoginOperations.modify(SavedPasswordEditor.oldSignon, aNewSignon);
       showAlert(lazy.genStrBundle.GetStringFromName("logininfochanged"));
     } catch (e) {
       Services.prompt.alert(
@@ -131,7 +115,7 @@ export var SavedPasswordEditor = {
 
     if (spe._deleting) {
       try {
-        await (lazy.pwdSvc.removeLoginAsync || lazy.pwdSvc.removeLogin).call(lazy.pwdSvc, spe._signonMap[target.label]);
+        await LoginOperations.remove(spe._signonMap[target.label]);
         showAlert(lazy.genStrBundle.GetStringFromName("logininfodeleted"));
       } catch (e) {
         Services.prompt.alert(
@@ -141,11 +125,7 @@ export var SavedPasswordEditor = {
       }
     } else {
       SavedPasswordEditor.oldSignon = spe._signonMap[target.label];
-      window.openDialog(
-        "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
-        "centerscreen,dependent,dialog,chrome",
-        [SavedPasswordEditor.oldSignon], 1, false,
-        { newSignon: null, callback: spe._finishEdit, parentWindow: window });
+      LoginEditor.open(window, { action: "edit", logins: [SavedPasswordEditor.oldSignon], onAccept: spe._finishEdit });
     }
 
     spe._deleting = false;
@@ -192,12 +172,7 @@ export var SavedPasswordEditor = {
         lazy.genStrBundle.GetStringFromName("nologinstoedit"));
     } else if (signons.length == 1) {
       SavedPasswordEditor.oldSignon = signons[0];
-      aWindow.openDialog(
-        "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
-        "centerscreen,dependent,dialog,chrome",
-        [signons[0]], 1, false,
-        { newSignon: null, callback: this._finishEdit,
-          parentWindow: aWindow });
+      LoginEditor.open(aWindow, { action: "edit", logins: [signons[0]], onAccept: this._finishEdit });
     } else
       this._showDisambig(aWindow, signons);
   },
@@ -230,7 +205,7 @@ export var SavedPasswordEditor = {
           res = 0;
 
         if (res == 0) {
-          await (lazy.pwdSvc.removeLoginAsync || lazy.pwdSvc.removeLogin).call(lazy.pwdSvc, signons[0]);
+          await LoginOperations.remove(signons[0]);
           showAlert(lazy.genStrBundle.GetStringFromName("logininfodeleted"));
         }
       } catch (e) {

@@ -8,6 +8,7 @@ var { AppConstants } = ChromeUtils.importESModule(
   "resource://gre/modules/AppConstants.sys.mjs"
 );
 var { LoginList } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/passwordmgr/LoginList.mjs");
+var { LoginOperations } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/LoginEditing.mjs");
 /* eslint-disable-next-line no-var */
 
 ChromeUtils.defineESModuleGetters(
@@ -239,7 +240,7 @@ let signonsTreeView = {
     let edit = signonState.edit(row, field, value);
     if (edit) {
       try {
-        await (Services.logins.modifyLoginAsync || Services.logins.modifyLogin).call(Services.logins, edit.oldLogin, edit.login);
+        await LoginOperations.modify(edit.oldLogin, edit.login);
       } catch (e) {
         edit.login[field] = edit.oldLogin[field];
         edit.login.timePasswordChanged = edit.oldLogin.timePasswordChanged;
@@ -414,7 +415,7 @@ async function AskUserShowPasswords() {
 async function FinalizeSignonDeletions(deleted, syncNeeded) {
   for (let signon of deleted) {
     if(!signon) continue;
-    await (Services.logins.removeLoginAsync || Services.logins.removeLogin).call(Services.logins, signon);
+    await LoginOperations.remove(signon);
     Services.obs.notifyObservers(
       null,
       "weave:telemetry:histogram",

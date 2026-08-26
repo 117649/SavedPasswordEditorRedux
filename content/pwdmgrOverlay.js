@@ -18,6 +18,8 @@
 
 "use strict";
 
+var { LoginEditor, LoginOperations } = ChromeUtils.importESModule("chrome://savedpasswordeditor/content/LoginEditing.mjs");
+
 document.addEventListener(
   "DOMContentLoaded",
   function dclHandler(ev) {
@@ -198,23 +200,6 @@ var spEditor = {
     ev.stopPropagation();
   },
 
-  _mergeSignonProps: (oldSignon, newProps) => {
-    var merged = {};
-    for (let prop in newProps)
-      if (newProps[prop] === undefined)
-        merged[prop] = oldSignon[prop];
-      else
-        merged[prop] = newProps[prop];
-
-    var newSignon =
-      Components.classes["@mozilla.org/login-manager/loginInfo;1"].
-        createInstance(Components.interfaces.nsILoginInfo);
-    newSignon.init(merged.hostname, merged.formSubmitURL,
-      merged.httpRealm, merged.username, merged.password,
-      merged.usernameField, merged.passwordField);
-    return newSignon;
-  },
-
   _refreshFilter: async function () {
     var fv = document.getElementById("filter").value;
     await setFilter("");
@@ -234,19 +219,14 @@ var spEditor = {
     if (selections.length < 1) return;
     var table = GetVisibleLogins();
     var selSignons = selections.map(el => table[el]);
-    var ret = { newSignon: null, callback: null };
-    window.openDialog(
-      "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
-      "centerscreen,dependent,dialog,chrome,modal",
-      selSignons, 1, checkPasswordsShowing(), ret);
+    var newProps = LoginEditor.open(window, { action: "edit", logins: selSignons, passwordsShowing: checkPasswordsShowing() });
 
     this.selectionsEnabled = true;
-    if (!ret.newSignon) return;
+    if (!newProps) return;
 
     try {
       for (let i = 0; i < selSignons.length; i++)
-        await (Services.logins.modifyLoginAsync || Services.logins.modifyLogin).call(Services.logins, selSignons[i],
-            this._mergeSignonProps(selSignons[i], ret.newSignon));
+        await LoginOperations.modify(selSignons[i], newProps);
       await this._refreshFilter();
     } catch (e) { this._showEntryError(e); }
   },
@@ -257,35 +237,26 @@ var spEditor = {
     if (selections.length != 1) return;
     var table = GetVisibleLogins();
     var signon = table[selections[0]];
-    var ret = { newSignon: null, callback: null };
-    window.openDialog(
-      "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
-      "centerscreen,dependent,dialog,chrome,modal",
-      [signon], 2, checkPasswordsShowing(), ret);
+    var newProps = LoginEditor.open(window, { action: "clone", logins: [signon], passwordsShowing: checkPasswordsShowing() });
     this.selectionsEnabled = true;
-    if (!ret.newSignon) return;
+    if (!newProps) return;
     try {
-      await (Services.logins.addLoginAsync || Services.logins.addLogin).
-        call(Services.logins, this._mergeSignonProps(signon, ret.newSignon));
+      await LoginOperations.add(newProps, signon);
       await this._refreshFilter();
     } catch (e) { this._showEntryError(e); }
   },
 
   newSignon: async function () {
     this.selectionsEnabled = false;
-    var ret = { newSignon: null, callback: null };
+    var newProps;
     try {
-      window.openDialog(
-        "chrome://savedpasswordeditor/content/pwdedit.xhtml", "",
-        "centerscreen,dependent,dialog,chrome,modal",
-        [], 0, checkPasswordsShowing(), ret);
+      newProps = LoginEditor.open(window, { action: "new", passwordsShowing: checkPasswordsShowing() });
     } catch (e) { console.log(e) }
 
     this.selectionsEnabled = true;
-    if (!ret.newSignon) return;
+    if (!newProps) return;
     try {
-      await (Services.logins.addLoginAsync || Services.logins.addLogin).
-        call(Services.logins, this._mergeSignonProps({}, ret.newSignon));
+      await LoginOperations.add(newProps);
       await this._refreshFilter();
     } catch (e) { this._showEntryError(e); }
   },
