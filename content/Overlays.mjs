@@ -13,9 +13,10 @@ ChromeUtils.defineESModuleGetters(
   "resource://gre/modules/Timer.sys.mjs"}
 );
 
-const { CustomizableUI } = ChromeUtils.importESModule("moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs");
+const cuiURI = Services.vc.compare(Services.appinfo.platformVersion, "143") < 0 ? "resource:///modules/" : "moz-src:///browser/components/customizableui/";
+const { CustomizableUI } = ChromeUtils.importESModule(`${cuiURI}CustomizableUI.sys.mjs`);
+const { PanelMultiView } = ChromeUtils.importESModule(`${cuiURI}PanelMultiView.sys.mjs`);
 
-const evtInline = new WeakMap();
 const overlayInstances = new WeakMap();
 const widgetOwners = new Map();
 
@@ -75,10 +76,6 @@ export class Overlays {
       this.location = window.location.origin + window.location.pathname;
     }
 
-    this.isCSPstrict = evtInline.getOrInsertComputed(window, _ => {
-      const csp = window.document.csp ?? window.document.policyContainer.csp;
-      return !csp.getAllowsInline(Ci.nsIContentSecurityPolicy.SCRIPT_SRC_ATTR_DIRECTIVE, false, "", false, null, null, "", 0, 1);
-    });
     this._windowUnload = () => this.unload();
     window.addEventListener("unload", this._windowUnload, { once: true });
   }
@@ -362,7 +359,7 @@ export class Overlays {
    */
   _resolveForwardReference(node) {
     if (node.id) {
-      const target = this.document.getElementById(node.id);
+      const target = PanelMultiView.getViewNode(this.document, node.id);
       if (node.localName == "template") {
         this._insertElement(this.document.documentElement, node);
         return true;
@@ -505,12 +502,12 @@ export class Overlays {
     const after = Boolean(pos);
     pos ||= node.getAttribute("insertbefore");
 
-    if (this.isCSPstrict) [node, ...node.querySelectorAll("*")].forEach((el) => [...el.attributes].forEach((a) =>
+    [node, ...node.querySelectorAll("*")].forEach((el) => [...el.attributes].forEach((a) =>
       a.name.startsWith("on") && (el.setAttribute("an" + a.name, el.getAttribute(a.name)), el.removeAttribute(a.name))));
 
     if (pos) {
       for (const id of pos.split(",")) {
-        const targetChild = this.document.getElementById(id);
+        const targetChild = PanelMultiView.getViewNode(this.document, id);
         if (targetChild && parent.contains(targetChild.parentNode)) {
           targetChild.parentNode.insertBefore(
             node,
@@ -536,7 +533,7 @@ export class Overlays {
     }
     this.addCleanup(() => node.remove());
 
-    if (this.isCSPstrict) [node, ...node.querySelectorAll("*")].forEach((el) =>
+    [node, ...node.querySelectorAll("*")].forEach((el) =>
       [...el.attributes].forEach((a) => {
         if (a.name.startsWith("anon"))
           el.addEventListener(a.name.replace(/^anon/, ''), this._insertInlineEventHandler(el, a.textContent));

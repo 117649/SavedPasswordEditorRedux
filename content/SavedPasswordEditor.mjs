@@ -159,10 +159,10 @@ export var SavedPasswordEditor = {
       function () { dp.openPopup(null, null, x, y, true, false, null); }, 1);
   },
 
-  editLoginInfo: function (aWindow) {
-    var signons = lazy.pwdSvc.findLogins({}, this.curInfo.hostname,
-                                    this.curInfo.formSubmitURL, null);
+  editLoginInfo: async function (aWindow) {
+    var loginInfo = this.curInfo;
     this.curInfo = null;
+    var signons = await LoginOperations.findForForm(loginInfo);
     this._deleting = false;
 
     if (signons.length == 0) {
@@ -178,9 +178,9 @@ export var SavedPasswordEditor = {
   },
 
   deleteLoginInfo: async function (aWindow) {
-    var signons = lazy.pwdSvc.findLogins({}, this.curInfo.hostname,
-                                    this.curInfo.formSubmitURL, null);
+    var loginInfo = this.curInfo;
     this.curInfo = null;
+    var signons = await LoginOperations.findForForm(loginInfo);
     this._deleting = true;
 
     if (signons.length == 0) {
@@ -191,7 +191,7 @@ export var SavedPasswordEditor = {
     } else if (signons.length == 1) {
       try {
         let res;
-        if (prefs.getBoolPref("confirm_ctxmenu_delete")) {
+        if (lazy.prefs.getBoolPref("confirm_ctxmenu_delete")) {
           let cs = { value: false };
           res = Services.prompt.confirmEx(
             aWindow, lazy.genStrBundle.GetStringFromName("deletinglogininfo"),

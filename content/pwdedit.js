@@ -122,7 +122,7 @@ window.addEventListener(
   },
   false);
 
-function afterLoadHandler () {
+async function afterLoadHandler () {
   var pwdShownInSPWin = window.arguments[2];
   var alwaysShowPwds = prefs.getBoolPref("always_show_passwords");
   var showpwd = prefs.getIntPref("showpassword");
@@ -130,19 +130,19 @@ function afterLoadHandler () {
   var showpwdButton = $("showPassword_btn");
   var hidepwdButton = $("hidePassword_btn");
 
-  if (alwaysShowPwds && (pwdShownInSPWin || (haveOldSignon ? login() : true)))
+  if (alwaysShowPwds && (pwdShownInSPWin || (haveOldSignon ? await login() : true)))
     pwdCurHidden = false;
   else switch (showpwd) {
   case 0:
     pwdCurHidden = true;
     break;
   case 1:
-    if (pwdShownInSPWin || (haveOldSignon ? login() : true))
+    if (pwdShownInSPWin || (haveOldSignon ? await login() : true))
       pwdCurHidden = false;
     break;
   case 2:
     if (!pwdCurHidden && !pwdShownInSPWin
-        && (haveOldSignon ? !login() : false))
+        && (haveOldSignon ? !(await login()) : false))
       pwdCurHidden = true;
     break;
   case 3:
@@ -176,15 +176,19 @@ function intersectSignonProps (aSignons) {
   return intersection;
 }
 
-function login () {
-  var token = Components.classes["@mozilla.org/security/pk11tokendb;1"].
-                createInstance(Components.interfaces.nsIPK11TokenDB).
-                getInternalKeyToken();
+async function login () {
+  var modern = "@mozilla.org/security/internalkeytoken;1" in Cc;
+  var token;
+  if (modern)
+    token = Cc["@mozilla.org/security/internalkeytoken;1"].createInstance(Ci.nsIPKCS11Token);
+  else
+    token = Cc["@mozilla.org/security/pk11tokendb;1"].createInstance(Ci.nsIPK11TokenDB).getInternalKeyToken();
   if (token.hasPassword) {
     try {
-      token.login(true);
+      if (modern) await token.login();
+      else token.login(true);
     } catch (e) { }
-    return token.isLoggedIn();
+    return modern ? token.isLoggedIn : token.isLoggedIn();
   }
   return true;
 }
@@ -206,13 +210,13 @@ function handle_typeSelect () {
   }
 }
 
-function togglePasswordView () {
+async function togglePasswordView () {
   var focusTarget;
   var pwdField = $("password_text");
   var showpwdButton = $("showPassword_btn");
   var hidepwdButton = $("hidePassword_btn");
   if (pwdField.type == "password") {
-    if (pwdField.value != "" && !login()) return;
+    if (pwdField.value != "" && !(await login())) return;
     pwdField.removeAttribute("type");
     showpwdButton.hidden = true;
     hidepwdButton.hidden = false;

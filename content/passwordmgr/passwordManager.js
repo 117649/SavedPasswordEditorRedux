@@ -415,7 +415,11 @@ async function AskUserShowPasswords() {
 async function FinalizeSignonDeletions(deleted, syncNeeded) {
   for (let signon of deleted) {
     if(!signon) continue;
-    await LoginOperations.remove(signon);
+    try { await LoginOperations.remove(signon); } catch (e) {
+      await LoadSignons();
+      if (filterField.value) await FilterPasswords();
+      throw e;
+    }
     Services.obs.notifyObservers(
       null,
       "weave:telemetry:histogram",
@@ -634,26 +638,28 @@ function UpdateContextMenu() {
 
 async function masterPasswordLogin(noPasswordCallback) {
   // This does no harm if master password isn't set.
-  let token = Cc["@mozilla.org/security/internalkeytoken;1"].createInstance(
-    Ci.nsIPKCS11Token
-  );
+  const modern = "@mozilla.org/security/internalkeytoken;1" in Cc;
+  let token;
+  if (modern)
+    token = Cc["@mozilla.org/security/internalkeytoken;1"].createInstance(Ci.nsIPKCS11Token);
+  else
+    token = Cc["@mozilla.org/security/pk11tokendb;1"].createInstance(Ci.nsIPK11TokenDB).getInternalKeyToken();
 
   // If there is no master password, still give the user a chance to opt-out of displaying passwords
   if (!token.hasPassword) {
     return noPasswordCallback ? noPasswordCallback() : true;
   }
 
-  // So there's a master password. But since checkPassword didn't succeed, we're logged out (per nsIPK11Token.idl).
   try {
     // Relogin and ask for the master password.
-    token.login(true); // 'true' means always prompt for token password. User will be prompted until
-    // clicking 'Cancel' or entering the correct password.
+    if (modern) await token.login();
+    else token.login(true);
   } catch (e) {
     // An exception will be thrown if the user cancels the login prompt dialog.
     // User is also logged out of Software Security Device.
   }
 
-  return token.isLoggedIn();
+  return modern ? token.isLoggedIn : token.isLoggedIn();
 }
 
 function escapeKeyHandler() {

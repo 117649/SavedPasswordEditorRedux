@@ -22,9 +22,13 @@
   list-style-image: url('chrome://savedpasswordeditor/skin/key24.png');
 }
 
-#savedpasswordeditor-toolsmenuitem, #savedpasswordeditor-appmenuitem,
+#savedpasswordeditor-toolsmenuitem,
 toolbar[iconsize="small"] #savedpasswordeditor-button {
   --menuitem-icon: url('chrome://savedpasswordeditor/skin/key16.png');
+}
+
+#savedpasswordeditor-appmenuitem {
+  list-style-image: url('chrome://savedpasswordeditor/skin/key16.png');
 }
 
 /* Australis */

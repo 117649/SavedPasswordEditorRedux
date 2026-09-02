@@ -36,7 +36,7 @@ export function extractLoginForm (form, aWindow = form.ownerDocument.defaultView
   var usernameField = null;
   for (i = i - 1; i >= 0; i--) {
     let element = form.elements[i];
-    if (!element instanceof HTMLInputElement) continue;
+    if (!(element instanceof HTMLInputElement)) continue;
     let elType = (element.getAttribute("type") || "").toLowerCase();
     if (!elType || elType == "text" || elType == "email" || elType == "url" || elType == "tel" || elType == "number") {
       usernameField = element;
@@ -83,7 +83,7 @@ export var SavedPasswordEditor = {
 
     function walkTree (aWindow) {
       var curDoc = aWindow.document;
-      if (!(curDoc instanceof HTMLDocument)) return [];
+      if (!HTMLDocument.isInstance(curDoc)) return [];
 
       // Locate likely login forms and their fields
       var loginForms = [];

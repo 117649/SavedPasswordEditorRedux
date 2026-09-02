@@ -47,7 +47,7 @@ async function showPasswords() {
 
     if (togglePasswords &&
       (!spEditor.prefs.getBoolPref("force_prompt_for_masterPassword")
-        || masterPasswordLogin(() => true))) {
+        || await masterPasswordLogin(() => true))) {
       // if (window.hasOwnProperty("showingPasswords"))
         showingPasswords = true;
 

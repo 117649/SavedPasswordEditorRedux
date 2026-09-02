@@ -24,6 +24,9 @@ export const LoginEditor = {
 };
 
 export const LoginOperations = {
+  findForForm({ hostname, formSubmitURL }) {
+    return Services.logins.searchLoginsAsync({ origin: hostname, formActionOrigin: formSubmitURL, httpRealm: null });
+  },
   add(newProps, baseLogin) { return mutate("addLogin", createLogin(newProps, baseLogin)); },
   modify(oldLogin, newProps) {
     return mutate("modifyLogin", oldLogin, newProps.QueryInterface ? newProps : createLogin(newProps, oldLogin));
