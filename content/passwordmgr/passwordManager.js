@@ -652,11 +652,12 @@ async function masterPasswordLogin(noPasswordCallback) {
 
   try {
     // Relogin and ask for the master password.
-    if (modern) await token.login();
+    if (modern) { await token.logout(); await token.login(); }
     else token.login(true);
   } catch (e) {
     // An exception will be thrown if the user cancels the login prompt dialog.
     // User is also logged out of Software Security Device.
+    return false;
   }
 
   return modern ? token.isLoggedIn : token.isLoggedIn();

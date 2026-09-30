@@ -185,9 +185,9 @@ async function login () {
     token = Cc["@mozilla.org/security/pk11tokendb;1"].createInstance(Ci.nsIPK11TokenDB).getInternalKeyToken();
   if (token.hasPassword) {
     try {
-      if (modern) await token.login();
+      if (modern) { await token.logout(); await token.login(); }
       else token.login(true);
-    } catch (e) { }
+    } catch (e) { return false; }
     return modern ? token.isLoggedIn : token.isLoggedIn();
   }
   return true;
