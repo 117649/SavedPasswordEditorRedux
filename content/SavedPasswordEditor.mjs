@@ -138,7 +138,7 @@ export var SavedPasswordEditor = {
     this._signonMap = {};
     for (let signon of aSignons) {
       this._signonMap[signon.username] = signon;
-      let mi = aWindow.document.createElement("menuitem");
+      let mi = aWindow.document.createXULElement("menuitem");
       mi.setAttribute("label", signon.username);
       dp.appendChild(mi);
     }
@@ -153,10 +153,9 @@ export var SavedPasswordEditor = {
       },
       false);
 
-    var bo = el(aWindow, "contentAreaContextMenu").boxObject,
-        x = bo.x, y = bo.y;
+    var { x, y } = el(aWindow, "contentAreaContextMenu").getOuterScreenRect();
     aWindow.setTimeout(
-      function () { dp.openPopup(null, null, x, y, true, false, null); }, 1);
+      function () { dp.openPopupAtScreen(x, y, true); }, 1);
   },
 
   editLoginInfo: async function (aWindow) {
