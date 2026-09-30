@@ -96,11 +96,11 @@ export var SavedPasswordEditor = {
     this.curInfo = null;
   },
 
-  _finishEdit: async function (aNewSignon, aParentWindow) {
+  _finishEdit: async function (aOldSignon, aNewSignon, aParentWindow) {
     if (!aNewSignon) return;
 
     try {
-      await LoginOperations.modify(SavedPasswordEditor.oldSignon, aNewSignon);
+      await LoginOperations.modify(aOldSignon, aNewSignon);
       showAlert(lazy.genStrBundle.GetStringFromName("logininfochanged"));
     } catch (e) {
       Services.prompt.alert(
@@ -124,8 +124,8 @@ export var SavedPasswordEditor = {
           lazy.genStrBundle.formatStringFromName("failed", [e.message], 1));
       }
     } else {
-      SavedPasswordEditor.oldSignon = spe._signonMap[target.label];
-      LoginEditor.open(window, { action: "edit", logins: [SavedPasswordEditor.oldSignon], onAccept: spe._finishEdit });
+      LoginEditor.open(window, { action: "edit", logins: [spe._signonMap[target.label]],
+        onAccept: spe._finishEdit.bind(null, spe._signonMap[target.label]) });
     }
 
     spe._deleting = false;
@@ -171,8 +171,7 @@ export var SavedPasswordEditor = {
         lazy.genStrBundle.GetStringFromName("error"),
         lazy.genStrBundle.GetStringFromName("nologinstoedit"));
     } else if (signons.length == 1) {
-      SavedPasswordEditor.oldSignon = signons[0];
-      LoginEditor.open(aWindow, { action: "edit", logins: [signons[0]], onAccept: this._finishEdit });
+      LoginEditor.open(aWindow, { action: "edit", logins: [signons[0]], onAccept: this._finishEdit.bind(null, signons[0]) });
     } else
       this._showDisambig(aWindow, signons);
   },
