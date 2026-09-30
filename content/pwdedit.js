@@ -39,7 +39,7 @@ window.addEventListener(
     pwdField.setAttribute("type", "password");
     window.removeEventListener("DOMContentLoaded", dclHandler, false);
 
-    document.documentElement.addEventListener("dialogaccept", setNewSignon);
+    document.documentElement.addEventListener("dialogaccept", event => { if (!setNewSignon()) event.preventDefault(); });
     $("type_group").addEventListener("command", handle_typeSelect, false);
     $("showPassword_btn").addEventListener("command", togglePasswordView, false);
     $("hidePassword_btn").addEventListener("command", togglePasswordView, false);
