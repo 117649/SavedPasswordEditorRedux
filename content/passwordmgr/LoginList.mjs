@@ -3,7 +3,7 @@ export class LoginList {
     this.logins = [];
     this.filtered = [];
     this.filtering = false;
-    this.selectedRanges = [];
+    this.selectedGuids = [];
     this.sortColumn = "origin";
     this.sortAscending = true;
   }
@@ -12,8 +12,20 @@ export class LoginList {
 
   replace(logins) { this.logins = logins; }
 
-  filter(value, showingPasswords, selectedRanges) {
-    if (!this.filtering) { this.selectedRanges = selectedRanges.map(range => ({ ...range })); }
+  update(type, login, oldGuid = login?.guid) {
+    if (type == "removeAllLogins") { this.logins.length = 0; return; }
+    let index = this.logins.findIndex(entry => entry.guid == oldGuid);
+    if (type == "removeLogin") {
+      if (index != -1) this.logins.splice(index, 1);
+    } else if (index == -1) {
+      this.logins.push(login);
+    } else {
+      this.logins[index] = login;
+    }
+  }
+
+  filter(value, showingPasswords, selectedGuids) {
+    if (!this.filtering) { this.selectedGuids = [...selectedGuids]; }
     this.filtering = true;
     value = value.toLowerCase();
     this.filtered = this.logins.filter(login =>
@@ -26,11 +38,11 @@ export class LoginList {
   }
 
   clearFilter(singleSelection) {
-    let selectedRanges = singleSelection ? this.selectedRanges : [];
+    let selectedGuids = singleSelection ? this.selectedGuids : [];
     this.filtered = [];
     this.filtering = false;
-    this.selectedRanges = [];
-    return selectedRanges;
+    this.selectedGuids = [];
+    return selectedGuids;
   }
 
   sort(column, ascending) {
@@ -73,17 +85,24 @@ export class LoginList {
       i += count;
     }
 
+    if (this.filtering) {
+      let removed = new Set(deleted);
+      this.logins = this.logins.filter(login => !removed.has(login));
+    }
     return {
       deleted,
       nextSelection: table.length ? Math.min(indexes[0], table.length - 1) : -1,
       rowChanges,
-      syncNeeded: this.filtering,
     };
   }
 
   deleteAllVisible() {
     let table = this.visible;
-    let result = { deleted: [...table], syncNeeded: this.filtering, };
+    let result = { deleted: [...table] };
+    if (this.filtering) {
+      let removed = new Set(table);
+      this.logins = this.logins.filter(login => !removed.has(login));
+    }
     table.length = 0;
     return result;
   }
