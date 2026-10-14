@@ -661,10 +661,12 @@ function escapeKeyHandler() {
 
 function OpenMigrator() {
   const { MigrationUtils } = ChromeUtils.importESModule(
-    "resource:///modules/MigrationUtils.sys.mjs"
+    parseInt(AppConstants.MOZ_APP_VERSION, 10) >= 159
+      ? "moz-src:///browser/components/migration/MigrationUtils.sys.mjs"
+      : "resource:///modules/MigrationUtils.sys.mjs"
   );
   // We pass in the type of source we're using for use in telemetry:
-  MigrationUtils.showMigrationWizard(window, [
-    MigrationUtils.MIGRATION_ENTRYPOINT_PASSWORDS,
-  ]);
+  MigrationUtils.showMigrationWizard(null, {
+    entrypoint: MigrationUtils.MIGRATION_ENTRYPOINTS.PASSWORDS,
+  });
 }
