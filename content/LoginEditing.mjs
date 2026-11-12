@@ -2,8 +2,7 @@ const { classes: Cc, interfaces: Ci } = Components;
 const fields = ["hostname", "formSubmitURL", "httpRealm", "username", "password", "usernameField", "passwordField"];
 const modes = { new: 0, edit: 1, clone: 2 };
 
-function createLogin(newProps, baseLogin = {}) {
-  const login = Cc["@mozilla.org/login-manager/loginInfo;1"].createInstance(Ci.nsILoginInfo);
+function createLogin(newProps, baseLogin = {}, login = Cc["@mozilla.org/login-manager/loginInfo;1"].createInstance(Ci.nsILoginInfo)) {
   login.init(...fields.map(prop => newProps[prop] === undefined ? baseLogin[prop] : newProps[prop]));
   return login;
 }
@@ -29,7 +28,7 @@ export const LoginOperations = {
   },
   add(newProps, baseLogin) { return mutate("addLogin", createLogin(newProps, baseLogin)); },
   modify(oldLogin, newProps) {
-    return mutate("modifyLogin", oldLogin, newProps.QueryInterface ? newProps : createLogin(newProps, oldLogin));
+    return mutate("modifyLogin", oldLogin, newProps.QueryInterface ? newProps : createLogin(newProps, oldLogin, oldLogin.clone()));
   },
   remove(login) { return mutate("removeLogin", login); },
 };

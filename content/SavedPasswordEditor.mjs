@@ -51,9 +51,14 @@ ChromeUtils.defineLazyGetter(
 const el = (aWindow, aId) => aWindow.document.getElementById(aId);
 
 function showAlert (aMsg) {
-  lazy.alertsSvc.showAlertNotification(
-    "chrome://savedpasswordeditor/skin/key32.png",
-    lazy.genStrBundle.GetStringFromName("savedpasswordeditor"), aMsg);
+  try {
+    const alert = Cc["@mozilla.org/alert-notification;1"].createInstance(Ci.nsIAlertNotification);
+    alert.init("", "chrome://savedpasswordeditor/skin/key32.png",
+      lazy.genStrBundle.GetStringFromName("savedpasswordeditor"), aMsg);
+    lazy.alertsSvc.showAlert(alert, null);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export var SavedPasswordEditor = {
@@ -131,7 +136,7 @@ export var SavedPasswordEditor = {
     spe._deleting = false;
   },
 
-  _showDisambig: function (aWindow, aSignons) {
+  _showDisambig: function (aWindow, aSignons, position) {
     var dp = el(aWindow, "savedpasswordeditor-disambig-popup");
     while (dp.hasChildNodes()) dp.removeChild(dp.firstChild);
 
@@ -153,7 +158,7 @@ export var SavedPasswordEditor = {
       },
       false);
 
-    var { x, y } = el(aWindow, "contentAreaContextMenu").getOuterScreenRect();
+    var { x, y } = position || el(aWindow, "contentAreaContextMenu").getOuterScreenRect();
     aWindow.setTimeout(
       function () { dp.openPopupAtScreen(x, y, true); }, 1);
   },
@@ -172,7 +177,7 @@ export var SavedPasswordEditor = {
     } else if (signons.length == 1) {
       LoginEditor.open(aWindow, { action: "edit", logins: [signons[0]], onAccept: this._finishEdit.bind(null, signons[0]) });
     } else
-      this._showDisambig(aWindow, signons);
+      this._showDisambig(aWindow, signons, loginInfo.popupPosition);
   },
 
   deleteLoginInfo: async function (aWindow) {
@@ -213,6 +218,6 @@ export var SavedPasswordEditor = {
           lazy.genStrBundle.formatStringFromName("failed", [e.message], 1));
       }
     } else
-      this._showDisambig(aWindow, signons);
+      this._showDisambig(aWindow, signons, loginInfo.popupPosition);
   },
 };

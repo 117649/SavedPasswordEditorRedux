@@ -21,6 +21,15 @@
 function contextMenuLoadHandler () {
     const prefix = "savedpasswordeditor-";
 
+    const menu = document.getElementById("contentAreaContextMenu");
+    const rememberPosition = event => {
+      if (event.target === menu && SavedPasswordEditor.curInfo) {
+        SavedPasswordEditor.curInfo.popupPosition = menu.getOuterScreenRect().toJSON();
+      }
+    };
+    menu.addEventListener("popupshown", rememberPosition);
+    Overlay.addCleanup(() => menu.removeEventListener("popupshown", rememberPosition));
+
     const contextshowingHandler = {
       receiveMessage ({ data }) {
         SavedPasswordEditor.updateLoginInfo(data);
